@@ -1,0 +1,11 @@
+<!-- stack_list.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content_container %}
+
+	{% for stack in object_list %}
+		<div><a href="{{ stack.get_absolute_url }}">{{ stack }}</a></div>
+	{% endfor %}
+    
+{% endblock content_container %}
