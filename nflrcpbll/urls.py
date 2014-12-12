@@ -1,14 +1,16 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+admin.autodiscover()
 
-from stacks.views import HomeView, StackListView, StackView
+from lessons.views import HomeView, LessonListView, LessonView, IsotopeView
 
 urlpatterns = patterns('',
     url(r'^$', HomeView.as_view(), name='home'),
     
-    url(r'^stacks/', StackListView.as_view(), name='stack_list' ),
-    url(r'^stack/(?P<slug>[-\w]+)/$', StackView.as_view(), name='stack' ),
+    url(r'^lessons/', LessonListView.as_view(), name='lesson_list' ),
+    url(r'^lesson/(?P<slug>[-\w]+)/$', LessonView.as_view(), name='lesson' ),
 
-
+    url(r'^isotoped/', IsotopeView.as_view(), name='isotoped' ),
+    
     url(r'^admin/', include(admin.site.urls)),
 )

@@ -4,21 +4,14 @@ Django settings for nflrcpbll project.
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+from unipath import Path
 
+PROJECT_DIR = Path(__file__).ancestor(3)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECRET_KEY IS NOT DEFINED IN BASE. Must be set in relavant runtime environment/context
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -30,7 +23,10 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'stacks',
+    'lessons',
+    'core',
+
+    
 )
 
 MIDDLEWARE_CLASSES = (
@@ -57,7 +53,7 @@ WSGI_APPLICATION = 'nflrcpbll.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Pacific/Honolulu'
 
 USE_I18N = True
 
@@ -65,8 +61,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+TEMPLATE_DIRS = (PROJECT_DIR.child('templates'),)
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
+STATICFILES_DIRS = (PROJECT_DIR.child('static'),)
+
 
 STATIC_URL = '/static/'

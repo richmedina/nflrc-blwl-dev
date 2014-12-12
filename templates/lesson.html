@@ -1,0 +1,18 @@
+<!-- stack.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content_container %}
+<div class="row">
+    <div class="col-md-10">
+        <h2>Content</h2>
+		{% for i in object.content.all %}
+            <div> {{ i.text }}</div>
+        {% endfor %}
+    </div>
+    <div class="col-md-2">
+        <h2>Lesson Items</h2>        
+    </div>
+</div>
+    
+{% endblock content_container %}
