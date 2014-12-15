@@ -23,6 +23,11 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'quiz',
+    'multichoice',
+    'true_false',
+    'essay',
+
     'lessons',
     'core',
 

@@ -5,13 +5,30 @@
 {% block content_container %}
 <div class="row">
     <div class="col-md-10">
-        <h2>Content</h2>
-		{% for i in object.content.all %}
-            <div> {{ i.text }}</div>
-        {% endfor %}
+		<div id="content_display" class="row">
+			{% for i in object.sections.all %}
+				<div class="col-md-12 item item_{{ forloop.counter }}">
+					<h2>{{ i.get_content_type_display }}</h2>
+					<h4>{{ i.text }}</h4>
+				</div>
+			{% endfor %}
+			<div class="col-md-12 item item_quiz">
+				{{ quiz }}
+			</div>
+			<div class="col-md-12 item item_discuss">Discuss</div>
+		</div>
     </div>
     <div class="col-md-2">
-        <h2>Lesson Items</h2>        
+        <h2></h2>
+        <div id="content_filters" class="row">
+			<div class="col-md-12 button-group">
+				<div class="button" data-filter=".item_1">Topic</div>
+				<div class="button" data-filter=".item_2">Watch</div>
+				<div class="button" data-filter=".item_3">Read</div>
+				<div class="button" data-filter=".item_quiz">Test questions here.</div>
+				<div class="button" data-filter=".item_discuss">Discussion panel here.</div>
+			</div>
+		</div>    
     </div>
 </div>
     

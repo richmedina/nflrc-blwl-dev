@@ -5,10 +5,11 @@ jQuery(function($) {
 
 	$container.isotope({
 		itemSelector: '.item',
-		layoutMode: 'fitRows'
+		layoutMode: 'fitRows',
+		filter: '.item_1',
 	});
 
-	$('#content_filters').on( 'click', 'button', function() {
+	$('#content_filters').on( 'click', '.button', function() {
 		var filterValue = $(this).attr('data-filter');
 		$container.isotope({ filter: filterValue });
 	});

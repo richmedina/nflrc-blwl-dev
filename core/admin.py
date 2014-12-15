@@ -1,7 +1,7 @@
 from django.contrib import admin
 # admin.autodiscover()
 
-from lessons.models import Lesson, LessonSection
+from lessons.models import Lesson, LessonSection, LessonQuiz
 
 class ExtraMedia:
     js = [
@@ -11,3 +11,4 @@ class ExtraMedia:
 
 admin.site.register(Lesson)
 admin.site.register(LessonSection)
+admin.site.register(LessonQuiz)

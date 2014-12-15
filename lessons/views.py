@@ -15,5 +15,11 @@ class LessonView(DetailView):
 	model = Lesson
 	template_name = 'lesson.html'
 
+	def get_context_data(self, **kwargs):
+		context = super(LessonView, self).get_context_data(**kwargs)
+		context['quiz'] =  self.get_object().lesson_quiz.get().quiz.url
+		context['discussion'] = ""
+		return context
+
 class IsotopeView(TemplateView):
 	template_name = 'isotope_scratch.html'
