@@ -3,9 +3,8 @@
 {% load staticfiles %}
 
 {% block content_container %}
-
-	{% for stack in object_list %}
-		<div><a href="{{ stack.get_absolute_url }}">{{ stack }}</a></div>
+	{% for lesson in object_list %}
+		<div><a href="{{ lesson.get_absolute_url }}">{{ lesson }}</a></div>
 	{% endfor %}
     
 {% endblock content_container %}
