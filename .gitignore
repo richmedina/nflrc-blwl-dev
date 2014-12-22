@@ -39,3 +39,4 @@ Thumbs.db
 # Project specific exclusions #
 ############
 prod-*
+*.sqlite
