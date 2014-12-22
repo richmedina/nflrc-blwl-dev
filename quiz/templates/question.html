@@ -8,75 +8,115 @@
 
 {% block content_container %}
 
-{% if previous.answers %}
+<div class="row">
+    <div class="col-md-10">
+    	<div id="breadcrumbs" class="row"><div class="col-md-12"> 
+    		<div>
+    			<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> >> {{ lesson }}
+    		</div>
+    	</div></div>
+		
+		<div id="content_display_quiz" class="row">
+			
+			{% for i in lesson.sections.all %}	
+				<div class="col-md-12 item item_{{ i.content_type }}">
+					<h2>{{ i.get_content_type_display }}</h2>
+					<h4>{{ i.text }}</h4>
+				</div>
+			{% endfor %}
 
-  <p class="muted"><small>{% trans "The previous question" %}:</small></p>
-  <p>{{ previous.previous_question }}</p>
+			<div class="col-md-12 item item_discuss">Discuss</div>
+		
+			<div class="col-md-12 item item_quiz">
+				{% if previous.answers %}
 
-  {% if previous.previous_outcome %}
-	<div class="alert alert-success">
-  {% else %}
-	<div class="alert alert-warning">
-  {% endif %}
-  	  <p><small>
-		{% trans "Your answer was" %} </small>
-		<strong>
-		  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
-		</strong>
-	  </p>
+				  <p class="muted"><small>{% trans "The previous question" %}:</small></p>
+				  <p>{{ previous.previous_question }}</p>
 
-	</div>
+				  {% if previous.previous_outcome %}
+					<div class="alert alert-success">
+				  {% else %}
+					<div class="alert alert-warning">
+				  {% endif %}
+				  	  <p><small>
+						{% trans "Your answer was" %} </small>
+						<strong>
+						  {{ previous.previous_outcome|yesno:"correct,incorrect" }}
+						</strong>
+					  </p>
 
-	{% include 'correct_answer.html' %}
+					</div>
 
-	<p><strong>{% trans "Explanation" %}:</strong></p>
-	<div class="well " style="background-color: #fcf8e3;">
-	  <p>{{ previous.previous_question.explanation }}</p>
-	</div>
+					{% include 'correct_answer.html' %}
 
-	<hr>
+					<p><strong>{% trans "Explanation" %}:</strong></p>
+					<div class="well " style="background-color: #fcf8e3;">
+					  <p>{{ previous.previous_question.explanation }}</p>
+					</div>
 
-{% endif %}
+					<hr>
 
-<br />
+				{% endif %}
 
-{% if question %}
+				<br />
 
-{% if progress %}
-<div style="float: right;">
-{% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
+				{% if question %}
+
+				{% if progress %}
+				<div style="float: right;">
+				{% trans "Question" %} {{ progress.0|add:1 }} {% trans "of" %} {{ progress.1 }}
+				</div>
+				{% endif %}
+
+
+
+				<p class="lead">{{ question.content }}</p>
+
+				{% if question.figure %}
+				    <img src="{{ question.figure.url }}" alt="{{ question.content }}" />
+				{% endif %}
+
+				<form action="" method="POST">{% csrf_token %}
+				  <input type=hidden name="question_id" value="{{ question.id }}">
+
+				  <ul class="list-group">
+
+					{% for answer in form.answers %}
+					  <li class="list-group-item">
+					    {{ answer }}
+					  </li>
+					{% endfor %}
+
+				  </ul>
+				  <input type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
+				</form>
+
+				{% endif %}
+
+				<hr>
+			</div>
+		</div>
+    </div>
+    <div class="col-md-2">
+        <h2></h2>
+        <div id="content_filters" class="row">
+			<div class="col-md-12 button-group">
+				<div class="button" data-filter=".item_topic">Topic</div>
+				<div class="button" data-filter=".item_media">Watch</div>
+				<div class="button" data-filter=".item_reading">Read</div>
+				<div class="button" data-filter=".item_quiz">Quiz
+					<!-- <a href="{{ object.get_absolute_url }}test/{{ quiz }}/take">Test Yourself</a> -->
+				</div>
+				<div class="button" data-filter=".item_discuss">Discussion panel here.</div>
+			</div>
+		</div>    
+    </div>
 </div>
-{% endif %}
 
-<p>
-  <small class="muted">{% trans "Question category" %}:</small>
-  <strong>{{ question.category }}</strong>
-</p>
 
-<p class="lead">{{ question.content }}</p>
+	
 
-{% if question.figure %}
-    <img src="{{ question.figure.url }}" alt="{{ question.content }}" />
-{% endif %}
 
-<form action="" method="POST">{% csrf_token %}
-  <input type=hidden name="question_id" value="{{ question.id }}">
-
-  <ul class="list-group">
-
-	{% for answer in form.answers %}
-	  <li class="list-group-item">
-	    {{ answer }}
-	  </li>
-	{% endfor %}
-
-  </ul>
-  <input type="submit" value={% trans "Check" %} class="btn btn-large btn-block btn-warning" >
-</form>
-
-{% endif %}
-
-<hr>
 
 
 {% endblock %}

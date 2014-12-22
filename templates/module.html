@@ -1,0 +1,13 @@
+<!-- module.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content_container %}
+
+<h2> {{ object.title }}  </h2>
+<h3> Lessons </h3>
+{% for i in lessons %}
+	<div> <a href="{{ i.get_absolute_url }}"> {{ i }} </a> </div>
+{% endfor %}
+    
+{% endblock content_container %}

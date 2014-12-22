@@ -10,6 +10,8 @@ from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
 
+from lessons.models import Module, Lesson, LessonQuiz
+
 
 class QuizMarkerMixin(object):
     @method_decorator(login_required)
@@ -190,6 +192,10 @@ class QuizTake(FormView):
         context = super(QuizTake, self).get_context_data(**kwargs)
         context['question'] = self.question
         context['quiz'] = self.quiz
+
+# Custom CLT--
+        context['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
+# --Custom CLT
         if hasattr(self, 'previous'):
             context['previous'] = self.previous
         if hasattr(self, 'progress'):
@@ -238,6 +244,10 @@ class QuizTake(FormView):
                 self.sitting.get_questions(with_answers=True)
             results['incorrect_questions'] =\
                 self.sitting.get_incorrect_questions
+
+            # Custom CLT--
+            results['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
+            # --Custom CLT
 
         if self.quiz.exam_paper is False:
             self.sitting.delete()
