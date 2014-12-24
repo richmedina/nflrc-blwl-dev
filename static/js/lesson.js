@@ -19,7 +19,7 @@ jQuery(function($) {
         event.preventDefault();
         var reply_thread = $(this).attr('data-reply_target')
         $.ajax({
-            url : "/discussions/post/add/",
+            url : $(this).attr('action'),
             type : "POST",
             data : $("#"+event.target.id).serializeArray(),
             dataType : "json",
