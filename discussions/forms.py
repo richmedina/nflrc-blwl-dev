@@ -15,3 +15,18 @@ class PostForm(forms.ModelForm):
         labels = {
             'text': ''
         }
+
+
+class PostReplyForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['subject', 'text', 'creator', 'parent_post']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 2, 'cols': '100%', 'class': 'form-control'}),
+            'subject': forms.HiddenInput(),
+            'creator': forms.HiddenInput(),
+            'parent_post': forms.HiddenInput(), 
+        }
+        labels = {
+            'text': ''
+        }

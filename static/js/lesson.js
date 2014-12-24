@@ -14,23 +14,9 @@ jQuery(function($) {
 		$container.isotope({ filter: filterValue });
 	});
 
-	var $quiz_container = $('#content_display_quiz');
-
-	$quiz_container.isotope({
-		itemSelector: '.item',
-		layoutMode: 'fitRows',
-		filter: '.item_quiz',
-	});
-
-	$('#content_filters').on( 'click', '.button', function() {
-		var filterValue = $(this).attr('data-filter');
-		$quiz_container.isotope({ filter: filterValue });
-	});
-
-
+	
     $( ".postform" ).submit(function( event ) {
         event.preventDefault();
-        console.log($(this).attr('data-reply_target'));
         var reply_thread = $(this).attr('data-reply_target')
         $.ajax({
             url : "/discussions/post/add/",
@@ -40,8 +26,8 @@ jQuery(function($) {
 
             // handle a successful response
             success : function(json) {
-				var hdr = '<dt><h4>' + json.subject + '</h4><small>' + json.creator + '</small><small style="float: right"> ' + json.modified + '</small></dt>';
-				var body = '<dd>' + json.text + '</dd>';
+            	var hdr = '<div class="well" style="margin-left: 30px"><dt>' + json.subject + '<small>' + json.creator + '</small><small style="float: right"> ' + json.modified + '</small></dt>';
+				var body = '<dd>' + json.text + '</dd></div>';
 				var msg = hdr + ' ' + body;
 
                 // $('#posts').append(msg);

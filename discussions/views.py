@@ -3,7 +3,7 @@ from django.views.generic import TemplateView, CreateView, ListView
 from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, LoginRequiredMixin
 
 from .models import Post
-from .forms import PostForm
+from .forms import PostForm, PostReplyForm
 
 class DiscussionView(LoginRequiredMixin, TemplateView):
     template_name = 'discussions.html'
@@ -20,7 +20,7 @@ class DiscussionView(LoginRequiredMixin, TemplateView):
             replies = hdr.replies.all().order_by('-modified')
             initial_post_data['subject'] = 'Re: %s'% hdr.subject
             initial_post_data['parent_post'] = hdr.id  
-            form = PostForm(initial=initial_post_data)
+            form = PostReplyForm(initial=initial_post_data)
             threads.append({'header': hdr, 'replies': replies, 'postform': form})
 
         context['threads'] = threads

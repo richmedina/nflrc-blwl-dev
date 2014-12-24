@@ -6,47 +6,65 @@
 {% block content_container %}
 
 <div class="row">
-    <div class="col-md-10">
-        <!-- <legend>New Post</legend>
-        <div id="add_note_panel">
-        
-        </div> -->
 
+    <div class="col-md-10">
     	<legend>Discussions</legend>
-    	<div>
+    	<div id="content_display">
 			<dl id="posts">      
 			{% for i in threads  %}
-			    <dt><h2>{{ i.header.subject }}</h2><small>{{ i.header.creator }}</small><small style="float: right">{{ i.header.modified|date:"M j Y" }}</small></dt>
-			    <dd>{{ i.header.text }}</dd>
-		        <div style="display: none">
-		        <form id="{{i.header.id}}-postform" class="postform" action="" method="post" data-reply_target="{{i.header.id}}-replies">{% csrf_token %}
-		            {{ i.postform|crispy }}
-		            <p><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></p>
-		        </form>
-		        </div>
-		        <dl id="{{i.header.id}}-replies">		    
+			<div class="{{i.header.id}}_thread">
+			    <dt>
+			    	<h2><a href="#{{i.header.id}}-panel" data-toggle="collapse" aria-expanded="false" aria-controls="{{i.header.id}}-panel">{{ i.header.subject }}</a></h2>
+			    	<small>{{ i.header.creator }}</small>
+			    	<small style="float: right">{{ i.header.modified|date:"M j Y" }}</small>
+			    </dt>
+				
+			<!-- thread panel -->
+			    <div id="{{i.header.id}}-panel" class="collapse">
+				    
+				    <dd>{{ i.header.text }}</dd>
+	        
+			        <!-- Replies -->
+			        <dl id="{{i.header.id}}-replies">		    
 				    {% for j in i.replies  %}
-				    	<dt><h4>{{ j.subject }}</h4><small>{{ j.creator }}</small><small style="float: right">{{ j.modified|date:"M j Y" }}</small></dt>
-				    	<dd>{{ j.text }}</dd>
+					    <div class="well" style="margin-left: 30px">
+					    	<dt>
+					    		{{ j.subject }}
+					    		<small>{{ j.creator }}</small>
+					    		<small style="float: right">{{ j.modified|date:"M j Y" }}</small>
+					    		
+					    	</dt>
+					    	<dd>{{ j.text }}</dd>
+					    </div>
 				    {% endfor %}
-				</dl>
+					</dl>
+			        
+			        <div class="well">
+				        <form id="{{i.header.id}}-postform" class="postform" action="" method="post" data-reply_target="{{i.header.id}}-replies">{% csrf_token %}
+				            {{ i.postform|crispy }}
+				            <p><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></p>
+				        </form>
+			        </div>
 
-				<h1><hr></h1>
+				</div> 
+			<!-- end thread panel -->
+			</div>
 			{% endfor %}
 			</dl>
 		</div>
 	</div>	
+    
     <div class="col-md-2">
-    	<legend>Modules</legend>
+    	<legend>Threads</legend>
+    	<div id="content_filters" data-default=".1_thread" class="row">
+			<div class="col-md-12 button-group">
+			{% for i in threads  %}
+				<a href="#{{i.header.id}}-panel" data-toggle="collapse" aria-expanded="false" aria-controls="{{i.header.id}}-panel"><div class="button" data-filter=".{{i.header.id}}_thread">{{i.header.subject}}</div></a>				
+			{% endfor %}
+			</div>	
+		</div>
     </div>
+
 </div>
 
 {% endblock content_container %}
-
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
