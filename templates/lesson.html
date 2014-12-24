@@ -19,7 +19,7 @@
 			{% for i in lesson.sections.all %}	
 				<div id="{{ i.content_type }}" class="col-md-12 item item_{{ i.content_type }}">
 					<h2>{{ i.get_content_type_display }}</h2>
-					<h4>{{ i.text }}</h4>
+					<div>{{ i.text | safe }}</div>
 				</div>
 			{% endfor %}
 			<div class="col-md-12 item item_discuss">Discuss</div>
