@@ -1,4 +1,10 @@
 Django==1.7.1
+Pillow==2.5.0
 Unipath==1.0
+django-braces==1.4.0
+django-crispy-forms==1.4.0
 django-model-utils==2.2
+py==1.4.26
+six==1.8.0
+tox==1.8.1
 wsgiref==0.1.2
