@@ -10,6 +10,9 @@ urlpatterns = patterns('',
 	url(r'^$', HomeView.as_view(), name='home'),
     
     url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
     
     url(r'^quiz/', include('quiz.urls')),
     
@@ -23,4 +26,7 @@ urlpatterns = patterns('',
     url(r'^discussions/post/add/$', PostCreateView.as_view(), name='create_post'),
 
     url(r'^isotoped/$', IsotopeView.as_view(), name='isotoped' ),
+
+
+
 )
