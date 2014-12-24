@@ -17,3 +17,6 @@ DATABASES = {
         'NAME': PROJECT_DIR.child('pbll-dev.sqlite3'),
     }
 }
+
+# LOGIN_REDIRECT_URL = '/'
+# LOGIN_URL = '/admin/'
