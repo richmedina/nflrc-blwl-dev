@@ -1,39 +1,43 @@
-<!-- stack.html -->
+<!-- lesson.html -->
 {% extends "base.html" %}
 {% load staticfiles %}
 
 {% block content_container %}
+
 <div class="row">
     <div class="col-md-10">
-    	<div id="breadcrumbs" class="row"><div class="col-md-12"> 
-    		<div>
-    			<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> >> {{ lesson }}
+    	<div id="breadcrumbs" class="row">
+    		<div class="col-md-12"> 
+	    		<div>
+	    			<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> >> 
+	    			<a href="{{ lesson.get_absolute_url }}"> {{ lesson }}</a>
+	    		</div>
     		</div>
-    	</div></div>
+    	</div>
 		
-		<div id="content_display" class="row">
-			
+		<div id="content_display" class="row">			
 			{% for i in lesson.sections.all %}	
-				<div class="col-md-12 item item_{{ i.content_type }}">
+				<div id="{{ i.content_type }}" class="col-md-12 item item_{{ i.content_type }}">
 					<h2>{{ i.get_content_type_display }}</h2>
 					<h4>{{ i.text }}</h4>
 				</div>
 			{% endfor %}
-
 			<div class="col-md-12 item item_discuss">Discuss</div>
 		</div>
     </div>
+    
     <div class="col-md-2">
-        <h2></h2>
-        <div id="content_filters" class="row">
+        
+        <div id="content_filters" data-default=".item_{{ section }}" class="row">
 			<div class="col-md-12 button-group">
-				<div class="button" data-filter=".item_topic">Topic</div>
-				<div class="button" data-filter=".item_media">Watch</div>
-				<div class="button" data-filter=".item_reading">Read</div>
-				<div class="button" data-filter=".item_quiz">
-					<a href="{{ object.get_absolute_url }}test/{{ quiz }}/take">Test Yourself</a>
-				</div>
-				<div class="button" data-filter=".item_discuss">Discussion panel here.</div>
+				<a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}"><div class="button" data-filter=".item_topic">Topic</div></a>
+				
+				<a href="{% url 'lesson_section' slug=lesson.slug section='media' %}"><div class="button" data-filter=".item_media">Watch</div></a>
+				<a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}"><div class="button" data-filter=".item_reading">Read</div></a>
+				
+				{% if quiz %} <a href="{% url 'lesson_quiz' quiz_name=quiz %}">Test Yourself</a> {% endif %} 
+				
+				<a href="{% url 'discussion' %}"><div class="button" data-filter=".item_discuss">Interact</div></a>
 			</div>
 		</div>    
     </div>

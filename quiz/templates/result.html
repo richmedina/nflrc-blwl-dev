@@ -9,18 +9,16 @@
       
       <div id="breadcrumbs" class="row">
         <div class="col-md-12"> 
-          <div><a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> >> {{ lesson }}</div>
+          <div>
+            <a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> >> 
+            <a href="{{ lesson.get_absolute_url }}"> {{ lesson }}</a>
+          </div>
         </div>
       </div>
 
 <!-- Content Panel Display    -->
       <div id="content_display_quiz" class="row">
-        {% for i in lesson.sections.all %}  
-          <div class="col-md-12 item item_{{ i.content_type }}">
-            <h2>{{ i.get_content_type_display }}</h2>
-            <h4>{{ i.text }}</h4>
-          </div>
-        {% endfor %}
+    
 
 <!-- Quiz Panel -->
         <div class="col-md-12 item item_quiz">
@@ -49,14 +47,20 @@
                 {% trans "You answered" %} {{ score }} {% trans "questions correctly out of" %} {{ max_score }}, {% trans "giving you" %} {{ percent }} {% trans "percent correct" %}
               </p>
 
+              
               {% if quiz.pass_mark %}
-                <hr><p class="lead">{{ sitting.result_message }}</p><hr>
+                <p class="lead">{{ sitting.result_message }}</p>
               {% endif %}
 
-              <p>{% trans "Review the questions below and try the exam again in the future"%}.</p>
+              {% if score < max_score %}
+                <h4><a href="{% url 'lesson_quiz' quiz_name=quiz.url %}">Try again now?</a></h4>
+              {% endif %}
+              
 
               {% if user.is_authenticated %}
+                {% comment %}
                 <p>{% trans "The result of this exam will be stored in your progress section so you can review and monitor your progression" %}.</p>
+                {% endcomment %}
               {% endif %}
             </div>
           {% endif %}
@@ -91,21 +95,22 @@
     </div><!-- End Content Container Left   -->
 
 
-<!-- Menu Right -->
+<!-- Lesson Menu Right -->
     <div class="col-md-2">
-      <h2></h2>
+        
       <div id="content_filters" class="row">
         <div class="col-md-12 button-group">
-          <div class="button" data-filter=".item_topic">Topic</div>
-          <div class="button" data-filter=".item_media">Watch</div>
-          <div class="button" data-filter=".item_reading">Read</div>
-          <div class="button" data-filter=".item_quiz">
-            <a href="{{ object.get_absolute_url }}test/{{ quiz }}/take">Test Yourself</a>
-          </div>
-          <div class="button" data-filter=".item_discuss">Discussion panel here.</div>
+          <a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}"><div class="button" data-filter=".item_topic">Topic</div></a>
+          
+          <a href="{% url 'lesson_section' slug=lesson.slug section='media' %}"><div class="button" data-filter=".item_media">Watch</div></a>
+          <a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}"><div class="button" data-filter=".item_reading">Read</div></a>
+
+          <a href=""><div class="button" data-filter=".item_discuss">Discussion panel here.</div></a>
         </div>
-      </div>    
-    </div><!-- End Menu -->
+      </div>
+
+    </div>
+<!-- End Menu -->
 
 </div>
 
