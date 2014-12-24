@@ -1,8 +1,6 @@
-from django.shortcuts import render
-from django.core.urlresolvers import reverse_lazy
-from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DetailView
+from django.views.generic import TemplateView, DetailView
 
-from .models import Module, Lesson, LessonSection
+from .models import Module, Lesson
 
 class HomeView(TemplateView):
 	template_name = 'index.html'
@@ -21,10 +19,6 @@ class ModuleView(DetailView):
 		context['lessons'] = self.get_object().lessons.all()
 		return context
 
-class LessonListView(ListView):
-	model = Lesson
-	template_name = 'lesson_list.html'
-
 class LessonView(DetailView):
 	model = Lesson
 	template_name = 'lesson.html'
@@ -38,8 +32,15 @@ class LessonView(DetailView):
 			context['quiz'] =  quiz_url
 		except:
 			pass
+		try: 
+			context['section'] = self.kwargs['section']
+		except:
+			context['section'] = 'topic'
+		 
 		context['discussion'] = ""
 		print self.get_object().module.lessons.all()
+		
+
 		return context
 
 class IsotopeView(TemplateView):

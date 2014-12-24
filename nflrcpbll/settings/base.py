@@ -29,7 +29,10 @@ INSTALLED_APPS = (
     'essay',
 
     'lessons',
+    'discussions',
     'core',
+
+    'crispy_forms',
 
     
 )

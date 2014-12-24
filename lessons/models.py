@@ -45,7 +45,7 @@ class Lesson(TimeStampedModel):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('lesson', args=[str(self.module.slug), str(self.slug)])
+        return reverse('lesson', args=[str(self.slug)])
 
 
 class LessonSection(models.Model):
@@ -57,7 +57,7 @@ class LessonSection(models.Model):
         return '%s' % (self.content_type)
 
     def get_absolute_url(self):
-        return reverse('section', args=[str(self.id)])
+        return reverse('lesson_section', args=[str(self.lesson.slug), str(self.slug)])
 
 
 class LessonQuiz(models.Model):

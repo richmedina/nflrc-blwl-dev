@@ -193,13 +193,14 @@ class QuizTake(FormView):
         context['question'] = self.question
         context['quiz'] = self.quiz
 
-# Custom CLT--
-        context['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
-# --Custom CLT
+
         if hasattr(self, 'previous'):
             context['previous'] = self.previous
         if hasattr(self, 'progress'):
             context['progress'] = self.progress
+# Custom CLT--
+        context['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
+# --Custom CLT
         return context
 
     def form_valid_user(self, form):
