@@ -7,6 +7,7 @@ from django.utils.text import slugify
 from model_utils.models import TimeStampedModel
 
 from quiz.models import Quiz
+from discussions.models import Post
 
 CONTENT_TYPES = (
     ('topic', 'Topic'),
@@ -67,6 +68,12 @@ class LessonQuiz(models.Model):
     def __unicode__(self):
         return '%s' % (self.quiz)
 
+class LessonDiscussion(models.Model):
+    thread = models.ForeignKey(Post, related_name='lesson_post')
+    lesson = models.ForeignKey(Lesson, related_name='lesson_discussion')
+
+    def __unicode__(self):
+        return '%s -- %s' % (self.lesson, self.thread)
 
 # class StackItem(models.Model):
 #     order = models.IntegerField(default=0)

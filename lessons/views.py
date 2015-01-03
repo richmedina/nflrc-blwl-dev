@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView, DetailView
 
-from .models import Module, Lesson
+from .models import Module, Lesson, LessonSection
 
 class HomeView(TemplateView):
 	template_name = 'index.html'
@@ -32,14 +32,19 @@ class LessonView(DetailView):
 			context['quiz'] =  quiz_url
 		except:
 			pass
-		try: 
-			context['section'] = self.kwargs['section']
-		except:
-			context['section'] = 'topic'
-		 
-		context['discussion'] = ""
-		print self.get_object().module.lessons.all()
 		
+		try:
+			context['curr_section'] = self.kwargs['section']
+			context['section_items'] = LessonSection.objects.filter(content_type=self.kwargs['section'])
+		except:
+			context['curr_section'] = 'topic'
+			context['section_items'] = LessonSection.objects.filter(content_type='topic')		
+
+		try:
+			context['lesson_thread'] =  self.get_object().lesson_discussion.get().thread.slug
+			context['lesson_thread_replies'] = self.get_object().lesson_discussion.get().thread.replies.all().order_by('-modified')
+		except:
+			context['lesson_thread'] = None
 
 		return context
 

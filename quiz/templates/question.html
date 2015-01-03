@@ -94,11 +94,11 @@
         
         <div id="content_filters" class="row">
 			<div class="col-md-12 button-group">
-				<a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}"><div class="button" data-filter=".item_topic">Topic</div></a>
-				
-				<a href="{% url 'lesson_section' slug=lesson.slug section='media' %}"><div class="button" data-filter=".item_media">Watch</div></a>
-				<a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}"><div class="button" data-filter=".item_reading">Read</div></a>				
-				<a href=""><div class="button" data-filter=".item_discuss">Discussion panel here.</div></a>
+		          <a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}"><div class="button">Topic</div></a>
+		          <a href="{% url 'lesson_section' slug=lesson.slug section='media' %}"><div class="button">Watch</div></a>
+		          <a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}"><div class="button">Read</div></a>
+		          <a href="#"><div class="button active">Topic</div></a>
+		          <a href="{% url 'discussion' %}"><div class="button">Get Involved</div></a>
 			</div>
 		</div>
 

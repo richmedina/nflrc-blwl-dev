@@ -1,0 +1,39 @@
+<!-- discussions_index.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block content_container %}
+
+<div class="row">
+
+    <div class="col-md-12">
+    	<legend>Discussions</legend>
+    	<div id="thread_display" data-selected="{% if selected_thread %}.{{ selected_thread.id }}_thread {% else %}*{% endif %}"> 
+			<dl id="posts">      
+			{% for i in threads  %}
+			
+				<div class="{{i.header.id}}_thread thread_content" style="position: relative">
+				<!-- thread header -->
+				    <dt class="thread_head">
+				    	<h3><a href="{{ i.lesson.get_absolute_url }}">({{ i.lesson }})</a></h3>
+				    	<h2><a href="{% url 'discussion_select' i.header.slug %}">{{ i.header.subject }}</a></h2>
+				    	<small>{{ i.header.creator }}</small>
+				    	<small style="float: right">{{ i.header.modified|date:"M j Y" }}</small>
+				    </dt>
+				    <dd>{{ i.header.text }}</dd>
+				<!-- end thread header -->	
+				</div>
+
+			{% endfor %}
+			</dl>
+		</div>
+	</div>	
+
+</div>
+
+{% endblock content_container %}
+
+{% block js_include %}<script src="{% static 'js/discussions.js' %}"></script> {% endblock js_include %}
+
+

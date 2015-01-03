@@ -9,58 +9,58 @@
 
     <div class="col-md-10">
     	<legend>Discussions</legend>
-    	<div id="content_display">
-			<dl id="posts">      
-			{% for i in threads  %}
-			<div class="{{i.header.id}}_thread">
-			    <dt>
-			    	<h2><a href="#{{i.header.id}}-panel" data-toggle="collapse" aria-expanded="false" aria-controls="{{i.header.id}}-panel">{{ i.header.subject }}</a></h2>
-			    	<small>{{ i.header.creator }}</small>
-			    	<small style="float: right">{{ i.header.modified|date:"M j Y" }}</small>
-			    </dt>
+    	<div id="thread_display"> 
+			<dl id="posts">  			
 				
-			<!-- thread panel -->
-			    <div id="{{i.header.id}}-panel" class="collapse">
-				    
-				    <dd>{{ i.header.text }}</dd>
-	        
-			        <!-- Replies -->
-			        <dl id="{{i.header.id}}-replies">		    
-				    {% for j in i.replies  %}
-					    <div class="well" style="margin-left: 30px">
-					    	<dt>
-					    		{{ j.subject }}
-					    		<small>{{ j.creator }}</small>
-					    		<small style="float: right">{{ j.modified|date:"M j Y" }}</small>
-					    		
-					    	</dt>
-					    	<dd>{{ j.text }}</dd>
-					    </div>
-				    {% endfor %}
-					</dl>
-			        
-			        <div class="well">
-				        <form id="{{i.header.id}}-postform" class="postform" action="{%url 'create_post'%}" method="post" data-handler="" data-reply_target="{{i.header.id}}-replies">{% csrf_token %}
-				            {{ i.postform|crispy }}
-				            <p><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></p>
-				        </form>
-			        </div>
+			<!-- thread header -->
+			    <dt class="thread_head">
+			    	<h2><a href="#">{{ thread.subject }}</a></h2>
+			    	<small>{{ thread.creator }}</small>
+			    	<small style="float: right">{{ thread.modified|date:"M j Y" }}</small>
+			    </dt>
+			<!-- end thread header -->	
+			
+			<!-- thread body -->
+			    <dd>{{ thread.text }}</dd>
 
-				</div> 
-			<!-- end thread panel -->
-			</div>
-			{% endfor %}
+		        <div class="well">
+			        <form id="{{thread.id}}-postform" class="postform" action="{% url 'create_post'%}" method="post" data-reply_target="{{thread.id}}-replies">{% csrf_token %}
+			            {{ postform|crispy }}
+			            <p><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></p>
+			        </form>
+		        </div>
+		        
+		        <!-- Replies -->
+		        <dl id="{{thread.id}}-replies" class="reply-block">		    
+			    {% for j in replies  %}
+				    <div class="well" style="margin-left: 30px">
+				    	<dt>
+				    		{{ j.subject }}
+				    		<small>{{ j.creator }}</small>
+				    		<small style="float: right">{{ j.modified|date:"M j Y" }}</small>
+				    		
+				    	</dt>
+				    	<dd>{{ j.text }}</dd>
+				    </div>
+			    {% endfor %}
+				</dl>
+				<!-- end thread body -->
+				
+
+			
 			</dl>
 		</div>
 	</div>	
     
     <div class="col-md-2">
     	<legend>Threads</legend>
-    	<div id="content_filters" data-default=".1_thread" class="row">
+    	<div class="row">
 			<div class="col-md-12 button-group">
-			{% for i in threads  %}
-				<a href="#{{i.header.id}}-panel" data-toggle="collapse" aria-expanded="false" aria-controls="{{i.header.id}}-panel"><div class="button" data-filter=".{{i.header.id}}_thread">{{i.header.subject}}</div></a>				
+			{% for i in thread_list  %}
+				<a href="{% url 'discussion_select' i.slug %}"><div class="button">{{i.subject}}</div></a>
+				<a href="{{ i.lesson_post.all.0.lesson.get_absolute_url }}">({{ i.lesson_post.all.0.lesson }})</a>
 			{% endfor %}
+				<a href="{% url 'discussion' %}"><div class="button"> All </div></a>
 			</div>	
 		</div>
     </div>
@@ -68,3 +68,7 @@
 </div>
 
 {% endblock content_container %}
+
+ 
+{% block js_include %} <script src="{% static 'js/discussions.js' %}"></script>{% endblock js_include %}
+

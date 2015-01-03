@@ -10,7 +10,8 @@ from .forms import QuestionForm, EssayForm
 from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
 
-from lessons.models import Module, Lesson, LessonQuiz
+from braces.views import LoginRequiredMixin
+from lessons.models import LessonQuiz
 
 
 class QuizMarkerMixin(object):
@@ -134,7 +135,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
         return context
 
 
-class QuizTake(FormView):
+class QuizTake(LoginRequiredMixin, FormView):
     form_class = QuestionForm
     template_name = 'question.html'
 
@@ -356,6 +357,10 @@ class QuizTake(FormView):
             results['incorrect_questions'] = (
                 self.request
                     .session[self.quiz.anon_q_data()]['incorrect_questions'])
+
+            # Custom CLT--
+            results['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
+            # --Custom CLT
 
         else:
             results['previous'] = self.previous
