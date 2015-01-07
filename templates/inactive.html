@@ -1,0 +1,18 @@
+<!-- inactive.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content_container %}
+
+<div class="row">
+    <div class="col-md-12">
+    	{% if user.is_anonymous %}
+    	<p>Please agree to honor the participation agreement before proceeding.</p>
+    	{% else %}
+    	<p>Please <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">sign in</a> before proceeding.</p>
+    	{% endif %}
+
+    </div>
+</div>
+    
+{% endblock content_container %}

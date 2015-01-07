@@ -16,11 +16,13 @@ class DiscussionListView(LoginRequiredMixin, TemplateView):
         threads = []
 
         for hdr in headers:
+           
             try:
                 lesson = LessonDiscussion.objects.get(thread=hdr).lesson
             except:
                 lesson = None
-            threads.append({'lesson': lesson, 'header': hdr})
+            
+            threads.append({'lesson': lesson, 'header': hdr, 'reply_count': hdr.replies.count()})
 
         context['threads'] = threads
         return context

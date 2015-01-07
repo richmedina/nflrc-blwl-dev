@@ -5,7 +5,7 @@
 
 {% block content_container %}
 <div class="row">
-    <div class="col-md-10">
+    <div class="col-md-9">
       
       <div id="breadcrumbs" class="row">
         <div class="col-md-12"> 
@@ -96,19 +96,37 @@
 
 
 <!-- Lesson Menu Right -->
-    <div class="col-md-2">
+    <div class="col-md-3">
         
       <div id="content_filters" class="row">
         <div class="col-md-12 button-group">
-          <a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}"><div class="button">Topic</div></a>
-          <a href="{% url 'lesson_section' slug=lesson.slug section='media' %}"><div class="button">Watch</div></a>
-          <a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}"><div class="button">Read</div></a>
-          <a href="#"><div class="button active">Topic</div></a>
-          <a href="{% url 'discussion' %}"><div class="button">Get Involved</div></a>
+          <a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn btn">Topic</a>
+          <a href="{% url 'lesson_section' slug=lesson.slug section='media' %}" class="menu_btn btn">Watch</a>
+          <a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}" class="menu_btn btn">Read</a>            
+          <a href="#"><div class="menu_btn btn active">Test Yourself</div></a>
+          {% if lesson_thread %}
+            <a href="{% url 'discussion_select' slug=lesson_thread %}" class="menu_btn btn">Get Involved</a>
+            <div class="well reply_preview_list">
+              
+              <div style="text-align: left"><small>Recent Posts</small></div>
+              {% for i in lesson_thread_replies %}
+              <a href="{% url 'discussion_select' slug=lesson_thread %}#post_{{i.id}}">
+                <div class="well">
+                  <i class="fa fa-quote-left"></i>              
+                  <div class="reply_preview"><small><i>{{ i.text|truncatewords:10 }}</i></small></div>
+                  <small style="float: right">{{ i.creator.first_name }}</small>
+                </div>
+              </a>          
+              {% empty %}
+                <div class="well"><small>No recent posts. Be the first!</small></div>
+              {% endfor %}
+
+            </div>                  
+          {% endif %}
         </div>
       </div>
 
-    </div>
+      </div>
 <!-- End Menu -->
 
 </div>

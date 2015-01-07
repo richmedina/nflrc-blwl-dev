@@ -22,5 +22,3 @@ DATABASES = {
     }
 }
 
-# LOGIN_REDIRECT_URL = '/'
-# LOGIN_URL = '/admin/'

@@ -6,10 +6,17 @@
 
 <h2>Modules</h2>
 {% for i in modules %}
-	<div class="button"><a class="button" href="{{ i.get_absolute_url }}"> <legend>{{ i }}</legend> </a></div>
-	{% for j in i.lessons.all %}
-		<h4><a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a></h4>
-	{% endfor %}
+	<div class="thumbnail blocks">
+	
+		<div class="button"><a class="button" href="{{ i.get_absolute_url }}"> <legend>{{ i }}</legend> </a></div>
+		{% for j in i.lessons.all %}
+			<div class="thumbnail">
+				<a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a>
+				<p>{{ j.description }}</p>
+			</div>
+		{% endfor %}		
+	
+	</div>
 {% endfor %}
 
 {% endblock content_container %}

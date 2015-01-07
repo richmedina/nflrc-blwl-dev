@@ -2,16 +2,20 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from lessons.views import HomeView, ModuleView, LessonView, HonorAgreementView, LoginForbiddenView
 from quiz.views import QuizTake
-from lessons.views import HomeView, ModuleView, LessonView, IsotopeView
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView
 
 urlpatterns = patterns('',
+
+    url('', include('social.apps.django_app.urls', namespace='social')),
+    url('', include('django.contrib.auth.urls', namespace='auth')),
+
 	url(r'^$', HomeView.as_view(), name='home'),
     
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
+    # url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
     
     url(r'^quiz/', include('quiz.urls')),
@@ -26,8 +30,6 @@ urlpatterns = patterns('',
     url(r'^discussions/$', DiscussionListView.as_view(), name='discussion' ),
     url(r'^discussions/post/add/$', PostCreateView.as_view(), name='create_post'),
 
-    url(r'^isotoped/$', IsotopeView.as_view(), name='isotoped' ),
-
-
-
+    url(r'^inactive-user/$', HonorAgreementView.as_view(), name='honor_agreement'),
+    url(r'^login-forbidden/$', LoginForbiddenView.as_view(), name='login_forbidden'),
 )

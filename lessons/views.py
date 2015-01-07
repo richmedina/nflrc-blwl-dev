@@ -1,5 +1,7 @@
 from django.views.generic import TemplateView, DetailView
 
+from braces.views import LoginRequiredMixin
+
 from .models import Module, Lesson, LessonSection
 
 class HomeView(TemplateView):
@@ -10,7 +12,7 @@ class HomeView(TemplateView):
 		context['modules'] = Module.objects.all()
 		return context
 
-class ModuleView(DetailView):
+class ModuleView(LoginRequiredMixin, DetailView):
 	model = Module
 	template_name = 'module.html'
 
@@ -19,7 +21,7 @@ class ModuleView(DetailView):
 		context['lessons'] = self.get_object().lessons.all()
 		return context
 
-class LessonView(DetailView):
+class LessonView(LoginRequiredMixin, DetailView):
 	model = Lesson
 	template_name = 'lesson.html'
 	context_object_name = 'lesson'
@@ -42,11 +44,16 @@ class LessonView(DetailView):
 
 		try:
 			context['lesson_thread'] =  self.get_object().lesson_discussion.get().thread.slug
-			context['lesson_thread_replies'] = self.get_object().lesson_discussion.get().thread.replies.all().order_by('-modified')
+			preview_replies = self.get_object().lesson_discussion.get().thread.replies.all().order_by('-modified')
+			context['lesson_thread_replies'] = preview_replies[0:5]
 		except:
 			context['lesson_thread'] = None
 
 		return context
 
-class IsotopeView(TemplateView):
-	template_name = 'isotope_scratch.html'
+
+class HonorAgreementView(TemplateView):
+	template_name = 'inactive.html'
+
+class LoginForbiddenView(TemplateView):
+	template_name = 'login-forbidden.html'
