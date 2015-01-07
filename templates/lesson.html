@@ -5,7 +5,8 @@
 {% block content_container %}
 
 <div class="row">
-    <div class="col-md-10">
+    
+    <div class="col-md-9">
     	<div id="breadcrumbs" class="row">
     		<div class="col-md-12"> 
 	    		<div>
@@ -25,31 +26,34 @@
 		</div>
     </div>
     
-    <div class="col-md-2">        
-        <div class="row">
-			<div class="col-md-12">
-				<a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}"><div class="button {% if curr_section == 'topic' %}active{% endif %}">Topic</div></a>
+    <div class="col-md-3">        
+		<a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn btn {% if curr_section == 'topic' %}active{% endif %}">Topic</a>
+		<a href="{% url 'lesson_section' slug=lesson.slug section='media' %}" class="menu_btn btn  {% if curr_section == 'media' %}active{% endif %}">Watch</a>
+		<a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}" class="menu_btn btn  {% if curr_section == 'reading' %}active{% endif %}">Read</a>
+		
+		{% if quiz %} 
+			<a href="{% url 'lesson_quiz' quiz_name=quiz %}" class="menu_btn btn ">Test Yourself</a> 
+		{% endif %} 
+		
+		{% if lesson_thread %}
+			<a href="{% url 'discussion_select' slug=lesson_thread %}" class="menu_btn btn ">Get Involved</a>
+			<div class="well reply_preview_list">
 				
-				<a href="{% url 'lesson_section' slug=lesson.slug section='media' %}"><div class="button {% if curr_section == 'media' %}active{% endif %}">Watch</div></a>
-				<a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}"><div class="button {% if curr_section == 'reading' %}active{% endif %}">Read</div></a>
-				
-				{% if quiz %} <a href="{% url 'lesson_quiz' quiz_name=quiz %}">Test Yourself</a> {% endif %} 
-				{% if lesson_thread %}
-					<a href="{% url 'discussion_select' slug=lesson_thread %}"><div class="button">Recent Posts (Get Involved)</div></a>
-					
-					{% for i in lesson_thread_replies %}
-					<div>
-						<small style="float: right"><b>{{ i.creator }}</b></small>
-						<div class="well"><i>"{{ i.text|truncatewords:10 }}"</i></div>
+				<div style="text-align: left"><small>Recent Posts</small></div>
+				{% for i in lesson_thread_replies %}
+				<a href="{% url 'discussion_select' slug=lesson_thread %}#post_{{i.id}}">
+					<div class="well">
+						<i class="fa fa-quote-left"></i>							
+						<div class="reply_preview"><small><i>{{ i.text|truncatewords:10 }}</i></small></div>
+						<small style="float: right">{{ i.creator.first_name }}</small>
 					</div>
-					{% empty %}
-						<small>No recent posts. Be the first!</small>
-					{% endfor %}
-				{% else %}
-					<a href="{% url 'discussion' %}"><div class="button">Get Involved </div></a>
-				{% endif %}				
-			</div>
-		</div>    
+				</a>					
+				{% empty %}
+					<div class="well"><small>No recent posts. Be the first!</small></div>
+				{% endfor %}
+
+			</div>									
+		{% endif %}				
     </div>
 </div>
     

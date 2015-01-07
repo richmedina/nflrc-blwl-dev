@@ -8,26 +8,33 @@
 <div class="row">
 
     <div class="col-md-12">
-    	<legend>Discussions</legend>
-    	<div id="thread_display" data-selected="{% if selected_thread %}.{{ selected_thread.id }}_thread {% else %}*{% endif %}"> 
-			<dl id="posts">      
-			{% for i in threads  %}
+    	<h1>Discussions</h1>		      
+		{% for i in threads  %}
+		
+			<div class="thumbnail blocks">
 			
-				<div class="{{i.header.id}}_thread thread_content" style="position: relative">
+				
 				<!-- thread header -->
-				    <dt class="thread_head">
-				    	<h3><a href="{{ i.lesson.get_absolute_url }}">({{ i.lesson }})</a></h3>
-				    	<h2><a href="{% url 'discussion_select' i.header.slug %}">{{ i.header.subject }}</a></h2>
-				    	<small>{{ i.header.creator }}</small>
-				    	<small style="float: right">{{ i.header.modified|date:"M j Y" }}</small>
-				    </dt>
-				    <dd>{{ i.header.text }}</dd>
-				<!-- end thread header -->	
-				</div>
+			    
+		    	<a href="{{ i.lesson.get_absolute_url }}">
+		    		<small class="badge">{{ i.lesson }}</small>
+		    	</a>
+		    	<small class="" style="font-size: 0.3; float: right"><i>{{ i.reply_count }} replies</i></small>
+		    	
+		    	
+		    	<a href="{% url 'discussion_select' i.header.slug %}">
+			    	<h2>{{ i.header.subject }}</h2>
+			    	<small>{{ i.header.creator }}</small>
+			    	<small style="float: right">{{ i.header.modified|date:"M j Y" }}</small>
+		    	</a>
+			    
+			    <!-- thread header text -->
+			    <p>{{ i.header.text }}</p>
+			    
+			
+			</div>
 
-			{% endfor %}
-			</dl>
-		</div>
+		{% endfor %}
 	</div>	
 
 </div>

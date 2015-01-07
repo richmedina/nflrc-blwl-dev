@@ -201,6 +201,13 @@ class QuizTake(LoginRequiredMixin, FormView):
             context['progress'] = self.progress
 # Custom CLT--
         context['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
+        try:
+            context['lesson_thread'] =  context['lesson'].lesson_discussion.get().thread.slug
+            preview_replies = context['lesson'].lesson_discussion.get().thread.replies.all().order_by('-modified')
+            context['lesson_thread_replies'] = preview_replies[0:5]
+
+        except:
+            context['lesson_thread'] = None
 # --Custom CLT
         return context
 
@@ -249,6 +256,12 @@ class QuizTake(LoginRequiredMixin, FormView):
 
             # Custom CLT--
             results['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
+            try:
+                results['lesson_thread'] =  results['lesson'].lesson_discussion.get().thread.slug
+                preview_replies = results['lesson'].lesson_discussion.get().thread.replies.all().order_by('-modified')
+                results['lesson_thread_replies'] = preview_replies[0:5]
+            except:
+                results['lesson_thread'] = None
             # --Custom CLT
 
         if self.quiz.exam_paper is False:
