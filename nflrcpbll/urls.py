@@ -2,9 +2,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
-from lessons.views import HomeView, ModuleView, LessonView, HonorAgreementView, LoginForbiddenView
+from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView
+from core.views import HonorCodeFormView
 
 urlpatterns = patterns('',
 
@@ -30,6 +31,6 @@ urlpatterns = patterns('',
     url(r'^discussions/$', DiscussionListView.as_view(), name='discussion' ),
     url(r'^discussions/post/add/$', PostCreateView.as_view(), name='create_post'),
 
-    url(r'^inactive-user/$', HonorAgreementView.as_view(), name='honor_agreement'),
+    url(r'^inactive-user/$', HonorCodeFormView.as_view(), name='honor_agreement'),
     url(r'^login-forbidden/$', LoginForbiddenView.as_view(), name='login_forbidden'),
 )

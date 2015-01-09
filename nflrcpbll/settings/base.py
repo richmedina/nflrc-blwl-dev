@@ -112,7 +112,8 @@ SOCIAL_AUTH_PIPELINE = (
     # the unique identifier of the given user in the provider.
     'social.pipeline.social_auth.social_uid',
 
-  # NFLRC Custom function to load whitelist from db.
+# NFLRC Custom function to load whitelist from db. This sets the SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_EMAILS 
+# configuration setting used by the next pipe.
     'core.utils.nflrc_auth_allowed',
 
     # Verifies that the current auth process is valid within the current
@@ -136,9 +137,10 @@ SOCIAL_AUTH_PIPELINE = (
     # a similar email address. Disabled by default.
     # 'social.pipeline.social_auth.associate_by_email',
 
-    # Create a user account if we haven't found one yet.
+    # Create a user account if we haven't found one yet. 
     'social.pipeline.user.create_user',
 
+    
     # Create the record that associated the social account with this user.
     'social.pipeline.social_auth.associate_user',
 
@@ -147,6 +149,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social.pipeline.social_auth.load_extra_data',
 
     # Update the user record with any changed info from the auth service.
-    'social.pipeline.user.user_details'
+    'social.pipeline.user.user_details',
+
 )
 

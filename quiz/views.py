@@ -12,6 +12,7 @@ from essay.models import Essay_Question
 
 from braces.views import LoginRequiredMixin
 from lessons.models import LessonQuiz
+from core.mixins import HonorCodeRequired
 
 
 class QuizMarkerMixin(object):
@@ -135,7 +136,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
         return context
 
 
-class QuizTake(LoginRequiredMixin, FormView):
+class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
     form_class = QuestionForm
     template_name = 'question.html'
 

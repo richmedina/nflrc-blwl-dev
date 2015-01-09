@@ -5,9 +5,10 @@ from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, 
 from .models import Post
 from .forms import PostForm, PostReplyForm
 from lessons.models import LessonDiscussion
+from core.mixins import HonorCodeRequired
 
 
-class DiscussionListView(LoginRequiredMixin, TemplateView):
+class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
     template_name = 'discussions_index.html'
 
     def get_context_data(self, **kwargs):
@@ -28,7 +29,7 @@ class DiscussionListView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class DiscussionView(LoginRequiredMixin, DetailView):
+class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = Post
     template_name = 'discussions.html'
     
@@ -56,11 +57,11 @@ class DiscussionView(LoginRequiredMixin, DetailView):
 
         return context
 
-class PostView(LoginRequiredMixin, ListView):
+class PostView(LoginRequiredMixin, HonorCodeRequired, ListView):
     model = Post
     template_name = 'post.html'
 
-class PostCreateView(LoginRequiredMixin, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, CreateView):
     model = Post
     template_name = 'discussions.html'
     form_class= PostForm

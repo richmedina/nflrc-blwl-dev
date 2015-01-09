@@ -2,6 +2,7 @@ from django.views.generic import TemplateView, DetailView
 
 from braces.views import LoginRequiredMixin
 
+from core.mixins import HonorCodeRequired
 from .models import Module, Lesson, LessonSection
 
 class HomeView(TemplateView):
@@ -12,7 +13,7 @@ class HomeView(TemplateView):
 		context['modules'] = Module.objects.all()
 		return context
 
-class ModuleView(LoginRequiredMixin, DetailView):
+class ModuleView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 	model = Module
 	template_name = 'module.html'
 
@@ -21,7 +22,7 @@ class ModuleView(LoginRequiredMixin, DetailView):
 		context['lessons'] = self.get_object().lessons.all()
 		return context
 
-class LessonView(LoginRequiredMixin, DetailView):
+class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 	model = Lesson
 	template_name = 'lesson.html'
 	context_object_name = 'lesson'
@@ -51,9 +52,6 @@ class LessonView(LoginRequiredMixin, DetailView):
 
 		return context
 
-
-class HonorAgreementView(TemplateView):
-	template_name = 'inactive.html'
 
 class LoginForbiddenView(TemplateView):
 	template_name = 'login-forbidden.html'
