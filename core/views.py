@@ -1,4 +1,5 @@
 from django.shortcuts import redirect
+from django.core.urlresolvers import reverse_lazy
 
 from django.views.generic import FormView
 
@@ -10,7 +11,7 @@ from .forms import HonorCodeForm
 class HonorCodeFormView(FormView):
     template_name = 'inactive.html'
     form_class = HonorCodeForm
-    success_url = '/'
+    success_url = reverse_lazy('home')
 
     def form_valid(self, form):
         if form.cleaned_data['honor_agreement']:
