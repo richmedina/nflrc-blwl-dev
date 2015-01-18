@@ -58,7 +58,7 @@ class LessonSection(models.Model):
         return '%s' % (self.content_type)
 
     def get_absolute_url(self):
-        return reverse('lesson_section', args=[str(self.lesson.slug), str(self.slug)])
+        return reverse('lesson_section', args=[str(self.lesson.slug), str(self.content_type)])
 
 
 class LessonQuiz(models.Model):
@@ -74,6 +74,21 @@ class LessonDiscussion(models.Model):
 
     def __unicode__(self):
         return '%s -- %s' % (self.lesson, self.thread)
+
+class PbllPage(models.Model):
+    title = models.CharField(max_length=512)
+    content = models.TextField(blank=True)
+    slug = models.SlugField(blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unicode(self.title))
+        super(PbllPage, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('pbllpage', args=[str(self.slug)])
 
 # class StackItem(models.Model):
 #     order = models.IntegerField(default=0)

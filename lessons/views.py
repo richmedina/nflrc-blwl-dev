@@ -1,15 +1,16 @@
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, UpdateView
 
 from braces.views import LoginRequiredMixin
 
 from core.mixins import HonorCodeRequired
-from .models import Module, Lesson, LessonSection
+from .models import Module, Lesson, LessonSection, PbllPage
 
 class HomeView(TemplateView):
 	template_name = 'index.html'
 
 	def get_context_data(self, **kwargs):
 		context = super(HomeView, self).get_context_data(**kwargs)
+		context['page_content'] = PbllPage.objects.get(pk=1)
 		context['modules'] = Module.objects.all()
 		return context
 
@@ -38,11 +39,11 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 		
 		try:
 			context['curr_section'] = self.kwargs['section']
-			context['section_items'] = LessonSection.objects.filter(content_type=self.kwargs['section'])
 		except:
 			context['curr_section'] = 'topic'
-			context['section_items'] = LessonSection.objects.filter(content_type='topic')		
 
+		context['section_items'] = self.get_object().sections.filter(content_type=context['curr_section'])
+		
 		try:
 			context['lesson_thread'] =  self.get_object().lesson_discussion.get().thread.slug
 			preview_replies = self.get_object().lesson_discussion.get().thread.replies.all().order_by('-modified')
@@ -52,6 +53,33 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 
 		return context
 
+class PbllPageView(DetailView):
+	model = PbllPage
+	template_name = "pbllpage.html"
+
+
+class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+	model = Module
+	template_name = "edit_form.html"
+	fields = ['title', 'description']
+
+class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+	model = Lesson
+	template_name = "edit_form.html"
+	fields = ['title', 'description']
+
+class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+	model = LessonSection
+	template_name = "edit_form.html"
+	fields = ['text', 'content_type']
 
 class LoginForbiddenView(TemplateView):
 	template_name = 'login-forbidden.html'
+
+class PbllPageUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+	model = PbllPage
+	template_name = "edit_form.html"
+	fields = ['title', 'content']
+	labels = {
+            'title': 'Editing a PBLL basic page:'
+        }

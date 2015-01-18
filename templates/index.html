@@ -3,20 +3,32 @@
 {% load staticfiles %}
 
 {% block content_container %}
+<div class="col-md-12">
+	<h2>{{ page_content.title }}
+		{% if user.is_staff %}<a href="{% url 'pbllpage_edit' slug=page_content.slug %}" class=""><small>edit</small></a>{% endif %}
+	</h2></div>
 
-<h2>Modules</h2>
-{% for i in modules %}
-	<div class="thumbnail blocks">
-	
-		<div class="button"><a class="button" href="{{ i.get_absolute_url }}"> <legend>{{ i }}</legend> </a></div>
-		{% for j in i.lessons.all %}
-			<div class="thumbnail">
-				<a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a>
-				<p>{{ j.description }}</p>
+<div class="col-md-12">{{ page_content.content }}</div>
+<div class="col-md-12">
+	<h2>Modules</h2>
+	{% for i in modules %}
+		<div class="thumbnail blocks">
+		
+			<div class="button">
+				{% if user.is_staff %}<a href="{% url 'module_edit' slug=i.slug %}" class="pull-right"><small>edit</small></a>{% endif %}
+				<a class="button" href="{{ i.get_absolute_url }}"> <legend>{{ i }}</legend> </a>
+
 			</div>
-		{% endfor %}		
-	
-	</div>
-{% endfor %}
+			{% for j in i.lessons.all %}
+				<div class="thumbnail">
+					{% if user.is_staff %}<a href="{% url 'lesson_edit' slug=j.slug %}" class="pull-right"><small>edit</small></a>{% endif %}
+					<a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a>
+					<p>{{ j.description }}</p>
+				</div>
+			{% endfor %}		
+		
+		</div>
+	{% endfor %}
+</div>
 
 {% endblock content_container %}
