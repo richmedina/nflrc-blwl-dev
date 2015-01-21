@@ -26,7 +26,7 @@
 				<div class="thumbnail">
 					{% if user.is_staff %}<a href="{% url 'lesson_edit' slug=j.slug %}" class="pull-right"><small>edit</small></a>{% endif %}
 					<a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a>
-					<p>{{ j.description }}</p>
+					<p>{{ j.description | safe }}</p>
 				</div>
 			{% endfor %}		
 		

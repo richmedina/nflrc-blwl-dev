@@ -68,6 +68,7 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
 
     def post_ajax(self, request, *args, **kwargs):
         postform = PostForm(request.POST)
+        print request.POST
         if postform.is_valid():
 
             new_post = postform.save()
@@ -83,3 +84,4 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             data = postform.errors
             print 'Errors?' , data
             return self.render_json_response(data)
+

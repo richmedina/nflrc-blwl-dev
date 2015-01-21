@@ -1,9 +1,11 @@
 from django.views.generic import TemplateView, DetailView, UpdateView
+from django import forms
 
 from braces.views import LoginRequiredMixin
 
 from core.mixins import HonorCodeRequired
 from .models import Module, Lesson, LessonSection, PbllPage
+from .forms import ModuleUpdateForm, LessonUpdateForm, LessonSectionUpdateForm
 
 class HomeView(TemplateView):
 	template_name = 'index.html'
@@ -61,17 +63,17 @@ class PbllPageView(DetailView):
 class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Module
 	template_name = "edit_form.html"
-	fields = ['title', 'description']
+	form_class = ModuleUpdateForm
 
 class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Lesson
 	template_name = "edit_form.html"
-	fields = ['title', 'description']
+	form_class = LessonUpdateForm
 
 class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = LessonSection
 	template_name = "edit_form.html"
-	fields = ['text', 'content_type']
+	form_class = LessonSectionUpdateForm
 
 class LoginForbiddenView(TemplateView):
 	template_name = 'login-forbidden.html'

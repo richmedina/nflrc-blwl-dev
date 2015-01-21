@@ -7,43 +7,28 @@ class ModuleUpdateForm(forms.ModelForm):
     class Meta:
         model = Module
         fields = ['title', 'description']
-        """
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 2, 'cols': 80}),
-            'creator': forms.HiddenInput(),
-            'parent_post': forms.HiddenInput(), 
+            'text': forms.Textarea(attrs={'rows': 2, 'cols': 80, 'class': 'editor'}),
+             
         }
-        labels = {
-            'text': ''
-        }
-        """
+        
+       
 
 class LessonUpdateForm(forms.ModelForm):
     class Meta:
         model = Lesson
         fields = ['title', 'description']
-        """
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 2, 'cols': 80}),
-            'creator': forms.HiddenInput(),
-            'parent_post': forms.HiddenInput(), 
+            'text': forms.Textarea(attrs={'rows': 2, 'cols': 80, 'class': 'editor'}),
+
         }
-        labels = {
-            'text': ''
-        }
-        """
+        
+       
 
 class LessonSectionUpdateForm(forms.ModelForm):
     class Meta:
         model = LessonSection
-        fields = ['title', 'description']
-        """
+        fields = ['text', 'content_type']
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 2, 'cols': 80}),
-            'creator': forms.HiddenInput(),
-            'parent_post': forms.HiddenInput(), 
-        }
-        labels = {
-            'text': ''
-        }
-        """
+            'text': forms.Textarea(attrs={'rows': 2, 'cols': 80, 'class': 'editor'}),
+        }    
