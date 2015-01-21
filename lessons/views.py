@@ -49,7 +49,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 		try:
 			context['lesson_thread'] =  self.get_object().lesson_discussion.get().thread.slug
 			preview_replies = self.get_object().lesson_discussion.get().thread.replies.all().order_by('-modified')
-			context['lesson_thread_replies'] = preview_replies[0:5]
+			context['lesson_thread_replies'] = preview_replies[0:1]
 		except:
 			context['lesson_thread'] = None
 
@@ -63,12 +63,14 @@ class PbllPageView(DetailView):
 class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Module
 	template_name = "edit_form.html"
-	form_class = ModuleUpdateForm
+	fields = ['title', 'description']
+	# form_class = ModuleUpdateForm
 
 class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Lesson
 	template_name = "edit_form.html"
-	form_class = LessonUpdateForm
+	fields = ['title', 'description']
+	# form_class = LessonUpdateForm
 
 class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = LessonSection

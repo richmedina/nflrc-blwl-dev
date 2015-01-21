@@ -13,7 +13,8 @@ CONTENT_TYPES = (
     ('topic', 'Topic'),
     ('media', 'Consider This'),
     ('reading', 'More To Consider'),
-    ('quiz', 'Test Yourself'),    
+    ('quiz', 'Test Yourself'), 
+    ('apply', 'Apply'),    
 )
 
 class Module(models.Model):

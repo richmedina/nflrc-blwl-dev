@@ -3,6 +3,7 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 
+
 {% block content_container %}
 
 <div class="row">
@@ -24,10 +25,12 @@
 	    <div class="well">
 	        <form id="{{thread.id}}-postform" class="postform" action="{% url 'create_post'%}" method="post" data-reply_target="{{thread.id}}-replies">{% csrf_token %}
 	            {{ postform|crispy }}
-	            <p><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></p>
+	            <p></p>
+	            <div style="text-align: right"><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></div>
+	            <p></p>
 	        </form>
 	    </div>
-	        
+	     
 	<!-- thread replies -->
 	    <dl id="{{thread.id}}-replies" class="reply-block">		    
 	    {% for j in replies  %}
@@ -36,9 +39,8 @@
 		    		{{ j.subject }}
 		    		<small>{{ j.creator }}</small>
 		    		<small style="float: right">{{ j.modified|date:"M j Y" }}</small>
-		    		
 		    	</dt>
-		    	<dd>{{ j.text }}</dd>
+		    	<dd>{{ j.text | safe }}</dd>
 		    </div>
 	    {% endfor %}
 		</dl>
@@ -61,6 +63,6 @@
 
 {% endblock content_container %}
 
- 
+   
 {% block js_include %} <script src="{% static 'js/discussions.js' %}"></script>{% endblock js_include %}
 

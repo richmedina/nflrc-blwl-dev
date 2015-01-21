@@ -99,8 +99,6 @@ STATICFILES_DIRS = (PROJECT_DIR.child('static'),)
 STATIC_URL = '/static/'
 
 
-
-
 SOCIAL_AUTH_PIPELINE = (
     # Get the information we can about the user and return it in a simple
     # format to create the user instance later. On some cases the details are

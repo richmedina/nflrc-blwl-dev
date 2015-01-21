@@ -8,13 +8,12 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['subject', 'text', 'creator', 'parent_post']
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 2, 'cols': 80}),
+            # 'text': forms.Textarea(attrs={'rows': 2, 'cols': 80}),
             'creator': forms.HiddenInput(),
             'parent_post': forms.HiddenInput(), 
         }
-        labels = {
-            'text': ''
-        }
+
+        
 
 
 class PostReplyForm(forms.ModelForm):
@@ -27,6 +26,4 @@ class PostReplyForm(forms.ModelForm):
             'creator': forms.HiddenInput(),
             'parent_post': forms.HiddenInput(), 
         }
-        labels = {
-            'text': ''
-        }
+        labels = { 'text': ''}

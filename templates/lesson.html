@@ -5,22 +5,13 @@
 {% block content_container %}
 
 <div class="row">
-    
+    <div class="col-md-12"><h2><a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> {{ lesson }}</h2></div>
     <div class="col-md-9">
-    	<div id="breadcrumbs" class="row">
-    		<div class="col-md-12"> 
-	    		<div>
-	    			<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> >> 
-	    			<a href="{{ lesson.get_absolute_url }}"> {{ lesson }}</a>
-	    			{% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class=""> <small>[ edit ]</small> </a>{% endif %}
-	    		</div>
-    		</div>
-    	</div>
-		
-		<div class="row">			
+		<div class="row">
+					
 			{% for item in section_items %}
 				<div class="col-md-12">
-
+			
 					<h2>{{ item.get_content_type_display }}
 						{% if user.is_staff %}<a href="{% url 'lesson_section_edit' lesson=lesson.slug pk=item.id %}" class=""><small>edit</small></a>{% endif %}
 					</h2>
@@ -32,36 +23,37 @@
     </div>
     
     <div class="col-md-3">        
-		<a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn btn {% if curr_section == 'topic' %}active{% endif %}">Topic</a>
-		<a href="{% url 'lesson_section' slug=lesson.slug section='media' %}" class="menu_btn btn  {% if curr_section == 'media' %}active{% endif %}">Watch</a>
-
+	    <div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a></div>
+	    <div><a href="{% url 'lesson_section' slug=lesson.slug section='media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
+	    
 		{% if quiz %} 
-			<a href="{% url 'lesson_quiz' quiz_name=quiz %}" class="menu_btn btn ">Test Yourself</a> 
+			<div><a href="{% url 'lesson_quiz' quiz_name=quiz %}" class="menu_btn ">Test Yourself</a></div>
 		{% endif %} 
 		
-		<a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}" class="menu_btn btn  {% if curr_section == 'reading' %}active{% endif %}">Read</a>
-		
+		<div><a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}" class="menu_btn {% if curr_section == 'reading' %}active{% endif %}">More to Consider</a></div>
 
 		
 		{% if lesson_thread %}
-			<a href="{% url 'discussion_select' slug=lesson_thread %}" class="menu_btn btn ">Get Involved</a>
+			<div><a href="{% url 'discussion_select' slug=lesson_thread %}" class="menu_btn ">Get Involved</a></div>
 			<div class="well reply_preview_list">
 				
-				<div style="text-align: left"><small>Recent Posts</small></div>
+				<div style="text-align: left"><small>Latest posting</small></div>
 				{% for i in lesson_thread_replies %}
 				<a href="{% url 'discussion_select' slug=lesson_thread %}#post_{{i.id}}">
 					<div class="well">
 						<i class="fa fa-quote-left"></i>							
-						<div class="reply_preview"><small><i>{{ i.text|truncatewords:10 }}</i></small></div>
-						<small style="float: right">{{ i.creator.first_name }}</small>
+						<div class="reply_preview"><small><i>{{ i.text|truncatewords:10 | safe }}</i></small></div>
 					</div>
-				</a>					
+					
+				</a>
+				<small class="pull-right" alt="{{ i.creator.email }}">{{ i.creator.first_name }}</small>					
 				{% empty %}
 					<div class="well"><small>No recent posts. Be the first!</small></div>
 				{% endfor %}
-
-			</div>									
-		{% endif %}				
+			</div>
+		{% endif %}
+		
+		<div><a href="{% url 'lesson_section' slug=lesson.slug section='apply' %}" class="menu_btn {% if curr_section == 'apply' %}active{% endif %}">Apply</a>	</div>
     </div>
 </div>
     
