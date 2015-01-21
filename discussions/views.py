@@ -52,7 +52,7 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         # form = self.get_form(self.get_form_class())
 
         context['thread'] = thread_post
-        context['thread_list'] = Post.objects.filter(parent_post=None).order_by('-created')
+        context['thread_list'] = Post.objects.filter(parent_post=None).order_by('created')
         context['lesson'] = lesson
         context['replies'] = replies
         context['postform'] = form
