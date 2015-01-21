@@ -8,6 +8,6 @@
 		{% if user.is_staff %}<a href="{% url 'pbllpage_edit' slug=object.slug %}" class=""><small>edit</small></a>{% endif %}
 	</h2></div>
 
-<div class="col-md-12">{{ object.content }}</div>
+<div class="col-md-12">{{ object.content | safe }}</div>
 
 {% endblock content_container %}

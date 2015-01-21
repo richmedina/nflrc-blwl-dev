@@ -10,7 +10,7 @@ class HomeView(TemplateView):
 
 	def get_context_data(self, **kwargs):
 		context = super(HomeView, self).get_context_data(**kwargs)
-		context['page_content'] = PbllPage.objects.get(pk=1)
+		context['pbllpage'] = PbllPage.objects.get(pk=1)
 		context['modules'] = Module.objects.all()
 		return context
 

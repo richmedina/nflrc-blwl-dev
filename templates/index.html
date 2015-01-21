@@ -4,11 +4,14 @@
 
 {% block content_container %}
 <div class="col-md-12">
-	<h2>{{ page_content.title }}
-		{% if user.is_staff %}<a href="{% url 'pbllpage_edit' slug=page_content.slug %}" class=""><small>edit</small></a>{% endif %}
-	</h2></div>
+	<h2>{{ pbllpage.title }}
+		{% if user.is_staff %}
+		<a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class=""><small>edit</small></a>
+		{% endif %}
+	</h2>
+</div>
 
-<div class="col-md-12">{{ page_content.content }}</div>
+<div class="col-md-12">{{ pbllpage.content|safe }}</div>
 <div class="col-md-12">
 	<h2>Modules</h2>
 	{% for i in modules %}
