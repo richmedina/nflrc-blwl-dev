@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse_lazy
 from django.views.generic import FormView
 
 from core.models import Whitelist
+from lessons.models import PbllPage
 from .forms import HonorCodeForm
 
 
@@ -22,3 +23,8 @@ class HonorCodeFormView(FormView):
         	return redirect('home')
 
         return super(HonorCodeFormView, self).form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super(HonorCodeFormView, self).get_context_data(**kwargs)
+        context['pbllpage'] = PbllPage.objects.get(slug='honor-agreement')
+        return context

@@ -12,15 +12,14 @@
     		<p>Please <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">sign in</a> before proceeding.</p>
 
     	{% else %}
+            <h2>
+                {{ pbllpage.title }}
+                {% if user.is_staff %}
+                    <a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class=""><small>edit</small></a>
+                {% endif %}
+            </h2>
 
-    		<p>
-    			<h3>By participating in this institute I agree to the following:</h3>
-
-				<h4>I will treat others with respect.</h4> 
-				<h4>I will not record or make quiz responses available to others.</h4>
-				<h4>All individual work I submit for grading will be my own work.</h4>
-				<h4>I will not engage in activities that will dishonestly improve my results or modify the results of other participants.</h4>
-			</p>
+    		{{ pbllpage.content | safe }}
     	
     	{% endif %}
 

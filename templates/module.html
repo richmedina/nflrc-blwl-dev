@@ -10,7 +10,10 @@
 </h2>
 <h3> Lessons </h3>
 {% for i in lessons %}
-	<div> <a href="{{ i.get_absolute_url }}"> {{ i }} </a> </div>
+	<div>
+		<a href="{{ i.get_absolute_url }}"> {{ i }} </a>
+		{% if user.is_staff %}<a href="{% url 'lesson_edit' slug=i.slug %}"><small>edit</small></a>{% endif %}
+	</div>
 {% endfor %}
     
 {% endblock content_container %}
