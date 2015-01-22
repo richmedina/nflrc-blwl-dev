@@ -20,14 +20,16 @@ class LessonDiscussionAdminModelForm(ModelForm):
         model = LessonDiscussion
         fields = ['thread', 'lesson']
 
-
+class LessonSectionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'text', 'content_type', 'lesson')
+    list_filter = ['lesson', 'content_type']   
 
 class LessonDiscussionAdmin(admin.ModelAdmin):
 	form = LessonDiscussionAdminModelForm
 
 admin.site.register(Module)
 admin.site.register(Lesson)
-admin.site.register(LessonSection)
+admin.site.register(LessonSection, LessonSectionAdmin)
 admin.site.register(LessonQuiz)
 admin.site.register(LessonDiscussion, LessonDiscussionAdmin)
 admin.site.register(Post)
