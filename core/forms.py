@@ -10,5 +10,5 @@ class HonorCodeForm(ModelForm):
     	model = Whitelist
     	fields = ['honor_agreement']
     	labels = {
-            'honor_agreement': _('Scout\'s Honor'),
+            'honor_agreement': _('I have read, acknowledge, and agree to the above statements'),
         }
