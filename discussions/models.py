@@ -10,6 +10,7 @@ class Post(TimeStampedModel):
     creator = models.ForeignKey(User)
     subject = models.CharField(max_length=512)
     parent_post = models.ForeignKey('self', blank=True, null=True, related_name='replies')
+    deleted = models.BooleanField(default=False)
     slug = models.SlugField(null=True, blank=True)
 
     def save(self, *args, **kwargs):

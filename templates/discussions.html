@@ -26,8 +26,10 @@
 	        <form id="{{thread.id}}-postform" class="postform" action="{% url 'create_post'%}" method="post" data-reply_target="{{thread.id}}-replies">{% csrf_token %}
 	            {{ postform|crispy }}
 	            <p></p>
+
 	            <div style="text-align: right"><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></div>
-	            <p></p>
+	            
+	            
 	        </form>
 	    </div>
 	     
@@ -41,6 +43,7 @@
 		    		<small style="float: right">{{ j.modified|date:"M j Y" }}</small>
 		    	</dt>
 		    	<dd>{{ j.text | safe }}</dd>
+		    	<div style="text-align: right"><a href="{% url 'delete_post' j.id %}"><small>remove</small></a></div>
 		    </div>
 	    {% endfor %}
 		</dl>

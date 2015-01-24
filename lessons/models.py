@@ -38,6 +38,7 @@ class Lesson(TimeStampedModel):
     description = models.TextField(blank=True)
     slug = models.SlugField(blank=True)
     module = models.ForeignKey(Module, related_name='lessons')
+    active = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.title))
@@ -51,7 +52,7 @@ class Lesson(TimeStampedModel):
 
 
 class LessonSection(models.Model):
-    text = models.TextField()
+    text = models.TextField(default='Coming soon...')
     content_type = models.CharField(max_length=64, choices=CONTENT_TYPES, default='text')
     lesson = models.ForeignKey(Lesson, related_name='sections')
     

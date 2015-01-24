@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView, DeleteView
 
 from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, LoginRequiredMixin
 
@@ -45,7 +45,7 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         except:
             lesson = None
 
-        replies = thread_post.replies.all().order_by('-modified')
+        replies = thread_post.replies.all().filter(deleted=False).order_by('-modified')
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject
         initial_post_data['parent_post'] = thread_post.id  
         form = PostReplyForm(initial=initial_post_data)
@@ -86,4 +86,35 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             data = postform.errors
             print 'Errors?' , data
             return self.render_json_response(data)
+
+class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, DetailView):
+    model = Post
+    template_name = 'discussions.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PostDeleteView, self).get_context_data(**kwargs)
+        post = self.get_object()
+        post.deleted = True
+        post.save()
+        return context
+
+#     def post_ajax(self, request, *args, **kwargs):
+#         postform = PostReplyForm(request.POST)
+#         print postform
+#         if postform.is_valid():
+
+#             new_post = postform.save()
+#             data = {}
+#             data['modified'] = new_post.modified.strftime('%b %d %Y %H:%M')
+#             data['text'] = new_post.text
+#             data['creator'] = new_post.creator.username
+#             data['subject'] = new_post.subject
+
+#             # print self.render_json_response(data)
+#             return self.render_json_response(data)
+#         else:
+#             data = postform.errors
+#             print 'Errors?' , data
+#             return self.render_json_response(data) 
+
 

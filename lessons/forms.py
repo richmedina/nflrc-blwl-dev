@@ -17,7 +17,7 @@ class ModuleUpdateForm(forms.ModelForm):
 class LessonUpdateForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'active']
         widgets = {
             'text': forms.Textarea(attrs={'rows': 2, 'cols': 80, 'class': 'editor'}),
 

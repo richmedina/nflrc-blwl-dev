@@ -69,7 +69,7 @@ class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Lesson
 	template_name = "edit_form.html"
-	fields = ['title', 'description']
+	fields = ['title', 'description', 'active']
 	# form_class = LessonUpdateForm
 
 class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
