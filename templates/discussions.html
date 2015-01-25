@@ -43,7 +43,7 @@
 		    		<small style="float: right">{{ j.modified|date:"M j Y" }}</small>
 		    	</dt>
 		    	<dd>{{ j.text | safe }}</dd>
-		    	<div style="text-align: right"><a href="{% url 'delete_post' j.id %}"><small>remove</small></a></div>
+		    	{% comment %}<div style="text-align: right"><a href="{% url 'delete_post' j.id %}"><small>remove</small></a></div>{% endcomment %}
 		    </div>
 	    {% endfor %}
 		</dl>
