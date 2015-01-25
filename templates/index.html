@@ -12,6 +12,8 @@
 </div>
 
 <div class="col-md-12">{{ pbllpage.content|safe }}</div>
+
+
 <div class="col-md-12">
 	<h2>Modules</h2>
 	{% for i in modules %}
@@ -19,14 +21,19 @@
 		
 			<div class="button">
 				{% if user.is_staff %}<a href="{% url 'module_edit' slug=i.slug %}" class="pull-right"><small>edit</small></a>{% endif %}
-				<a class="button" href="{{ i.get_absolute_url }}"> <legend>{{ i }}</legend> </a>
+				<legend>{{ i }}</legend>
 
 			</div>
 			{% for j in i.lessons.all %}
 				<div class="thumbnail">
-					{% if user.is_staff %}<a href="{% url 'lesson_edit' slug=j.slug %}" class="pull-right"><small>edit</small></a>{% endif %}
-					<a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a>
-					<p>{{ j.description | safe }}</p>
+					{% if user.is_staff %}
+						<a href="{% url 'lesson_edit' slug=j.slug %}" class="pull-right"><small>edit</small></a>
+					{% endif %}
+					{% if user.is_staff or j.active %}
+						<a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a>
+					{% else %}
+						<p class="inactive_lesson">{{ j }}</p>
+					{% endif %}
 				</div>
 			{% endfor %}		
 		

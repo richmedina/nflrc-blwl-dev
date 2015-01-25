@@ -10,7 +10,7 @@ from quiz.models import Quiz
 from discussions.models import Post
 
 CONTENT_TYPES = (
-    ('topic', 'Topic'),
+    ('topic', 'Topics'),
     ('media', 'Consider This'),
     ('reading', 'More To Consider'),
     ('quiz', 'Test Yourself'), 

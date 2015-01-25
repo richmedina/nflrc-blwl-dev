@@ -6,7 +6,9 @@
 {% block content_container %}
 <div class="row">
     <div class="col-md-12"><h2><a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> {{ lesson }}</h2></div>
-
+    {% if not lesson.active and not user.is_staff %}
+      <div class="col-md-12">This lesson has not been activated yet.</div>
+    {% else %}
     <div class="col-md-9">
       
 <!-- Content Panel Display    -->
@@ -120,7 +122,7 @@
     <div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Apply</a></div> 
   </div>
 <!-- End Menu -->
-
+{% endif %}
 </div>
 
 

@@ -11,8 +11,13 @@
 <h3> Lessons </h3>
 {% for i in lessons %}
 	<div>
-		<a href="{{ i.get_absolute_url }}"> {{ i }} </a>
-		{% if user.is_staff %}<a href="{% url 'lesson_edit' slug=i.slug %}"><small>edit</small></a>{% endif %}
+        {% if user.is_staff or i.active %}
+            <a href="{{ i.get_absolute_url }}"> {{ i }} </a>
+        {% else %}
+            <p class="inactive_lesson">{{ i }}</p>
+        {% endif %}
+
+		 {% if user.is_staff %}<a href="{% url 'lesson_edit' slug=i.slug %}"><small>edit</small> </a>{% if not i.active %}<small class="label label-danger">inactive</small>{% endif %}{% endif %}
 	</div>
 {% endfor %}
     

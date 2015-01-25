@@ -48,6 +48,10 @@ body {
 	color: #000;
 }
 
+.inactive_lesson {
+	color: #D0D0D0 ; 
+}
+
 .reply_preview_list {
 	color: #B2B3B3;
 	text-align: left;
