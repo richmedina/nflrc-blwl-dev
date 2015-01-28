@@ -19,7 +19,7 @@
 		<small>{{ thread.creator }}</small>
 		<small style="float: right">{{ thread.modified|date:"M j Y" }}</small>
 		    
-	    <p>{{ thread.text }}</p>
+	    <p>{{ thread.text  | safe }}</p>
 
 	<!-- thread post form -->
 	    <div class="well">
