@@ -15,6 +15,31 @@ jQuery(function($) {
 	});
 
 	
+    $(".post_delete").on("click", function(event) {
+        event.preventDefault();
+        console.log($(this).attr('data-target'));
+
+        var d = $(this).attr('data-target');
+        console.log(d);
+        $.ajax({
+            url : $(this).attr('data-handler'),
+            type : "POST",
+            data : {post: d},
+            dataType : "json",
+
+            // handle a successful response
+            success : function(json) {
+                console.log("success")
+                $("#"+event.target.id).remove();
+            },
+
+            // handle a non-successful response
+            error : function(xhr, errmsg, err) {
+                // console.log(xhr.status + ": " + errmsg ); // provide a bit more info about the error to the console
+            }
+        });       
+    });
+
     $( ".postform" ).submit(function( event ) {
         event.preventDefault();
         

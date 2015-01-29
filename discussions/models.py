@@ -17,5 +17,9 @@ class Post(TimeStampedModel):
         self.slug = slugify(unicode(self.subject))
         super(Post, self).save(*args, **kwargs)
 
+
+    def delete(self, *args, **kwargs):
+        self.deleted = True
+
     def __unicode__(self):
         return self.subject

@@ -21,7 +21,7 @@
 		    	</a>
 		    	<small class="" style="font-size: 0.3; float: right"><i>{{ i.reply_count }} replies</i></small>
 		    	
-		    	
+		    	<a href="{% url 'edit_post' i.header.id %}">edit</a>
 		    	<a href="{% url 'discussion_select' i.header.slug %}">
 			    	<h2>{{ i.header.subject }}</h2>
 			    	<small>{{ i.header.creator }}</small>
@@ -29,7 +29,7 @@
 		    	</a>
 			    
 			    <!-- thread header text -->
-			    <p>{{ i.header.text }}</p>
+			    <p>{{ i.header.text | safe }}</p>
 			    
 			
 			</div>
