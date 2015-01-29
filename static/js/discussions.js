@@ -17,14 +17,13 @@ jQuery(function($) {
 	
     $(".post_delete").on("click", function(event) {
         event.preventDefault();
-        console.log($(this).attr('data-target'));
-
         var d = $(this).attr('data-target');
         console.log(d);
+        console.log($(this).attr('data-handler'));
         $.ajax({
             url : $(this).attr('data-handler'),
-            type : "POST",
-            data : {post: d},
+            type : "GET",
+            // data : {deletepost: d},
             dataType : "json",
 
             // handle a successful response

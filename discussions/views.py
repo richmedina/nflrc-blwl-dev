@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView, ListView, DetailView, DeleteView, UpdateView, FormView
+from django.views.generic import View, TemplateView, CreateView, ListView, DetailView, UpdateView, FormView
 from django.core.urlresolvers import reverse
 
 from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, LoginRequiredMixin
@@ -97,20 +97,14 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             print 'Errors?' , data
             return self.render_json_response(data)
 
-class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, FormView):
-    # model = Post
-    template_name = 'discussions.html'
+class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, View):
 
+    def get_ajax(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        print self
 
-    def post_ajax(self, request, *args, **kwargs):
-        print request
-        if request:
-            data = 'data removed'
-            # print self.render_json_response(data)
-            return self.render_json_response(data)
-        else:
-            data = postform.errors
-            print 'Errors?' , data
-            return self.render_json_response(data) 
+        context_dict = {}
+
+        return self.render_json_response(context_dict)
 
 

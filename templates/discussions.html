@@ -46,7 +46,7 @@
 		    	<dd>{{ j.text | safe }}</dd>
 		    	<div style="text-align: right">
 		    			
-		    			<button id="post-{{j.id}}-del" data-handler="{% url 'delete_post' j.id %}" data-target="{{j.id}}" class="post_delete button">remove</button>
+		    			<button id="post-{{j.id}}-del" data-handler="{% url 'delete_post' j.id %}" data-target="{{j.id}}" class="post_delete button">{% csrf_token %}remove</button>
 		    		</form>
 		    	</div>
 		    </div>
