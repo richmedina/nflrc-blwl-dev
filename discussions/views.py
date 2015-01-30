@@ -107,7 +107,7 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             return self.render_json_response(data)
 
 class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, View):
-    
+   
     def post_ajax(self, request, *args, **kwargs):
         if request:
             try:
