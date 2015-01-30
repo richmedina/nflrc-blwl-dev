@@ -14,7 +14,7 @@ class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(DiscussionListView, self).get_context_data(**kwargs)
-        headers = Post.objects.filter(parent_post=None).order_by('-modified')
+        headers = Post.objects.filter(parent_post=None).order_by('created')
         threads = []
 
         for hdr in headers:
@@ -44,6 +44,12 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
             lesson = LessonDiscussion.objects.get(thread=thread_post).lesson
         except:
             lesson = None
+
+        try:
+            quiz_url = lesson.lesson_quiz.get().quiz.url
+            context['quiz'] =  quiz_url
+        except:
+            pass
 
         replies = thread_post.replies.all().filter(deleted=False).order_by('-created')
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject

@@ -204,7 +204,7 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
         context['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
         try:
             context['lesson_thread'] =  context['lesson'].lesson_discussion.get().thread.slug
-            preview_replies = context['lesson'].lesson_discussion.get().thread.replies.all().order_by('-modified')
+            preview_replies = context['lesson'].lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
             context['lesson_thread_replies'] = preview_replies[0:1]
 
         except:
@@ -259,8 +259,8 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
             results['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
             try:
                 results['lesson_thread'] =  results['lesson'].lesson_discussion.get().thread.slug
-                preview_replies = results['lesson'].lesson_discussion.get().thread.replies.all().order_by('-modified')
-                results['lesson_thread_replies'] = preview_replies[0:5]
+                preview_replies = results['lesson'].lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
+                results['lesson_thread_replies'] = preview_replies[0:1]
             except:
                 results['lesson_thread'] = None
             # --Custom CLT

@@ -11,25 +11,28 @@
     	<h1>Discussions</h1>		      
 		{% for i in threads  %}
 		
-			<div class="thumbnail blocks">
+			<div class="thumbnail blocks-wide">
 			
 				
 				<!-- thread header -->
 			    
 		    	<a href="{{ i.lesson.get_absolute_url }}">
-		    		<small class="badge">{{ i.lesson }}</small>
+		    		<small class="btn btn-sm btn-success">{{ i.lesson }}</small>
 		    	</a>
 		    	<small class="" style="font-size: 0.3; float: right"><i>{{ i.reply_count }} replies</i></small>
 		    	
-		    	<a href="{% url 'edit_post' i.header.id %}">edit</a>
+		    	
 		    	<a href="{% url 'discussion_select' i.header.slug %}">
 			    	<h2>{{ i.header.subject }}</h2>
-			    	<small>{{ i.header.creator }}</small>
-			    	<small style="float: right">{{ i.header.modified|date:"M j Y" }}</small>
-		    	</a>
+			    </a>
+		       
+		       	<small>{{ i.header.creator.first_name }}</small>
+		    	<small class="pull-right"> {{ i.header.modified|date:"M j Y" }} </small>
+		    	{% if user.is_staff or user == thread.creator %}<small class="pull-right"> <a href="{% url 'edit_post' i.header.id %}">edit</a>&nbsp; </small>{% endif %}
+		    	
 			    
 			    <!-- thread header text -->
-			    <p>{{ i.header.text | safe }}</p>
+			    <p>{{ i.header.text | truncatewords:70 | safe }}</p>
 			    
 			
 			</div>

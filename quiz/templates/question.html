@@ -105,7 +105,7 @@
 				<a href="{% url 'discussion_select' slug=lesson_thread %}#post_{{i.id}}">
 					<div class="well">
 						<i class="fa fa-quote-left"></i>							
-						<div class="reply_preview"><small><i>{{ i.text|truncatewords:10 | safe }}</i></small></div>
+						<div class="reply_preview"><small>{{ i.text|truncatewords:10 | safe }}</small></div>
 					</div>
 					
 				</a>

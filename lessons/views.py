@@ -48,7 +48,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 		
 		try:
 			context['lesson_thread'] =  self.get_object().lesson_discussion.get().thread.slug
-			preview_replies = self.get_object().lesson_discussion.get().thread.replies.all().order_by('-modified')
+			preview_replies = self.get_object().lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
 			context['lesson_thread_replies'] = preview_replies[0:1]
 		except:
 			context['lesson_thread'] = None

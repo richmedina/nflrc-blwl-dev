@@ -1,7 +1,7 @@
 /* base.css */
 body {
   padding-top: 80px;
-  padding-bottom: 50px;
+  padding-bottom: 75px;
   font-family: 'Roboto', sans-serif;
 }
 
@@ -33,6 +33,14 @@ body {
 	width: 200px; 
 	float: left; 
 	margin: 10px
+}
+
+.blocks-wide {
+	position: relative; 
+	width: 40%; 
+	float: left; 
+	margin: 10px;
+	padding: 20px;	
 }
 
 .menu_btn {
