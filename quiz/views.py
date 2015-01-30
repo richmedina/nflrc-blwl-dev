@@ -205,7 +205,7 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
         try:
             context['lesson_thread'] =  context['lesson'].lesson_discussion.get().thread.slug
             preview_replies = context['lesson'].lesson_discussion.get().thread.replies.all().order_by('-modified')
-            context['lesson_thread_replies'] = preview_replies[0:5]
+            context['lesson_thread_replies'] = preview_replies[0:1]
 
         except:
             context['lesson_thread'] = None

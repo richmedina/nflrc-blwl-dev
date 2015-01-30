@@ -7,15 +7,12 @@
 {% block content_container %}
 
 <div class="row">
-
+	<div class="col-md-12">{% if lesson %}<h2><a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> {{ lesson }}</h2>{% endif %}</div>
     <div class="col-md-9">
 		<h1>Discussions</h1>    					
 	<!-- thread header -->			    
-		<h3>{{ thread.subject }} {{thread}}
-			<a href="{% url 'edit_post' thread.id %}">edit</a>
-			<a href="{{ lesson.get_absolute_url }}">
-				<small class="badge" style="float: right">{{ lesson }}</small>
-			</a>
+		<h3>{{ thread.subject }}
+			{% if user.is_staff or user == thread.creator %}<a href="{% url 'edit_post' thread.id %}">edit</a>{% endif %}
 		</h3>
 		<small>{{ thread.creator }}</small>
 		<small style="float: right">{{ thread.modified|date:"M j Y" }}</small>
@@ -28,7 +25,7 @@
 	            {{ postform|crispy }}
 	            <p></p>
 
-	            <div style="text-align: right"><input id="post_submit_btn" type="submit" class="btn btn-default" value="Add Post"/></div>
+	            <div style="text-align: right"><input id="post_submit_btn" type="submit" class="btn btn-success btn-sm" value="Add Post"/></div>
 	            
 	            
 	        </form>
@@ -39,34 +36,42 @@
 	    {% for j in replies  %}
 		    <div id="post_{{j.id}}" class="well" style="margin-left: 30px">
 		    	<dt>
-		    		{{ j.subject }}
-		    		<small>{{ j.creator }}</small>
-		    		<small style="float: right">{{ j.modified|date:"M j Y" }}</small>
+		    		{{ j.parent_post.subject }}
+		    		<small>{% if user == j.creator %}me{% else %}{{ j.creator }}{% endif %}</small>
+		    		<small style="float: right"> {{ j.modified|date:"M j Y" }} </small>
+		    		{% if user.is_staff or user == j.creator %}<small style="float: right">&nbsp;<a href="{% url 'edit_post' j.id %}">edit</a>&nbsp;</small>{% endif %}
 		    	</dt>
 		    	<dd>{{ j.text | safe }}</dd>
 		    	<div style="text-align: right">
-		    			
-		    			<button id="post-{{j.id}}-del" data-handler="{% url 'delete_post' j.id %}" data-target="{{j.id}}" class="post_delete button">remove</button>
-		    		</form>
+	    			{% if user.is_staff or user == j.creator %}
+		    			<form class="post_delete" method="post" data-reply-target="post_{{j.id}}" action="{% url 'delete_post' %}">{% csrf_token %}
+		    				<input type="hidden" name="post" value="{{ j.id }}"/>
+		    				<input type="submit" class="btn btn-xs btn-danger" value="X"/>
+		    			</form>
+	    			{% endif %}
 		    	</div>
 		    </div>
 	    {% endfor %}
 		</dl>
 
 	</div>	
-    
-    <div class="col-md-3">
-    	<h1>Threads</h1>
-    	<div class="row">
-			<div class="col-md-12 button-group">
-			{% for i in thread_list  %}
-				<a href="{% url 'discussion_select' i.slug %}" class="menu_btn btn {% if i.id == thread.id %}active{% endif %}">{{i.subject}}</a>
-			{% endfor %}
-				<a href="{% url 'discussion' %}" class="menu_btn btn"> All </a>
-			</div>	
-		</div>
-    </div>
 
+    <div class="col-md-3">
+    	{% if lesson %}       
+		    <div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a></div>
+		    <div><a href="{% url 'lesson_section' slug=lesson.slug section='media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
+		    
+			{% if quiz %} 
+				<div><a href="{% url 'lesson_quiz' quiz_name=quiz %}" class="menu_btn ">Test Yourself</a></div>
+			{% endif %} 
+			
+			<div><a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}" class="menu_btn {% if curr_section == 'reading' %}active{% endif %}">More to Consider</a></div>
+			<div><a href="" class="menu_btn active">Get Involved</a></div>
+			
+			<div><a href="{% url 'lesson_section' slug=lesson.slug section='apply' %}" class="menu_btn {% if curr_section == 'apply' %}active{% endif %}">Apply</a>	</div>
+			<div><a href="{% url 'discussion' %}" class="menu_btn"> All Threads </a></div>
+		{% endif %}
+    </div>
 </div>
 
 {% endblock content_container %}

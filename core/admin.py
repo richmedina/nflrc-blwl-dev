@@ -28,8 +28,8 @@ class LessonDiscussionAdmin(admin.ModelAdmin):
 	form = LessonDiscussionAdminModelForm
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'text', 'creator', 'subject', 'deleted')
-    list_filter = ['subject', 'deleted']   
+    list_display = ('id', 'text', 'creator', 'subject', 'deleted', 'parent_post')
+    list_filter = ['deleted']   
 
 admin.site.register(Module)
 admin.site.register(Lesson)

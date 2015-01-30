@@ -15,29 +15,24 @@ jQuery(function($) {
 	});
 
 	
-    $(".post_delete").on("click", function(event) {
+    $(".post_delete").submit(function( event ) {
         event.preventDefault();
-        console.log($(this).attr('data-target'));
-
-        var d = $(this).attr('data-target');
-        console.log(d);
+        var container = $("#" + $(this).attr('data-reply-target'));
         $.ajax({
-            url : $(this).attr('data-handler'),
+            url : $(this).attr('action'),
             type : "POST",
-            data : {post: d},
+            data : $(this).serializeArray(),
             dataType : "json",
-
             // handle a successful response
             success : function(json) {
-                console.log("success")
-                $("#"+event.target.id).remove();
+                container.remove();
             },
 
             // handle a non-successful response
             error : function(xhr, errmsg, err) {
                 // console.log(xhr.status + ": " + errmsg ); // provide a bit more info about the error to the console
             }
-        });       
+        });
     });
 
     $( ".postform" ).submit(function( event ) {
@@ -60,8 +55,10 @@ jQuery(function($) {
             dataType : "json",
 
             // handle a successful response
+
+
             success : function(json) {
-            	var hdr = '<div class="well" style="margin-left: 30px"><dt>' + json.subject + ' <small> ' + json.creator + '</small><small style="float: right"> ' + json.modified + '</small></dt>';
+            	var hdr = '<div class="well" style="margin-left: 30px"><dt>' + json.subject + ' <small> ' + json.creator + '</small><small style="float: right"> ' + json.modified + '</small><small style="float: right">&nbsp;<a href="/discussions/post/' + json.id + '/edit/">edit</a>&nbsp;</small></dt>';
 				var body = '<dd>' + json.text + '</dd></div>';
 				var msg = hdr + ' ' + body;
 

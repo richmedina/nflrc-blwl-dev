@@ -1,7 +1,7 @@
-from django.views.generic import TemplateView, CreateView, ListView, DetailView, DeleteView, UpdateView, FormView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView, DeleteView, UpdateView, FormView, View
 from django.core.urlresolvers import reverse
 
-from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, LoginRequiredMixin
+from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, LoginRequiredMixin, StaffuserRequiredMixin
 
 from .models import Post
 from .forms import PostForm, PostReplyForm
@@ -33,7 +33,6 @@ class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
 class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = Post
     template_name = 'discussions.html'
-    # fields = ['subject', 'text', 'creator', 'parent_post']
     
     def get_context_data(self, **kwargs):
         context = super(DiscussionView, self).get_context_data(**kwargs)
@@ -46,7 +45,7 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         except:
             lesson = None
 
-        replies = thread_post.replies.all().filter(deleted=False).order_by('-modified')
+        replies = thread_post.replies.all().filter(deleted=False).order_by('-created')
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject
         initial_post_data['parent_post'] = thread_post.id  
         form = PostReplyForm(initial=initial_post_data)
@@ -69,7 +68,16 @@ class PostUpdateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, Upd
     form_class= PostReplyForm
     template_name = 'edit_form.html'
 
-    def get_success_url(self): 
+
+    def get_form_class(self):
+        form_class = super(PostUpdateView, self).get_form_class()
+        if self.request.user.is_staff:
+            form_class = PostForm
+        return form_class
+
+    def get_success_url(self):
+        if self.get_object().parent_post:
+            return reverse('discussion_select', args=[str(self.get_object().parent_post.slug)])
         return reverse('discussion_select', args=[str(self.get_object().slug)])
     
 
@@ -85,6 +93,7 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
 
             new_post = postform.save()
             data = {}
+            data['id'] = new_post.id
             data['modified'] = new_post.modified.strftime('%b %d %Y %H:%M')
             data['text'] = new_post.text
             data['creator'] = new_post.creator.username
@@ -97,20 +106,25 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             print 'Errors?' , data
             return self.render_json_response(data)
 
-class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, FormView):
-    # model = Post
-    template_name = 'discussions.html'
-
-
+class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, View):
+    
     def post_ajax(self, request, *args, **kwargs):
-        print request
         if request:
-            data = 'data removed'
-            # print self.render_json_response(data)
-            return self.render_json_response(data)
-        else:
-            data = postform.errors
-            print 'Errors?' , data
-            return self.render_json_response(data) 
+            try:
+                post = Post.objects.get(id=request.POST['post'])
+                
+                if post.creator == request.user or request.user.is_staff:
+                    post.deleted = True
+                    post.save()
+                    data = 'data removed'
+                    return self.render_json_response(data)
+                else:
+                    data = 'data not removed'
+
+            except Exception as e:
+                data = 'data not removed'
+                print 'Error: ', e
+        
+        return self.render_json_response(data) 
 
 

@@ -33,8 +33,9 @@ urlpatterns = patterns('',
     url(r'^discussions/(?P<slug>[-\w]+)/$', DiscussionView.as_view(), name='discussion_select' ),
     url(r'^discussions/$', DiscussionListView.as_view(), name='discussion' ),
     url(r'^discussions/post/add/$', PostCreateView.as_view(), name='create_post'),
+    url(r'^discussions/post/delete/$', PostDeleteView.as_view(), name='delete_post'),
     url(r'^discussions/post/(?P<pk>[-\w]+)/edit/$', PostUpdateView.as_view(), name='edit_post'),
-    url(r'^discussions/post/(?P<pk>[-\w]+)/delete/$', PostDeleteView.as_view(), name='delete_post'),
+    
 
     url(r'^pbllpage/(?P<slug>[-\w]+)/$', PbllPageView.as_view(), name='pbllpage' ),
     url(r'^pbllpage/edit/(?P<slug>[-\w]+)/$', PbllPageUpdateView.as_view(), name='pbllpage_edit' ),
