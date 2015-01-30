@@ -29,7 +29,8 @@
 					{% if user.is_staff %}
 						<a href="{% url 'lesson_edit' slug=j.slug %}" class="btn btn-default btn-xs pull-right">edit</a>
 					{% endif %}
-					{% if user.is_staff or j.active %}
+
+					{% if j.active %}
 						<small class="label label-success label-xs">&nbsp;&nbsp;</small> <a class="button" href="{{ j.get_absolute_url }}">{{ j }}</a>
 					{% else %}
 						<p class="inactive_lesson">{{ j }}</p>
