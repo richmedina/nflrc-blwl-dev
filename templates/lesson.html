@@ -8,7 +8,7 @@
     <div class="col-md-12">
     	<h2>
     		<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> 
-    		{% if user.is_staff %}<a href="{% url 'module_edit' lesson.module.slug %}" class=""><tiny>edit</tiny>{% endif %}
+    		{% if user.is_staff %}<a href="{% url 'module_edit' lesson.module.slug %}" class=""><small>edit</small></a>{% endif %}
     		{{ lesson }}
     	</h2>
 
