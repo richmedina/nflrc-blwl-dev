@@ -6,7 +6,7 @@
 <div class="col-md-12">
 	<h2>{{ pbllpage.title }}
 		{% if user.is_staff %}
-		<a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class=""><small>edit</small></a>
+		<a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class="btn btn-default btn-xs">edit</a>
 		{% endif %}
 	</h2>
 </div>
@@ -18,19 +18,19 @@
 	<h2>Modules</h2>
 	{% for i in modules %}
 		<div class="thumbnail blocks">
-		
+		  
 			<div class="button">
-				{% if user.is_staff %}<a href="{% url 'module_edit' slug=i.slug %}" class="pull-right"><small>edit</small></a>{% endif %}
+				{% if user.is_staff %}<a href="{% url 'module_edit' slug=i.slug %}" class="btn btn-default btn-xs pull-right">edit</a>{% endif %}
 				<legend>{{ i }}</legend>
 
 			</div>
 			{% for j in i.lessons.all %}
 				<div class="thumbnail">
 					{% if user.is_staff %}
-						<a href="{% url 'lesson_edit' slug=j.slug %}" class="pull-right"><small>edit</small></a>
+						<a href="{% url 'lesson_edit' slug=j.slug %}" class="btn btn-default btn-xs pull-right">edit</a>
 					{% endif %}
 					{% if user.is_staff or j.active %}
-						<a class="button" href="{{ j.get_absolute_url }}"> {{ j }} </a>
+						<small class="label label-success label-xs">&nbsp;&nbsp;</small> <a class="button" href="{{ j.get_absolute_url }}">{{ j }}</a>
 					{% else %}
 						<p class="inactive_lesson">{{ j }}</p>
 					{% endif %}

@@ -6,18 +6,24 @@
 
 <h2> 
 	{{ object.title }}  
-	{% if user.is_staff %}<a href="{% url 'module_edit' slug=object.slug %}" class=""><small>edit</small></a>{% endif %}
+	{% if user.is_staff %}<a href="{% url 'module_edit' slug=object.slug %}"  class="btn btn-default btn-xs">edit</a>{% endif %}
 </h2>
 <h3> Lessons </h3>
 {% for i in lessons %}
-	<div>
+	<div class="thumbnail blocks">
         {% if user.is_staff or i.active %}
+            {% if not i.active %}
+            	<small class="label label-default label-xs">&nbsp;&nbsp;</small>
+            {% else %}
+            	<small class="label label-success label-xs">&nbsp;&nbsp;</small>
+            {% endif %}
             <a href="{{ i.get_absolute_url }}"> {{ i }} </a>
         {% else %}
-            <p class="inactive_lesson">{{ i }}</p>
+            <span class="inactive_lesson">{{ i }}</span>
         {% endif %}
 
-		 {% if user.is_staff %}<a href="{% url 'lesson_edit' slug=i.slug %}"><small>edit</small> </a>{% if not i.active %}<small class="label label-danger">inactive</small>{% endif %}{% endif %}
+		 {% if user.is_staff %}<a href="{% url 'lesson_edit' slug=i.slug %}" class="btn btn-default btn-xs pull-right">edit</a>{% endif %}
+		 <div>{{i.description}}</div>
 	</div>
 {% endfor %}
     

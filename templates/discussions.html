@@ -7,12 +7,20 @@
 {% block content_container %}
 
 <div class="row">
-	<div class="col-md-12">{% if lesson %}<h2><a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> {{ lesson }}</h2>{% endif %}</div>
+	<div class="col-md-12">
+		{% if lesson %}
+			<h2>
+    			<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i>
+    			{{ lesson }} {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+			</h2>
+		{% endif %}
+	</div>
+
     <div class="col-md-9">
 		<h1>Discussions</h1>    					
 	<!-- thread header -->			    
 		<h3>{{ thread.subject }}
-			{% if user.is_staff or user == thread.creator %}<a href="{% url 'edit_post' thread.id %}">edit</a>{% endif %}
+			{% if user.is_staff or user == thread.creator %}<a href="{% url 'edit_post' thread.id %}" class="btn btn-primary btn-xs">edit</a>{% endif %}
 		</h3>
 		<small>{{ thread.creator }}</small>
 		<small style="float: right">{{ thread.modified|date:"M j Y" }}</small>
@@ -25,7 +33,7 @@
 	            {{ postform|crispy }}
 	            <p></p>
 
-	            <div style="text-align: right"><input id="post_submit_btn" type="submit" class="btn btn-success btn-sm" value="Add Post"/></div>
+	            <div style="text-align: right"><input id="post_submit_btn" type="submit" class="btn btn-success btn-sm btn-block" value="Add Post"/></div>
 	            
 	            
 	        </form>
@@ -38,15 +46,15 @@
 		    	<dt>
 		    		{{ j.parent_post.subject }}
 		    		<small>{% if user == j.creator %}me{% else %}{{ j.creator }}{% endif %}</small>
-		    		<small style="float: right"> {{ j.modified|date:"M j Y" }} </small>
-		    		{% if user.is_staff or user == j.creator %}<small style="float: right">&nbsp;<a href="{% url 'edit_post' j.id %}">edit</a>&nbsp;</small>{% endif %}
+		    		{% if user.is_staff or user == j.creator %}<small style="float: right">&nbsp;<a href="{% url 'edit_post' j.id %}" class="btn btn-primary btn-xs">edit</a>&nbsp;</small>{% endif %}
+		    		<small class="pull-right"> {{ j.modified|date:"M j Y" }} </small>
 		    	</dt>
 		    	<dd>{{ j.text | safe }}</dd>
 		    	<div style="text-align: right">
 	    			{% if user.is_staff or user == j.creator %}
 		    			<form class="post_delete" method="post" data-reply-target="post_{{j.id}}" action="{% url 'delete_post' %}">{% csrf_token %}
 		    				<input type="hidden" name="post" value="{{ j.id }}"/>
-		    				<input type="submit" class="btn btn-xs btn-danger" value="X"/>
+		    				<input type="submit" class="btn btn-xs btn-yield" title="Delete this post?" value="remove"/>
 		    			</form>
 	    			{% endif %}
 		    	</div>

@@ -9,7 +9,13 @@
 {% block content_container %}
 
 <div class="row">
-   <div class="col-md-12"><h2><a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> {{ lesson }}</h2></div>
+   <div class="col-md-12">
+   	<h2>
+		<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i>
+		{{ lesson }} {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+   	</h2>
+   </div>
+	
 	{% if not lesson.active and not user.is_staff %}
 		<div class="col-md-12">This lesson has not been activated yet.</div>
 	{% else %}
