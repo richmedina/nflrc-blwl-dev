@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 
 from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, LoginRequiredMixin, StaffuserRequiredMixin
 
-from .models import Post
+from .models import Post, DiscussionLog
 from .forms import PostForm, PostReplyForm
 from lessons.models import LessonDiscussion
 from core.mixins import HonorCodeRequired
@@ -23,8 +23,16 @@ class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
                 lesson = LessonDiscussion.objects.get(thread=hdr).lesson
             except:
                 lesson = None
-            
-            threads.append({'lesson': lesson, 'header': hdr, 'reply_count': hdr.replies.count()})
+
+            try:
+                logger = DiscussionLog.objects.filter(user=self.request.user).get(discussion=hdr)
+                last_visit =  logger.modified     
+            except:
+                last_visit = self.request.user.last_login
+        
+            replies = hdr.replies.all().filter(deleted=False).order_by('-modified')
+            newmsgs = replies.filter(modified__gt = last_visit)            
+            threads.append({'lesson': lesson, 'header': hdr, 'reply_count': len(replies), 'unread_reply_count': len(newmsgs)})
 
         context['threads'] = threads
         return context
@@ -36,10 +44,23 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     
     def get_context_data(self, **kwargs):
         context = super(DiscussionView, self).get_context_data(**kwargs)
+
         initial_post_data = {}
         initial_post_data['creator'] = self.request.user
         thread_post = self.get_object()
+
+        try:
+            logger = DiscussionLog.objects.filter(user=self.request.user).get(discussion=thread_post) 
+            print 'LAST VISITED: ', logger.modified 
+        except:
+            logger = DiscussionLog(user=self.request.user, discussion=thread_post)
+            logger.save()
+            print 'FIRST VISIT!'
         
+
+
+
+
         try:
             lesson = LessonDiscussion.objects.get(thread=thread_post).lesson
         except:
@@ -52,6 +73,11 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
             pass
 
         replies = thread_post.replies.all().filter(deleted=False).order_by('-created')
+        new_replies = replies.filter(created__gt = logger.modified)
+        print logger  
+        print len(new_replies)
+
+
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject
         initial_post_data['parent_post'] = thread_post.id  
         form = PostReplyForm(initial=initial_post_data)
@@ -61,8 +87,10 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         context['thread_list'] = Post.objects.filter(parent_post=None).order_by('created')
         context['lesson'] = lesson
         context['replies'] = replies
+        context['new_replies'] = new_replies
         context['postform'] = form
 
+        logger.save()
         return context
 
 class PostView(LoginRequiredMixin, HonorCodeRequired, ListView):
@@ -105,6 +133,11 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             data['creator'] = new_post.creator.username
             data['subject'] = new_post.subject
 
+            try:
+                logger = DiscussionLog.objects.get(user=request.user, discussion=new_post.parent_post)
+                logger.save()
+            except:
+                pass
             # print self.render_json_response(data)
             return self.render_json_response(data)
         else:

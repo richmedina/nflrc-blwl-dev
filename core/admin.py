@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import ModelForm
 
 from lessons.models import Module, Lesson, LessonSection, LessonQuiz, LessonDiscussion, PbllPage
-from discussions.models import Post
+from discussions.models import Post, DiscussionLog
 from .models import Whitelist
 
 class ExtraMedia:
@@ -29,7 +29,11 @@ class LessonDiscussionAdmin(admin.ModelAdmin):
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'text', 'creator', 'subject', 'deleted', 'parent_post')
-    list_filter = ['deleted']   
+    list_filter = ['deleted']
+
+class DiscussionLogAdmin(admin.ModelAdmin):
+    list_display = ('user', 'discussion', 'created', 'modified')
+    list_filter = ['user']
 
 admin.site.register(Module)
 admin.site.register(Lesson)
@@ -37,5 +41,6 @@ admin.site.register(LessonSection, LessonSectionAdmin)
 admin.site.register(LessonQuiz)
 admin.site.register(LessonDiscussion, LessonDiscussionAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.register(DiscussionLog, DiscussionLogAdmin)
 admin.site.register(Whitelist)
 admin.site.register(PbllPage)

@@ -42,8 +42,9 @@
 	<!-- thread replies -->
 	    <dl id="{{thread.id}}-replies" class="reply-block">		    
 	    {% for j in replies  %}
-		    <div id="post_{{j.id}}" class="well" style="margin-left: 30px">
+		    <div id="post_{{j.id}}" class="well" style="margin-left: 30px; {% if j in new_replies %} background-color: #FFCC99 {% endif %}">
 		    	<dt>
+		    		
 		    		{{ j.parent_post.subject }}
 		    		<small>{% if user == j.creator %}me{% else %}{{ j.creator }}{% endif %}</small>
 		    		{% if user.is_staff or user == j.creator %}<small style="float: right">&nbsp;<a href="{% url 'edit_post' j.id %}" class="btn btn-primary btn-xs">edit</a>&nbsp;</small>{% endif %}
