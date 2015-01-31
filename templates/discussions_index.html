@@ -19,7 +19,7 @@
 		    	<a href="{{ i.lesson.get_absolute_url }}">
 		    		<small class="btn btn-sm btn-success">{{ i.lesson }}</small>  
 		    	</a>
-		    	<small class="" style="font-size: 0.3; float: right"><i>{% if i.unread_reply_count %}{{ i.unread_reply_count }}/{% endif %}{{ i.reply_count }} unread replies</i></small>
+		    	<small class="" style="font-size: 0.3; float: right"><i>{% if i.unread_reply_count %}{{ i.unread_reply_count }} unread/{% endif %}{{ i.reply_count }}  replies</i></small>
 		    	
 		    	
 		    	<a href="{% url 'discussion_select' i.header.slug %}">

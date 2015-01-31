@@ -30,7 +30,7 @@ class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
             except:
                 last_visit = self.request.user.last_login
         
-            replies = hdr.replies.all().filter(deleted=False).order_by('-modified')
+            replies = hdr.replies.all().filter(deleted=False).order_by('-created')
             newmsgs = replies.filter(modified__gt = last_visit)            
             threads.append({'lesson': lesson, 'header': hdr, 'reply_count': len(replies), 'unread_reply_count': len(newmsgs)})
 
@@ -56,11 +56,6 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
             logger = DiscussionLog(user=self.request.user, discussion=thread_post)
             logger.save()
             print 'FIRST VISIT!'
-        
-
-
-
-
         try:
             lesson = LessonDiscussion.objects.get(thread=thread_post).lesson
         except:
@@ -73,7 +68,7 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
             pass
 
         replies = thread_post.replies.all().filter(deleted=False).order_by('-created')
-        new_replies = replies.filter(created__gt = logger.modified)
+        new_replies = replies.filter(modified__gt = logger.modified)
         print logger  
         print len(new_replies)
 
