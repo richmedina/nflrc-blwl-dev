@@ -30,7 +30,7 @@ class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
             except:
                 last_visit = self.request.user.last_login
         
-            replies = hdr.replies.all().filter(deleted=False).order_by('-created')
+            replies = hdr.replies.all().filter(deleted=False)
             newmsgs = replies.filter(modified__gt = last_visit)            
             threads.append({'lesson': lesson, 'header': hdr, 'reply_count': len(replies), 'unread_reply_count': len(newmsgs)})
 

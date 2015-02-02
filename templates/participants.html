@@ -1,0 +1,38 @@
+<!-- participants.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content_container %}
+<div class="col-md-12">
+
+	<div class="row">
+		<div class="col-md-12"><p><a href="{% url 'add_participant' %}" class="btn btn-md btn-success">+ Participant</a></p> </div>
+		<div id="filters" class="col-md-12">
+			<p>
+				<div class="btn btn-xs btn-default" data-filter="a-h" >a-h</div>
+				<div class="btn btn-xs btn-default" data-filter="i-p">i-p</div>
+				<div class="btn btn-xs btn-default" data-filter="q-z">q-z</div>
+				<div class="btn btn-xs btn-default" data-filter="opt1">Option 1</div>
+				<div class="btn btn-xs btn-default" data-filter="opt2">Option 1</div>
+			</p>
+		</div>
+		<p>
+		<div class="col-md-4">Registered email address</div>
+		<div class="col-md-2">Registration type</div>
+		<div class="col-md-2">Honor agreement</div>
+		<div class="col-md-2">Last login</div>
+		<div class="col-md-2">Edit record</div>
+		</p>
+	</div>
+{% for i in object_list %}
+	<div class="row">
+		<div class="col-md-4">{{ i.email_addr }}</div>
+		<div class="col-md-2">{{ i.participant_type }}</div>
+		<div class="col-md-2">{{ i.honor_agreement }}</div>
+		<div class="col-md-2">{{ i.last_login }}</div>
+		<div class="col-md-2">{% if user.is_staff %}<a href="{% url 'edit_participant' i.id %}" class=""><small>edit</small></a>{% endif %}</div>
+		  
+	</div>
+{% endfor %}
+
+{% endblock content_container %}

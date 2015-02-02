@@ -5,7 +5,7 @@ admin.autodiscover()
 from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleUpdateView, LessonUpdateView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView, PostDeleteView, PostUpdateView
-from core.views import HonorCodeFormView
+from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView
 
 urlpatterns = patterns('',
 
@@ -39,6 +39,11 @@ urlpatterns = patterns('',
 
     url(r'^pbllpage/(?P<slug>[-\w]+)/$', PbllPageView.as_view(), name='pbllpage' ),
     url(r'^pbllpage/edit/(?P<slug>[-\w]+)/$', PbllPageUpdateView.as_view(), name='pbllpage_edit' ),
+
+    
+    url(r'^participants/$', ParticipantListView.as_view(), name='participants'),
+    url(r'^participants/add/$', ParticipantCreateView.as_view(), name='add_participant'),
+    url(r'^participants/edit/(?P<pk>[-\w]+)/$', ParticipantUpdateView.as_view(), name='edit_participant'),
 
     url(r'^inactive-user/$', HonorCodeFormView.as_view(), name='honor_agreement'),
     url(r'^login-forbidden/$', LoginForbiddenView.as_view(), name='login_forbidden'),

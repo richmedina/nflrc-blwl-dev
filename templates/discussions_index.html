@@ -15,18 +15,18 @@
 			
 				
 				<!-- thread header -->
-			    
+			    <span>Lesson <i class="fa fa-caret-right"></i> </span>
 		    	<a href="{{ i.lesson.get_absolute_url }}">
-		    		<small class="btn btn-sm btn-success">{{ i.lesson }}</small>  
+		    		<small class="btn btn-xs btn-default">{{ i.lesson }}</small>  
 		    	</a>
-		    	<small class="" style="font-size: 0.3; float: right"><i>{% if i.unread_reply_count %}{{ i.unread_reply_count }} unread/{% endif %}{{ i.reply_count }}  replies</i></small>
+		    	<small class="" style="font-size: 0.3; float: right"><i>{{ i.reply_count }} replies {% if i.unread_reply_count %} <span class="badge">{{ i.unread_reply_count }}</span> new{% endif %}</i></small>
 		    	
 		    	
 		    	<a href="{% url 'discussion_select' i.header.slug %}">
 			    	<h2>{{ i.header.subject }}</h2>
 			    </a>
 		       
-		       	<small>{{ i.header.creator.first_name }}</small>
+		       	<small> by {{ i.header.creator.first_name }}</small>
 		    	<small class="pull-right"> {{ i.header.modified|date:"M j Y" }} </small>
 		    	{% if user.is_staff or user == thread.creator %}<small class="pull-right"> <a href="{% url 'edit_post' i.header.id %}">edit</a>&nbsp; </small>{% endif %}
 		    	
