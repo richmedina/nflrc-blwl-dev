@@ -45,10 +45,11 @@
 		    <div id="post_{{j.id}}" class="well" style="margin-left: 30px; {% if j in new_replies %} background-color: #FFCC99 {% endif %}">
 		    	<dt>
 		    		
-		    		{{ j.subject }}<br>
-		    		<small> by {% if user == j.creator %}me{% else %}{{ j.creator.first_name }} {{ j.creator.last_name }} {% endif %}</small>
+		    		{{ j.subject }}
+		    		
 		    		{% if user.is_staff or user == j.creator %}<small style="float: right">&nbsp;<a href="{% url 'edit_post' j.id %}" class="btn btn-primary btn-xs">edit</a>&nbsp;</small>{% endif %}
 		    		<small class="pull-right"> {{ j.modified|date:"M j Y" }} </small>
+		    		<br><small> by {% if user == j.creator %}me{% else %}{{ j.creator.first_name }} {{ j.creator.last_name }} {% endif %}</small>
 		    	</dt>
 		    	<dd>{{ j.text | safe }}</dd>
 		    	<div style="text-align: right">
