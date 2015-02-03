@@ -15,5 +15,3 @@ class Whitelist(TimeStampedModel):
 
 	def __unicode__(self):
 		return self.email_addr
-
-

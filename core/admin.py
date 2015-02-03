@@ -35,6 +35,11 @@ class DiscussionLogAdmin(admin.ModelAdmin):
     list_display = ('user', 'discussion', 'created', 'modified')
     list_filter = ['user']
 
+class WhitelistAdmin(admin.ModelAdmin):
+    list_display = ('email_addr', 'participant_type', 'honor_agreement')
+    list_filter = ['participant_type', 'honor_agreement']
+    list_editable = ['email_addr', 'participant_type', 'honor_agreement']
+
 admin.site.register(Module)
 admin.site.register(Lesson)
 admin.site.register(LessonSection, LessonSectionAdmin)
@@ -42,5 +47,5 @@ admin.site.register(LessonQuiz)
 admin.site.register(LessonDiscussion, LessonDiscussionAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(DiscussionLog, DiscussionLogAdmin)
-admin.site.register(Whitelist)
+admin.site.register(Whitelist, WhitelistAdmin)
 admin.site.register(PbllPage)
