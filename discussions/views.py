@@ -51,11 +51,9 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 
         try:
             logger = DiscussionLog.objects.filter(user=self.request.user).get(discussion=thread_post) 
-            print 'LAST VISITED: ', logger.modified 
         except:
             logger = DiscussionLog(user=self.request.user, discussion=thread_post)
             logger.save()
-            print 'FIRST VISIT!'
         try:
             lesson = LessonDiscussion.objects.get(thread=thread_post).lesson
         except:
@@ -69,8 +67,6 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 
         replies = thread_post.replies.all().filter(deleted=False).order_by('-created')
         new_replies = replies.filter(modified__gt = logger.modified)
-        print logger  
-        print len(new_replies)
 
 
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject
@@ -117,7 +113,6 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
 
     def post_ajax(self, request, *args, **kwargs):
         postform = PostReplyForm(request.POST)
-        print postform
         if postform.is_valid():
 
             new_post = postform.save()
@@ -137,7 +132,6 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             return self.render_json_response(data)
         else:
             data = postform.errors
-            print 'Errors?' , data
             return self.render_json_response(data)
 
 class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, View):
@@ -157,7 +151,6 @@ class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
 
             except Exception as e:
                 data = 'data not removed'
-                print 'Error: ', e
         
         return self.render_json_response(data) 
 
