@@ -11,7 +11,7 @@ PARTICIPANT_TYPES = (
 class Whitelist(TimeStampedModel):
 	email_addr = models.EmailField(max_length=254)
 	honor_agreement = models.BooleanField(default=False)
-	participant_type = models.CharField(max_length=8, choices=PARTICIPANT_TYPES, default='opt1')
+	participant_type = models.CharField(max_length=8, choices=PARTICIPANT_TYPES, default='opt2')
 
 	def __unicode__(self):
 		return self.email_addr
