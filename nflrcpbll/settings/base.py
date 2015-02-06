@@ -8,6 +8,8 @@ from unipath import Path
 
 PROJECT_DIR = Path(__file__).ancestor(3)
 
+ADMINS = (('LLCIT', 'llcit@hawaii.edu'),)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -97,6 +99,22 @@ STATICFILES_DIRS = (PROJECT_DIR.child('static'),)
 
 
 STATIC_URL = '/static/'
+
+SOCIAL_AUTH_DISCONNECT_PIPELINE = (
+    # Verifies that the social association can be disconnected from the current
+    # user (ensure that the user login mechanism is not compromised by this
+    # disconnection).
+    # 'social.pipeline.disconnect.allowed_to_disconnect',
+
+    # Collects the social associations to disconnect.
+    'social.pipeline.disconnect.get_entries',
+
+    # Revoke any access_token when possible.
+    'social.pipeline.disconnect.revoke_tokens',
+
+    # Removes the social associations.
+    'social.pipeline.disconnect.disconnect'
+)
 
 
 SOCIAL_AUTH_PIPELINE = (

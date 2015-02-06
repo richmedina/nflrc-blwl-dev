@@ -5,9 +5,12 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 
+
+
 .header {
 	background-color: white;
 	height: 80px;
+	border: none;
 }
 
 .header img {
@@ -20,6 +23,7 @@ body {
 }
 
 .footer {
+	background-color: white;
     text-align: center;
     color: #fff;
 }

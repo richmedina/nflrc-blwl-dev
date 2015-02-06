@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import Quiz, Category, SubCategory, Progress, Question
+from .models import Quiz, Category, SubCategory, Progress, Question, Sitting
 from multichoice.models import MCQuestion, Answer
 from true_false.models import TF_Question
 from essay.models import Essay_Question
@@ -80,6 +80,7 @@ class ProgressAdmin(admin.ModelAdmin):
     to do:
             create a user section
     """
+    list_display = ('user', 'score', )
     search_fields = ('user', 'score', )
 
 
@@ -100,10 +101,14 @@ class EssayQuestionAdmin(admin.ModelAdmin):
     search_fields = ('content', 'explanation')
     filter_horizontal = ('quiz',)
 
+class SittingAdmin(admin.ModelAdmin):
+    list_display = ('user', 'quiz', )
+
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(SubCategory, SubCategoryAdmin)
 admin.site.register(MCQuestion, MCQuestionAdmin)
 admin.site.register(Progress, ProgressAdmin)
+admin.site.register(Sitting, SittingAdmin)
 admin.site.register(TF_Question, TFQuestionAdmin)
 admin.site.register(Essay_Question, EssayQuestionAdmin)

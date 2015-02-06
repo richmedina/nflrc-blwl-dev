@@ -41,24 +41,26 @@
         <div class="navbar-header">
 
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
+            {% if user and not user.is_anonymous %}
+              <i class="fa fa-sign-out"></i>
+            {% else %}
+              <i class="fa fa-sign-in"></i>
+            {% endif %}
           </button>
 
-          <a class="navbar-brand" href="{% url 'home' %}">
+          <a class="pull-left" href="{% url 'home' %}">
             <img src="http://nflrc.hawaii.edu/media/img/1-PBLicon.png"> <span>Fundamentals of PBLL</span>
           </a>
 
         </div>
         
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse pull-right" style="background-color: white">
           <ul class="nav navbar-nav navbar-right">
-            {% if user.is_staff %}<li><a href="{% url 'participants' %}"><i class="fa fa-lock"></i></a>{% endif %}</li>
+            {% if user.is_staff %}<li><a href="{% url 'participants' %}"><i class="fa fa-users fa-1x"></i></a>{% endif %}</li>
             {% if user and not user.is_anonymous %}
-            <li>   <a href="{% url 'logout' %}"> sign out <smaller>{{ user.email }}</smaller></a> </li>
+              <li><a href="{% url 'auth:logout' %}?next={{ request.path }}"> sign out <smaller>{{ user.email }}</smaller></a> </li>
             {% else %}
-            <li><a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Sign in</a>  </li>
+              <li><a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Sign in</a>  </li>
             {% endif %}
           </ul>
         </div><!--/.nav-collapse -->
