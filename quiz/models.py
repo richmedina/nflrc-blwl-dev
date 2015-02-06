@@ -311,6 +311,12 @@ class SittingManager(models.Manager):
                                             .select_subclasses()
 
         question_set = question_set.values_list('id', flat=True)
+        
+        if not question_set:
+            # Question set is empty -- no questions are associated with this quiz.
+            # Do not create a sitting.
+            return None
+
         if quiz.max_questions and quiz.max_questions < len(question_set):
             question_set = question_set[:quiz.max_questions]
 

@@ -156,6 +156,10 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
         if self.sitting is False:
             return render(request, 'single_complete.html')
 
+        if self.sitting is None:
+            c = {'lesson': LessonQuiz.objects.get(quiz=self.quiz).lesson}
+            return render(request, 'no_questions_in_quiz.html', c)
+        
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
 
     def get_form(self, form_class):

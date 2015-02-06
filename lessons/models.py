@@ -55,7 +55,7 @@ class LessonSection(models.Model):
     text = models.TextField(default='Coming soon...')
     content_type = models.CharField(max_length=64, choices=CONTENT_TYPES, default='text')
     lesson = models.ForeignKey(Lesson, related_name='sections')
-    
+
     def __unicode__(self):
         return '%s' % (self.content_type)
 
@@ -67,15 +67,21 @@ class LessonQuiz(models.Model):
     quiz = models.ForeignKey(Quiz, related_name='lesson')
     lesson = models.ForeignKey(Lesson, related_name='lesson_quiz')
 
+    class Meta:
+        verbose_name = 'Lesson / Quiz Pair'
+
     def __unicode__(self):
-        return '%s' % (self.quiz)
+        return '%s --> %s' % (self.lesson, self.quiz)
 
 class LessonDiscussion(models.Model):
     thread = models.ForeignKey(Post, related_name='lesson_post')
     lesson = models.ForeignKey(Lesson, related_name='lesson_discussion')
 
+    class Meta:
+        verbose_name = 'Lesson / Discussion Pair'
+
     def __unicode__(self):
-        return '%s -- %s' % (self.lesson, self.thread)
+        return '%s --> %s' % (self.lesson, self.thread)
 
 class PbllPage(models.Model):
     title = models.CharField(max_length=512)
