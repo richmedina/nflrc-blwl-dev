@@ -9,7 +9,7 @@ PARTICIPANT_TYPES = (
 )
 
 class Whitelist(TimeStampedModel):
-	email_addr = models.EmailField(max_length=254)
+	email_addr = models.EmailField(max_length=254, unique=True)
 	honor_agreement = models.BooleanField(default=False)
 	participant_type = models.CharField(max_length=8, choices=PARTICIPANT_TYPES, default='opt2')
 
