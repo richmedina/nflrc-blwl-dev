@@ -122,7 +122,27 @@
 			</div>
 		{% endif %}
 		
-		<div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Apply</a></div>	
+		<div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Apply</a></div>
+
+		<hr>
+		
+		<div>
+			<a class="menu_btn" data-toggle="collapse" href="#lesson-menu"  aria-expanded="false" aria-controls="lesson-menu">More Lessons <i class="fa fa-caret-right"></i></a>
+
+			<div id="lesson-menu" class="collapse">
+				{% for i in module_lessons %}
+					<div class="">
+					{% if i.id = lesson.id %}
+						<span class="btn btn-md btn-default">{{ i.title }}</span>
+					{% else %}
+						<a href="{{ i.get_absolute_url }}" class="btn btn-md"> {{ i.title }}</a>
+					{% endif %}
+					</div>					
+				{% endfor %}
+			</div>
+    	</div>
+
+	
     </div>
     {% endif %}
 </div>

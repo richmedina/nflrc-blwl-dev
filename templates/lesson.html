@@ -73,7 +73,7 @@
 
 		<hr>
 
-		<span>
+		<div>
 			<a class="menu_btn" data-toggle="collapse" href="#lesson-menu"  aria-expanded="false" aria-controls="lesson-menu">More Lessons <i class="fa fa-caret-right"></i></a>
 
 			<div id="lesson-menu" class="collapse">
@@ -84,12 +84,10 @@
 					{% else %}
 						<a href="{{ i.get_absolute_url }}" class="btn btn-md"> {{ i.title }}</a>
 					{% endif %}
-					</div>
-
-					
+					</div>					
 				{% endfor %}
 			</div>
-    	</span>  
+    	</div>  
 
 		
     </div>

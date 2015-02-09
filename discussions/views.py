@@ -80,6 +80,7 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         context['replies'] = replies
         context['new_replies'] = new_replies
         context['postform'] = form
+        context['module_lessons'] = lesson.module.lessons.all()
 
         logger.save()
         return context
