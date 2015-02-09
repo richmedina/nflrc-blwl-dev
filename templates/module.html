@@ -23,7 +23,7 @@
         {% endif %}
 
 		 {% if user.is_staff %}<a href="{% url 'lesson_edit' slug=i.slug %}" class="btn btn-default btn-xs pull-right">edit</a>{% endif %}
-		 <div>{{i.description}}</div>
+		 <div>{{ i.description | safe }}</div>
 	</div>
 {% endfor %}
     

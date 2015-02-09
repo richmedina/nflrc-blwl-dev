@@ -6,12 +6,15 @@
 
 <div class="row">
     <div class="col-md-12">
+
+
     	<h2>
-    		<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i>
-    		{{ lesson }} {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+    		<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i></a>
+    		<span>{{ lesson }}</span>
+    		{% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>{% endif %}
     	</h2>
 
-    </div>
+	</div>
 
     
 
@@ -67,6 +70,28 @@
 		{% endif %}
 		
 		<div><a href="{% url 'lesson_section' slug=lesson.slug section='apply' %}" class="menu_btn {% if curr_section == 'apply' %}active{% endif %}">Apply</a>	</div>
+
+		<hr>
+
+		<span>
+			<a class="menu_btn" data-toggle="collapse" href="#lesson-menu"  aria-expanded="false" aria-controls="lesson-menu">More Lessons <i class="fa fa-caret-right"></i></a>
+
+			<div id="lesson-menu" class="collapse">
+				{% for i in module_lessons %}
+					<div class="">
+					{% if i.id = lesson.id %}
+						<span class="btn btn-md btn-default">{{ i.title }}</span>
+					{% else %}
+						<a href="{{ i.get_absolute_url }}" class="btn btn-md"> {{ i.title }}</a>
+					{% endif %}
+					</div>
+
+					
+				{% endfor %}
+			</div>
+    	</span>  
+
+		
     </div>
 </div>
     

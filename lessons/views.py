@@ -5,7 +5,7 @@ from braces.views import LoginRequiredMixin
 
 from core.mixins import HonorCodeRequired
 from .models import Module, Lesson, LessonSection, PbllPage
-from .forms import ModuleUpdateForm, LessonUpdateForm, LessonSectionUpdateForm
+from .forms import ModuleUpdateForm, LessonUpdateForm, LessonSectionUpdateForm, PbllPageUpdateForm
 
 class HomeView(TemplateView):
 	template_name = 'index.html'
@@ -53,6 +53,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 		except:
 			context['lesson_thread'] = None
 
+		context['module_lessons'] = self.get_object().module.lessons.all()
 		return context
 
 class PbllPageView(DetailView):
@@ -63,19 +64,32 @@ class PbllPageView(DetailView):
 class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Module
 	template_name = "edit_form.html"
-	fields = ['title', 'description']
-	# form_class = ModuleUpdateForm
+	form_class = ModuleUpdateForm
+
+	def get_context_data(self, **kwargs):
+		context = super(ModuleUpdateView, self).get_context_data(**kwargs)
+		context['object_type'] = 'Module'
+		return context
 
 class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Lesson
 	template_name = "edit_form.html"
-	fields = ['title', 'active']
-	# form_class = LessonUpdateForm
+	form_class = LessonUpdateForm
+
+	def get_context_data(self, **kwargs):
+		context = super(LessonUpdateView, self).get_context_data(**kwargs)
+		context['object_type'] = 'Lesson'
+		return context
 
 class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = LessonSection
 	template_name = "edit_form.html"
 	form_class = LessonSectionUpdateForm
+
+	def get_context_data(self, **kwargs):
+		context = super(LessonSectionUpdateView, self).get_context_data(**kwargs)
+		context['object_type'] = self.get_object().content_type 
+		return context
 
 class LoginForbiddenView(TemplateView):
 	template_name = 'login-forbidden.html'
@@ -83,7 +97,10 @@ class LoginForbiddenView(TemplateView):
 class PbllPageUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = PbllPage
 	template_name = "edit_form.html"
-	fields = ['title', 'content']
-	labels = {
-            'title': 'Editing a PBLL basic page:'
-        }
+	form_class = PbllPageUpdateForm
+
+	def get_context_data(self, **kwargs):
+		context = super(PbllPageUpdateView, self).get_context_data(**kwargs)
+		context['object_type'] = 'Generic Page'
+		return context
+
