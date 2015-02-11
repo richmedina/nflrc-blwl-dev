@@ -5,7 +5,7 @@ admin.autodiscover()
 from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleUpdateView, LessonUpdateView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView, PostDeleteView, PostUpdateView
-from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView
+from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView, ParticipantDeleteView
 
 urlpatterns = patterns('',
 
@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     
     url(r'^admin/', include(admin.site.urls)),
 
-    # url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),
     # url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
     
     url(r'^quiz/', include('quiz.urls')),
@@ -44,6 +44,7 @@ urlpatterns = patterns('',
     url(r'^participants/$', ParticipantListView.as_view(), name='participants'),
     url(r'^participants/add/$', ParticipantCreateView.as_view(), name='add_participant'),
     url(r'^participants/edit/(?P<pk>[-\w]+)/$', ParticipantUpdateView.as_view(), name='edit_participant'),
+    url(r'^participants/delete/(?P<pk>[-\w]+)/$', ParticipantDeleteView.as_view(), name='delete_participant'),
 
     url(r'^inactive-user/$', HonorCodeFormView.as_view(), name='honor_agreement'),
     url(r'^login-forbidden/$', LoginForbiddenView.as_view(), name='login_forbidden'),

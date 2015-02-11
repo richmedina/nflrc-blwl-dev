@@ -1,6 +1,6 @@
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
-from django.views.generic import FormView, ListView, UpdateView, CreateView
+from django.views.generic import FormView, ListView, UpdateView, CreateView, DeleteView
 
 from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
 
@@ -37,7 +37,10 @@ class ParticipantListView(LoginRequiredMixin, StaffuserRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(ParticipantListView, self).get_context_data(**kwargs)
         context['object_list'] = context['object_list'].order_by('participant_type', 'email_addr')  #self.get_queryset()
-        
+        context['option1_list'] = context['object_list'].filter(participant_type='opt1')
+        context['option2_list'] = context['object_list'].filter(participant_type='opt2')
+        context['staff_list'] = context['object_list'].filter(participant_type='staff')
+
         return context
 
 class ParticipantCreateView(LoginRequiredMixin, StaffuserRequiredMixin, CreateView):
@@ -51,6 +54,12 @@ class ParticipantUpdateView(LoginRequiredMixin, StaffuserRequiredMixin, UpdateVi
     model = Whitelist
     template_name = 'edit_form.html'
     fields =['email_addr', 'participant_type']
+    success_url = reverse_lazy('participants')
+
+class ParticipantDeleteView(LoginRequiredMixin, StaffuserRequiredMixin, DeleteView):
+    model = Whitelist
+    template_name = 'whitelist_confirm_delete.html'
+    # fields =['email_addr', 'participant_type']
     success_url = reverse_lazy('participants')
 
 
