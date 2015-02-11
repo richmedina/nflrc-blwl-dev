@@ -8,7 +8,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['subject', 'text', 'creator', 'parent_post']
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 2, 'cols': '100%', 'class': 'form-control'}),
+            'text': forms.Textarea(attrs={'rows': 2, 'cols': '100%', 'class': 'form-control content-editor'}),
             'creator': forms.HiddenInput(),
             'parent_post': forms.HiddenInput(), 
         }
