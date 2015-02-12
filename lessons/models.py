@@ -1,11 +1,11 @@
 from django.db import models
 from django.core.urlresolvers import reverse
-# from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
-# from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
 
+from core.models import SiteFile
 from quiz.models import Quiz
 from discussions.models import Post
 
@@ -55,7 +55,7 @@ class LessonSection(models.Model):
     text = models.TextField(default='Coming soon...')
     content_type = models.CharField(max_length=64, choices=CONTENT_TYPES, default='text')
     lesson = models.ForeignKey(Lesson, related_name='sections')
-
+    
     def __unicode__(self):
         return '%s' % (self.content_type)
 

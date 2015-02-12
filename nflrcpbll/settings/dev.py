@@ -32,3 +32,6 @@ SOCIAL_AUTH_LOGIN_ERROR_URL = '/login-forbidden/'
 
 LOGIN_URL ='/login/google-oauth2'
 LOGIN_REDIRECT_URL = '/'
+
+MEDIA_ROOT = '/Library/WebServer/Documents/media'
+MEDIA_URL = 'http://localhost/media/'

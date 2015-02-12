@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey
 
 from model_utils.models import TimeStampedModel
 
@@ -15,3 +17,10 @@ class Whitelist(TimeStampedModel):
 
 	def __unicode__(self):
 		return self.email_addr
+
+class SiteFile(TimeStampedModel):
+    fileobj = models.FileField(upload_to='pbll-media')
+
+    def __unicode__(self):
+        return self.fileobj
+  

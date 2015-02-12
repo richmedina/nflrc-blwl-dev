@@ -2,6 +2,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from filebrowser.sites import site
+
 from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleUpdateView, LessonUpdateView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView, PostDeleteView, PostUpdateView
@@ -13,7 +15,8 @@ urlpatterns = patterns('',
     url('', include('django.contrib.auth.urls', namespace='auth')),
 
 	url(r'^$', HomeView.as_view(), name='home'),
-    
+    url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+    url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', name='login'),

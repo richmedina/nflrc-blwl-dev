@@ -2,6 +2,8 @@ from django.views.generic import TemplateView, DetailView, UpdateView
 from django import forms
 
 from braces.views import LoginRequiredMixin
+from filebrowser.sites import site
+from filebrowser.base import FileListing
 
 from core.mixins import HonorCodeRequired
 from .models import Module, Lesson, LessonSection, PbllPage
@@ -88,7 +90,9 @@ class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView)
 
 	def get_context_data(self, **kwargs):
 		context = super(LessonSectionUpdateView, self).get_context_data(**kwargs)
-		context['object_type'] = self.get_object().content_type 
+		context['object_type'] = self.get_object().content_type
+		context['filelisting'] = FileListing('uploads', sorting_by='date', sorting_order='desc').listing
+
 		return context
 
 class LoginForbiddenView(TemplateView):

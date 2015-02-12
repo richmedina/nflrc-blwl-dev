@@ -18,6 +18,10 @@ ADMINS = (('LLCIT', 'llcit@hawaii.edu'),)
 # Application definition
 
 INSTALLED_APPS = (
+    'grappelli.dashboard',
+    'grappelli',
+    'filebrowser',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -91,6 +95,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
    
    'social.apps.django_app.context_processors.backends',
    'social.apps.django_app.context_processors.login_redirect',
+   'django.core.context_processors.request',
 )
 
 # Static files (CSS, JavaScript, Images)
@@ -99,6 +104,10 @@ STATICFILES_DIRS = (PROJECT_DIR.child('static'),)
 
 
 STATIC_URL = '/static/'
+
+GRAPPELLI_INDEX_DASHBOARD = 'nflrcpbll.pblladmindashboard.CustomIndexDashboard'
+FILEBROWSER_VERSIONS_BASEDIR = '_versions'
+
 
 SOCIAL_AUTH_DISCONNECT_PIPELINE = (
     # Verifies that the social association can be disconnected from the current
