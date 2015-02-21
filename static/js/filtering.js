@@ -18,10 +18,10 @@ jQuery(function($) {
         var ceiling = $(this).attr('data-ceiling');
         
         $participant_container.isotope({ filter: function() {
-            var q = $(this).find('.email_addr').text();
+            var q = $(this).find('.email_addr').text().toLowerCase();
             q = q.charAt(0);
             return q >= floor && q <= ceiling;
-        }})
+        }});
     });
 
 
