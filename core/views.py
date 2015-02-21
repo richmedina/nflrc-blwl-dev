@@ -40,6 +40,7 @@ class ParticipantListView(LoginRequiredMixin, StaffuserRequiredMixin, ListView):
         context['option1_list'] = context['object_list'].filter(participant_type='opt1')
         context['option2_list'] = context['object_list'].filter(participant_type='opt2')
         context['staff_list'] = context['object_list'].filter(participant_type='staff')
+        context['active_list'] = context['object_list'].filter(site_account__isnull=False).order_by('-site_account__last_login')
 
         return context
 

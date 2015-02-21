@@ -36,7 +36,9 @@
 				<div class="btn btn-xs btn-default" data-filter=".staff">Staff
 					<span class="badge">{{ staff_list|length }}</span>
 				</div>
-				<div class="btn btn-xs btn-default" data-filter=".active">Active</div>
+				<div class="btn btn-xs btn-default" data-filter=".active">Active
+					<span class="badge">{{ active_list|length }}</span>
+				</div>
 				<div class="btn btn-xs btn-default" data-filter=".participant">All</div>
 			
 			</div>
@@ -55,7 +57,7 @@
 			<div class="col-md-4 email_addr">{{ i.email_addr }}</div>
 			<div class="col-md-2">{{ i.participant_type }}</div>
 			<div class="col-md-2">{% if i.honor_agreement %}<span class="badge" style="background: green"><i class="fa fa-check"></i></span>{% else %} {% endif %}</div>
-			<div class="col-md-2">{{ i.site_account.last_login }}</div>
+			<div class="col-md-2 last_login">{{ i.site_account.last_login }}</div>
 			<div class="col-md-2">
 				{% if user.is_staff %}
 				<a href="{% url 'edit_participant' i.id %}" class="btn btn-xs btn-default"><small>edit</small></a>
