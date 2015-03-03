@@ -58,7 +58,7 @@
           <ul class="nav navbar-nav navbar-right">
             {% if user.is_staff %}<li><a href="{% url 'participants' %}"><i class="fa fa-users fa-1x"></i></a>{% endif %}</li>
             {% if user and not user.is_anonymous %}
-              <li><a href="{% url 'auth:logout' %}?next={{ request.path }}"> sign out <smaller>{{ user.email }}</smaller></a> </li>
+              <li><a href="{% url 'auth:logout' %}"> sign out <smaller>{{ user.email }}</smaller></a> </li>
             {% else %}
               <li><a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">Sign in</a>  </li>
             {% endif %}
