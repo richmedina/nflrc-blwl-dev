@@ -35,3 +35,4 @@ LOGIN_REDIRECT_URL = '/'
 
 MEDIA_ROOT = '/Library/WebServer/Documents/media'
 MEDIA_URL = 'http://localhost/media/'
+
