@@ -4,12 +4,14 @@ PyJWT==0.4.0
 Unipath==1.0
 django-braces==1.4.0
 django-crispy-forms==1.4.0
+django-debug-toolbar==1.2.2
 django-filebrowser==3.5.7
 django-grappelli==2.5.6
 django-model-utils==2.2
 httplib2==0.9
 oauth2==1.5.211
 oauthlib==0.7.2
+psycopg2==2.6.1
 py==1.4.26
 python-openid==2.2.5
 python-social-auth==0.2.1
