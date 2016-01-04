@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, DetailView, UpdateView
+from django.views.generic import TemplateView, DetailView, UpdateView, CreateView
 from django import forms
 
 from braces.views import LoginRequiredMixin
@@ -7,7 +7,7 @@ from filebrowser.base import FileListing
 
 from core.mixins import HonorCodeRequired
 from .models import Module, Lesson, LessonSection, PbllPage
-from .forms import ModuleUpdateForm, LessonUpdateForm, LessonSectionUpdateForm, PbllPageUpdateForm
+from .forms import ModuleUpdateForm, ModuleCreateForm, LessonCreateForm, LessonUpdateForm, LessonSectionUpdateForm, PbllPageUpdateForm
 
 class HomeView(TemplateView):
 	template_name = 'index.html'
@@ -34,7 +34,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 
 	def get_context_data(self, **kwargs):
 		context = super(LessonView, self).get_context_data(**kwargs)
-		
+		context['sections'] = self.get_object().sections.all()
 		try:
 			quiz_url = self.get_object().lesson_quiz.get().quiz.url
 			context['quiz'] =  quiz_url
@@ -63,6 +63,16 @@ class PbllPageView(DetailView):
 	template_name = "pbllpage.html"
 
 
+class ModuleCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
+	model = Module
+	template_name = "create_form.html"
+	form_class = ModuleCreateForm
+
+	def get_context_data(self, **kwargs):
+		context = super(ModuleCreateView, self).get_context_data(**kwargs)
+		context['object_type'] = 'Module'
+		return context
+
 class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Module
 	template_name = "edit_form.html"
@@ -72,6 +82,18 @@ class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 		context = super(ModuleUpdateView, self).get_context_data(**kwargs)
 		context['object_type'] = 'Module'
 		return context
+
+
+class LessonCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
+	model = Lesson
+	template_name = "create_form.html"
+	form_class = LessonCreateForm
+
+	def get_context_data(self, **kwargs):
+		context = super(LessonCreateView, self).get_context_data(**kwargs)
+		context['object_type'] = 'Lesson'
+		return context
+
 
 class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 	model = Lesson

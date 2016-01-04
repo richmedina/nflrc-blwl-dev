@@ -38,8 +38,10 @@
 		</div>
     </div>
     
-    <div class="col-md-3">        
-	    <div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a></div>
+    <div class="col-md-3">       
+	    <div>
+	    <a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a>
+	    </div>
 	    <div><a href="{% url 'lesson_section' slug=lesson.slug section='media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
 	    
 		{% if quiz %} 

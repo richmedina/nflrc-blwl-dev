@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.utils.text import slugify
 
@@ -21,7 +22,7 @@ class Module(models.Model):
     title = models.CharField(max_length=512)
     description = models.TextField(blank=True)
     slug = models.SlugField(blank=True)
-    order = models.IntegerField()
+    order = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.title))
@@ -31,7 +32,10 @@ class Module(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('module', args=[str(self.slug)])   
+        return reverse('module', args=[str(self.slug)])
+
+    class Meta:
+        ordering = ['order']
 
 class Lesson(TimeStampedModel):
     title = models.CharField(max_length=512)
@@ -39,16 +43,51 @@ class Lesson(TimeStampedModel):
     slug = models.SlugField(blank=True)
     module = models.ForeignKey(Module, related_name='lessons')
     active = models.BooleanField(default=True)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(unicode(self.title))
-        super(Lesson, self).save(*args, **kwargs)
+    order = models.IntegerField(default=0)
 
     def __unicode__(self):
         return self.title
 
     def get_absolute_url(self):
         return reverse('lesson', args=[str(self.slug)])
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(unicode(self.title))
+        super(Lesson, self).save(*args, **kwargs)
+
+        if not self.sections.all():
+            section = LessonSection(content_type='topic', lesson=self)
+            section.save()
+            section = LessonSection(content_type='media', lesson=self)
+            section.save()
+            section = LessonSection(content_type='reading', lesson=self)
+            section.save()
+            section = LessonSection(content_type='apply', lesson=self)
+            section.save()
+
+        if not self.lesson_discussion.all():
+            try:
+                user = User.objects.filter(is_superuser=True).get()
+                thread = Post(text="Start a discussion!", creator=user, subject=self.title+' Talk', parent_post=None)
+                thread.save()
+                discussion = LessonDiscussion(thread=thread, lesson=self)
+                discussion.save()
+            except:
+                pass  # Fail silently...
+
+        if not self.lesson_quiz.all():
+            try:
+                title = '%s %s Quiz'% (self.module.title, self.title)
+                quiz = Quiz(title=title, url=title, random_order=False, answers_at_end=True)
+                quiz.save()
+                lesson_quiz = LessonQuiz(quiz=quiz, lesson=self)
+                lesson_quiz.save()
+            except Exception as e:
+                print e
+                # pass  # Fail silently...
+
+    class Meta:
+        ordering = ['order']
 
 
 class LessonSection(models.Model):

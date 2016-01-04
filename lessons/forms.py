@@ -3,30 +3,43 @@ from django import forms
 
 from .models import Module, Lesson, LessonSection, PbllPage
 
+class ModuleCreateForm(forms.ModelForm):
+
+    class Meta:
+        model = Module
+        fields = ['title', 'description', 'order']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),      
+        }
+
 class ModuleUpdateForm(forms.ModelForm):
     class Meta:
         model = Module
-        fields = ['title', 'description']
+        fields = ['title', 'description', 'order']
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),
-             
+            'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),    
         }
         
-       
+class LessonCreateForm(forms.ModelForm):
+    class Meta:
+        model = Lesson
+        fields = ['module', 'title', 'description', 'active', 'order']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),
+        }      
 
 class LessonUpdateForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['title', 'description', 'active']
+        fields = ['title', 'description', 'active', 'order']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),
-
         }
 
 class LessonSectionUpdateForm(forms.ModelForm):
     class Meta:
         model = LessonSection
-        fields = ['text', 'content_type']
+        fields = ['text']
         widgets = {
             'text': forms.Textarea(attrs={'rows': 25, 'cols': 80, 'class': 'form-control content-editor'}),
         }

@@ -15,14 +15,20 @@
 
 
 <div class="col-md-12">
-	<h2>Modules</h2>
+	<h2>Modules
+		{% if user.is_staff %}
+		<a href="{% url 'module_create' %}" class="btn btn-default btn-xs">add</a>
+		{% endif %}
+	</h2>
 	{% for i in modules %}
 		<div class="thumbnail blocks">
 		  
 			<div class="button">
-				{% if user.is_staff %}<a href="{% url 'module_edit' slug=i.slug %}" class="btn btn-default btn-xs pull-right">edit</a>{% endif %}
+				{% if user.is_staff %}
+				<a href="{% url 'module_edit' slug=i.slug %}" class="btn btn-default btn-xs">edit</a>
+				<a href="{% url 'lesson_create' %}" class="btn btn-default btn-xs pull-right">add lesson</a>
+				{% endif %}
 				<legend>{{ i }}</legend>
-
 			</div>
 			{% for j in i.lessons.all %}
 				<div class="thumbnail">
