@@ -4,7 +4,7 @@ admin.autodiscover()
 
 from filebrowser.sites import site
 
-from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, LessonCreateView, LessonUpdateView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView
+from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, LessonCreateView, LessonUpdateView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView, PostDeleteView, PostUpdateView
 from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView, ParticipantDeleteView
@@ -28,12 +28,17 @@ urlpatterns = patterns('',
     url(r'^module/(?P<slug>[-\w]+)/$', ModuleView.as_view(), name='module' ),
     url(r'^module/(?P<slug>[-\w]+)/edit/$', ModuleUpdateView.as_view(), name='module_edit' ),
 
+
     url(r'^lesson/add/$', LessonCreateView.as_view(), name='lesson_create' ),
     url(r'^lesson/(?P<slug>[-\w]+)/$', LessonView.as_view(), name='lesson' ),
     url(r'^lesson/edit/(?P<slug>[-\w]+)/$', LessonUpdateView.as_view(), name='lesson_edit' ),
     url(r'^lesson/(?P<slug>[-\w]+)/(?P<section>[-\w]+)/$', LessonView.as_view(), name='lesson_section' ),
     url(r'^lesson/(?P<lesson>[-\w]+)/(?P<pk>[-\w]+)/edit/$', LessonSectionUpdateView.as_view(), name='lesson_section_edit' ),
-    url(r'^lesson/(?P<quiz_name>[-\w]+)/quiz/take/', QuizTake.as_view(), name='lesson_quiz'),
+
+    url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/question/(?P<pk>[-\w]+)/$', LessonQuizQuestionDetailView.as_view(), name='question_preview' ),    
+    url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/add/question/$', LessonQuizQuestionCreateView.as_view(), name='question_create' ),    
+    url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/edit/question/(?P<pk>[-\w]+)/$', LessonQuizQuestionUpdateView.as_view(), name='question_edit' ),
+    url(r'^lesson/quiz/(?P<quiz_name>[-\w]+)/quiz/take/', QuizTake.as_view(), name='lesson_quiz'),
 
     url(r'^discussions/(?P<slug>[-\w]+)/$', DiscussionView.as_view(), name='discussion_select' ),
     url(r'^discussions/$', DiscussionListView.as_view(), name='discussion' ),

@@ -12,7 +12,10 @@
    <div class="col-md-12">
    	<h2>
 		<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i>
-		{{ lesson }} {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+		{{ lesson }} 
+		{% if user.is_staff %}
+			<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>
+		{% endif %}
    	</h2>
    </div>
 	
@@ -20,7 +23,9 @@
 		<div class="col-md-12">This lesson has not been activated yet.</div>
 	{% else %}
     <div class="col-md-9">
-		
+		<div class="row">
+			<a href="{% url 'question_create' quiz.id %}" class="btn btn-default btn-xs">add question</a>			
+		</div>
 		<div id="content_display_quiz" class="row">
 		
 			<div class="col-md-12 item item_quiz">

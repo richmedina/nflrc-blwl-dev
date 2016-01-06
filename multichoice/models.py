@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.translation import ugettext as _
 from django.db import models
+from django.core.urlresolvers import reverse
+
 from quiz.models import Question
 
 
@@ -48,6 +50,9 @@ class MCQuestion(Question):
 
     def answer_choice_to_string(self, guess):
         return Answer.objects.get(id=guess).content
+
+    def get_absolute_url(self):
+        return reverse('question_preview', args=[str(self.quiz.all().get().id), str(self.id)])
 
     class Meta:
         verbose_name = _("Multiple Choice Question")
