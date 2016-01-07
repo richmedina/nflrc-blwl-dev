@@ -52,9 +52,29 @@ class LessonQuizQuestionCreateForm(forms.ModelForm):
     class Meta:
         model = MCQuestion
         fields = ['quiz', 'content', 'explanation']
-        widgets = {'quiz': forms.MultipleHiddenInput()}
+        widgets = {
+            'quiz': forms.MultipleHiddenInput(),
+            'content': forms.Textarea(attrs={'rows': 5, 'cols': 40}),
+            'explanation': forms.Textarea(attrs={'rows': 5, 'cols': 40})
+            }
 
-AnswersFormSet = inlineformset_factory(MCQuestion, Answer, extra=2, fields=['question', 'content', 'correct'])
+AnswersCreateFormSet = inlineformset_factory(
+    MCQuestion, Answer, 
+    extra=5,
+    fields=('question', 'content', 'correct'), 
+    widgets={'content': forms.TextInput(attrs={'size': 40})},
+    labels={'content': 'Text to display for this choice.'}
+)
+
+
+AnswersUpdateFormSet = inlineformset_factory(
+    MCQuestion, Answer, 
+    extra=3,
+    can_delete=True,
+    fields=('question', 'content', 'correct'), 
+    widgets={'content': forms.TextInput(attrs={'size': 40})},
+    labels={'content': 'Text to display for this choice.'}
+)
 
 class PbllPageUpdateForm(forms.ModelForm):
     class Meta:

@@ -141,7 +141,7 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
     template_name = 'question.html'
 
     def dispatch(self, request, *args, **kwargs):
-        self.quiz = get_object_or_404(Quiz, url=self.kwargs['quiz_name'])
+        self.quiz = get_object_or_404(Quiz, pk=self.kwargs['quiz_id'])
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
 
@@ -208,7 +208,7 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
         context['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
         context['module_lessons'] = context['lesson'].module.lessons.all()
         try:
-            context['lesson_thread'] =  context['lesson'].lesson_discussion.get().thread.slug
+            context['lesson_thread'] =  context['lesson'].lesson_discussion.get().thread
             preview_replies = context['lesson'].lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
             context['lesson_thread_replies'] = preview_replies[0:1]
 

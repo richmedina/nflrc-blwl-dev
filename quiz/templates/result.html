@@ -53,7 +53,7 @@
               {% endif %}
 
               {% if score < max_score %}
-                <h4><a href="{% url 'lesson_quiz' quiz_name=quiz.url %}">Try again now?</a></h4>
+                <h4><a href="{% url 'lesson_quiz' quiz_id=quiz.id %}">Try again now?</a></h4>
               {% endif %}
               
 
@@ -97,20 +97,20 @@
 
 <!-- Lesson Menu Right -->
   <div class="col-md-3">        
-    <div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a></div>
-    <div><a href="{% url 'lesson_section' slug=lesson.slug section='media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
+    <div><a href="{% url 'lesson_section' pk=lesson.id section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a></div>
+    <div><a href="{% url 'lesson_section' pk=lesson.id section='media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
     <div href="#" class="menu_btn active ">Test Yourself</div>
 
-    <div><a href="{% url 'lesson_section' slug=lesson.slug section='reading' %}" class="menu_btn {% if curr_section == 'reading' %}active{% endif %}">More to Consider</a></div>
+    <div><a href="{% url 'lesson_section' pk=lesson.id section='reading' %}" class="menu_btn {% if curr_section == 'reading' %}active{% endif %}">More to Consider</a></div>
 
     
     {% if lesson_thread %}
-      <div><a href="{% url 'discussion_select' slug=lesson_thread %}" class="menu_btn ">Get Involved</a></div>
+      <div><a href="{% url 'discussion_select' lesson_thread %}" class="menu_btn ">Get Involved</a></div>
       <div class="well reply_preview_list">
         
         <div style="text-align: left"><small>Latest posting</small></div>
         {% for i in lesson_thread_replies %}
-        <a href="{% url 'discussion_select' slug=lesson_thread %}#post_{{i.id}}">
+        <a href="{% url 'discussion_select' lesson_thread %}#post_{{i.id}}">
           <div class="well">
             <i class="fa fa-quote-left"></i>              
             <div class="reply_preview"><small>{{ i.text|truncatewords:10 | safe }}</small></div>
@@ -124,7 +124,7 @@
       </div>
     {% endif %}
     
-    <div><a href="{% url 'lesson_section' slug=lesson.slug section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Apply</a></div>
+    <div><a href="{% url 'lesson_section' pk=lesson.id section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Apply</a></div>
 
     <hr>
     

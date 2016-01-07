@@ -49,7 +49,7 @@ class Lesson(TimeStampedModel):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('lesson', args=[str(self.slug)])
+        return reverse('lesson', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.title))
@@ -99,7 +99,7 @@ class LessonSection(models.Model):
         return '%s' % (self.content_type)
 
     def get_absolute_url(self):
-        return reverse('lesson_section', args=[str(self.lesson.slug), str(self.content_type)])
+        return reverse('lesson_section', args=[str(self.lesson.id), str(self.content_type)])
 
 
 class LessonQuiz(models.Model):

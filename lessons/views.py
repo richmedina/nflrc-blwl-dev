@@ -8,11 +8,11 @@ from filebrowser.sites import site
 from filebrowser.base import FileListing
 
 from core.mixins import HonorCodeRequired
-from quiz.models import Quiz
+from quiz.models import Quiz, Sitting
 from multichoice.models import MCQuestion, Answer
 from .models import Module, Lesson, LessonSection, LessonQuiz, PbllPage
-from .forms import ModuleUpdateForm, ModuleCreateForm, LessonCreateForm, LessonUpdateForm, LessonSectionUpdateForm, LessonQuizQuestionCreateForm, AnswersFormSet, PbllPageUpdateForm
-
+from .forms import ModuleUpdateForm, ModuleCreateForm, LessonCreateForm, LessonUpdateForm, LessonSectionUpdateForm, LessonQuizQuestionCreateForm, AnswersCreateFormSet, AnswersUpdateFormSet, PbllPageUpdateForm
+ 
 class HomeView(TemplateView):
     template_name = 'index.html'
 
@@ -40,8 +40,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         context = super(LessonView, self).get_context_data(**kwargs)
         context['sections'] = self.get_object().sections.all()
         try:
-            quiz_url = self.get_object().lesson_quiz.get().quiz.url
-            context['quiz'] =  quiz_url
+            context['quiz'] = self.get_object().lesson_quiz.get().quiz
         except:
             pass
         
@@ -53,7 +52,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         context['section_items'] = self.get_object().sections.filter(content_type=context['curr_section'])
         
         try:
-            context['lesson_thread'] =  self.get_object().lesson_discussion.get().thread.slug
+            context['lesson_thread'] =  self.get_object().lesson_discussion.get().thread.id
             preview_replies = self.get_object().lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
             context['lesson_thread_replies'] = preview_replies[0:1]
         except:
@@ -92,10 +91,21 @@ class LessonCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
     model = Lesson
     template_name = "create_form.html"
     form_class = LessonCreateForm
+    module = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.module = get_object_or_404(Module, pk=kwargs['module_id'])
+        return super(LessonCreateView, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['module'] = self.module
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super(LessonCreateView, self).get_context_data(**kwargs)
         context['object_type'] = 'Lesson'
+        context['module'] = self.module
         return context
 
 
@@ -103,10 +113,21 @@ class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
     model = Lesson
     template_name = "edit_form.html"
     form_class = LessonUpdateForm
+    module = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.module = self.get_object().module
+        return super(LessonUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['module'] = self.module
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super(LessonUpdateView, self).get_context_data(**kwargs)
         context['object_type'] = 'Lesson'
+        context['module'] = self.module
         return context
 
 class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
@@ -121,20 +142,25 @@ class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView)
 
         return context
 
+class LessonQuizQuestionListView(LoginRequiredMixin, HonorCodeRequired, DetailView):
+    model = Quiz
+    template_name = 'question_list.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super(LessonQuizQuestionListView, self).get_context_data(**kwargs)
+        context['questions'] = self.get_object().get_questions()
+        context['lesson'] = get_object_or_404(LessonQuiz, quiz=self.get_object()).lesson
+        return context
+
 class LessonQuizQuestionDetailView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = MCQuestion
     template_name = 'question_preview.html'
     lesson = None
     quiz = None
 
-    # def dispatch(self, request, *args, **kwargs):
-    #     self.quiz = self.get_object().quiz.all().get()
-    #     self.lesson = get_object_or_404(LessonQuiz, quiz=self.quiz).lesson
-    #     return super(LessonQuizQuestionDetailView, self).dispatch(request, *args, **kwargs)
-    
     def get_context_data(self, **kwargs):
         context = super(LessonQuizQuestionDetailView, self).get_context_data(**kwargs)
-        context['answers'] = self.get_object().get_answers_list()
+        context['answers'] = Answer.objects.filter(question=self.get_object())
         context['quiz'] = self.get_object().quiz.all().get()
         context['lesson'] = get_object_or_404(LessonQuiz, quiz=context['quiz']).lesson
         return context
@@ -164,7 +190,7 @@ class LessonQuizQuestionCreateView(LoginRequiredMixin, HonorCodeRequired, Create
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        answers_form = AnswersFormSet()
+        answers_form = AnswersCreateFormSet()
         
         return self.render_to_response(
             self.get_context_data(form=form, answers_form=answers_form, quiz=self.quiz, lesson=self.lesson))
@@ -178,7 +204,7 @@ class LessonQuizQuestionCreateView(LoginRequiredMixin, HonorCodeRequired, Create
         self.object = None
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        answers_form = AnswersFormSet(self.request.POST)
+        answers_form = AnswersCreateFormSet(self.request.POST)
         
         if form.is_valid() and answers_form.is_valid():
             return self.form_valid(form, answers_form)
@@ -188,11 +214,16 @@ class LessonQuizQuestionCreateView(LoginRequiredMixin, HonorCodeRequired, Create
     def form_valid(self, form, answers_form):
         """
         Called if all forms are valid. Creates a MCQuestion instance along with
-        associated Answers and then redirects to success_url.
+        associated Answers and then redirects to success_url. All Sittings for the question
+        quiz are reset.
         """
         self.object = form.save()
         answers_form.instance = self.object
         answers_form.save()
+        sittings = Sitting.objects.filter(quiz=self.quiz)
+        for i in sittings: 
+            i.mark_quiz_complete()
+
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form, answers_form):
@@ -216,20 +247,15 @@ class LessonQuizQuestionUpdateView(LoginRequiredMixin, HonorCodeRequired, Update
         self.lesson = get_object_or_404(LessonQuiz, quiz=self.quiz.get()).lesson
         return super(LessonQuizQuestionUpdateView, self).dispatch(request, *args, **kwargs)
 
-    # def get_initial(self):
-    #     initial = self.initial.copy()
-    #     initial['quiz'] = self.quiz
-    #     return initial
-
     def get(self, request, *args, **kwargs):
         """
-        Handles GET requests and instantiates blank versions of the form
-        and its inline formsets.
+        Handles GET requests and instantiates the form
+        and its inline formsets with existing data.
         """
         self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        answers_form = AnswersFormSet(instance=self.get_object())
+        answers_form = AnswersUpdateFormSet(instance=self.get_object())
         
         return self.render_to_response(
             self.get_context_data(form=form, answers_form=answers_form, quiz=self.quiz, lesson=self.lesson))
@@ -240,10 +266,10 @@ class LessonQuizQuestionUpdateView(LoginRequiredMixin, HonorCodeRequired, Update
         formsets with the passed POST variables and then checking them for
         validity.
         """
-        self.object = None
+        self.object = self.get_object()
         form_class = self.get_form_class()
         form = self.get_form(form_class)
-        answers_form = AnswersFormSet(self.request.POST)
+        answers_form = AnswersUpdateFormSet(instance=self.object, data=self.request.POST)
         
         if form.is_valid() and answers_form.is_valid():
             return self.form_valid(form, answers_form)
@@ -252,10 +278,10 @@ class LessonQuizQuestionUpdateView(LoginRequiredMixin, HonorCodeRequired, Update
 
     def form_valid(self, form, answers_form):
         """
-        Called if all forms are valid. Creates a MCQuestion instance along with
+        Called if all forms are valid. Saves a MCQuestion instance along with
         associated Answers and then redirects to success_url.
         """
-        # self.object = form.save()
+        self.object = form.save()
         answers_form.instance = self.object
         answers_form.save()
         return HttpResponseRedirect(self.get_success_url())

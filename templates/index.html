@@ -19,6 +19,7 @@
 		{% if user.is_staff %}
 		<a href="{% url 'module_create' %}" class="btn btn-default btn-xs">add</a>
 		{% endif %}
+		<a href="{% url 'discussion' %}" class="btn btn-default btn-xs"> discussions </a>
 	</h2>
 	{% for i in modules %}
 		<div class="thumbnail blocks">
@@ -26,14 +27,14 @@
 			<div class="button">
 				{% if user.is_staff %}
 				<a href="{% url 'module_edit' slug=i.slug %}" class="btn btn-default btn-xs">edit</a>
-				<a href="{% url 'lesson_create' %}" class="btn btn-default btn-xs pull-right">add lesson</a>
+				<a href="{% url 'lesson_create' module_id=i.id %}" class="btn btn-default btn-xs pull-right">add lesson</a>
 				{% endif %}
 				<legend>{{ i }}</legend>
 			</div>
 			{% for j in i.lessons.all %}
 				<div class="thumbnail">
 					{% if user.is_staff %}
-						<a href="{% url 'lesson_edit' slug=j.slug %}" class="btn btn-default btn-xs pull-right">edit</a>
+						<a href="{% url 'lesson_edit' j.id %}" class="btn btn-default btn-xs pull-right">edit</a>
 					{% endif %}
 
 					{% if user.is_staff or j.active %}

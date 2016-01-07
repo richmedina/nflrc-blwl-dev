@@ -15,14 +15,12 @@
 			
 				
 				<!-- thread header -->
-			    <span>Lesson <i class="fa fa-caret-right"></i> </span>
-		    	<a href="{{ i.lesson.get_absolute_url }}">
-		    		<small class="btn btn-xs btn-default">{{ i.lesson }}</small>  
-		    	</a>
+				<a href="{{ i.lesson.module.get_absolute_url }}"> {{ i.lesson.module }} </a> <i class="fa fa-caret-right"></i> 
+		    	<a href="{{ i.lesson.get_absolute_url }}"> {{ i.lesson }} </a>
 		    	<small class="" style="font-size: 0.3; float: right"><i>{{ i.reply_count }} replies {% if i.unread_reply_count %} <span class="badge">{{ i.unread_reply_count }}</span> new{% endif %}</i></small>
 		    	
 		    	
-		    	<a href="{% url 'discussion_select' i.header.slug %}">
+		    	<a href="{% url 'discussion_select' i.header.id %}">
 			    	<h2>{{ i.header.subject }}</h2>
 			    </a>
 		       

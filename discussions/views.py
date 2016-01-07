@@ -55,13 +55,14 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
             logger = DiscussionLog(user=self.request.user, discussion=thread_post)
             logger.save()
         try:
-            lesson = LessonDiscussion.objects.get(thread=thread_post).lesson
+            lesson = thread_post.lesson_post.all().get().lesson
+            # lesson = LessonDiscussion.objects.get(thread=thread_post).lesson
         except:
             lesson = None
 
         try:
-            quiz_url = lesson.lesson_quiz.get().quiz.url
-            context['quiz'] =  quiz_url
+            quiz = lesson.lesson_quiz.get().quiz
+            context['quiz'] =  quiz
         except:
             pass
 
@@ -103,8 +104,8 @@ class PostUpdateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, Upd
 
     def get_success_url(self):
         if self.get_object().parent_post:
-            return reverse('discussion_select', args=[str(self.get_object().parent_post.slug)])
-        return reverse('discussion_select', args=[str(self.get_object().slug)])
+            return reverse('discussion_select', args=[str(self.get_object().parent_post.id)])
+        return reverse('discussion_select', args=[str(self.get_object().id)])
     
 
 class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, CreateView):
