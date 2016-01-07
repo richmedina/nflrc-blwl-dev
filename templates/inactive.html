@@ -6,7 +6,7 @@
 {% block content_container %}
 
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12 text-center">
     	{% if user.is_anonymous %}
     	
     		<p>Please <a href="{% url 'social:begin' 'google-oauth2' %}?next={{ request.path }}">sign in</a> before proceeding.</p>
