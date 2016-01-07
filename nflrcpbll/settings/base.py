@@ -139,13 +139,15 @@ SOCIAL_AUTH_PIPELINE = (
 
 # NFLRC Custom function to load whitelist from db. This sets the SOCIAL_AUTH_GOOGLE_OAUTH2_WHITELISTED_EMAILS 
 # configuration setting used by the next pipe.
-    'core.utils.nflrc_auth_allowed',
+    'core.utils.nflrc_load_whitelist',
 
     # Verifies that the current auth process is valid within the current
     # project, this is were emails and domains whitelists are applied (if
     # defined).
-    'social.pipeline.social_auth.auth_allowed',
+#  'social.pipeline.social_auth.auth_allowed',
 
+#  REPLACED by nflrc_auth_allowed in order to provide custom exception.
+    'core.utils.nflrc_auth_allowed',
 
     # Checks if the current social-account is already associated in the site.
     'social.pipeline.social_auth.social_user',

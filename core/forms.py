@@ -12,3 +12,4 @@ class HonorCodeForm(ModelForm):
     	labels = {
             'honor_agreement': _('I have read, acknowledge, and agree to the above statements'),
         }
+
