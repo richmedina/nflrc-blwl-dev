@@ -79,7 +79,7 @@ class Lesson(TimeStampedModel):
 
         if not self.lesson_discussion.all():
             try:
-                user = User.objects.filter(is_superuser=True).get()
+                user = User.objects.filter(email='nflrc@hawaii.edu')
                 thread = Post(text="Start a discussion!", creator=user, subject=self.title+' Talk', parent_post=None)
                 thread.save()
                 discussion = LessonDiscussion(thread=thread, lesson=self)
