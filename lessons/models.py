@@ -28,6 +28,18 @@ class Module(models.Model):
         self.slug = slugify(unicode(self.title))
         super(Module, self).save(*args, **kwargs)
 
+    def delete(self, *args, **kwargs):
+        print 'deleting a lesson!'
+        try:
+            lessons = self.lessons.all()
+            for i in lessons:
+                i.delete()
+            
+        except Exception as e:
+            pass  # proceed silently
+            
+        super(Module, self).delete(*args, **kwargs) # Call the "real" delete() 
+
     def __unicode__(self):
         return self.title
 
@@ -86,6 +98,18 @@ class Lesson(TimeStampedModel):
                 print e
                 # pass  # Fail silently...
 
+    def delete(self, *args, **kwargs):
+        print 'deleting a lesson!'
+        try:
+            q = self.lesson_quiz.all().get()
+            q.quiz.delete()
+            d = self.lesson_discussion.all().get()
+            d.thread.delete()
+        except Exception as e:
+            pass  # proceed silently
+            
+        super(Lesson, self).delete(*args, **kwargs) # Call the "real" delete() 
+
     class Meta:
         ordering = ['order']
 
@@ -109,6 +133,15 @@ class LessonQuiz(models.Model):
     class Meta:
         verbose_name = 'Lesson / Quiz Pair'
 
+    # def delete(self, *args, **kwargs):
+    #     try:
+    #         self.quiz.delete()
+    #         self.lesson.delete()
+    #     except:
+    #         pass  # proceed silently
+
+    #     super(LessonQuiz, self).delete(*args, **kwargs) # Call the "real" delete() 
+    
     def __unicode__(self):
         return '%s --> %s' % (self.lesson, self.quiz)
 

@@ -59,6 +59,38 @@
 		    				<input type="submit" class="btn btn-xs btn-yield" title="Delete this post?" value="remove"/>
 		    			</form>
 	    			{% endif %}
+
+{% comment %}	    			
+	    			{% if not j.parent.parent %}
+						<form id="{{j.id}}-postform" class="postform" action="{% url 'create_post'%}" method="post" data-reply_target="{{j.id}}-replies">{% csrf_token %}
+							{% with f=j.get_reply_form %}
+								{% for a in f.fields.hidden %}
+									{{ a }}
+								{% endfor %}
+								{% for b in f %}
+									{{ b }}
+								{% endfor %}
+	    
+	            			{% endwith %}
+	            			<p></p>
+	            			<div style="text-align: right"><input id="post_submit_btn" type="submit" class="btn btn-success btn-sm btn-block" value="reply"/></div>	            
+	        			</form>	    				
+	    			{% endif %}
+
+	    			<dl id="{{j.id}}-replies" class="reply-block">
+	    			{% for k in j.replies.all  %}
+				    	<dt>
+				    		
+				    		{{ k.subject }}
+				    		
+				    		{% if user.is_staff or user == k.creator %}<small style="float: right">&nbsp;<a href="{% url 'edit_post' k.id %}" class="btn btn-primary btn-xs">edit</a>&nbsp;</small>{% endif %}
+				    		<small class="pull-right"> {{ k.modified|date:"M j Y" }} </small>
+				    		<br><small> by {% if user == k.creator %}me{% else %}{{ k.creator.first_name }} {{ k.creator.last_name }} {% endif %}</small>
+				    	</dt>
+				    	<dd>{{ k.text | safe }}</dd>
+			    	{% endfor %}
+	    			</dl>
+{% endcomment %}
 		    	</div>
 		    </div>
 	    {% endfor %}

@@ -73,7 +73,6 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject
         initial_post_data['parent_post'] = thread_post.id  
         form = PostReplyForm(initial=initial_post_data)
-        # form = self.get_form(self.get_form_class())
 
         context['thread'] = thread_post
         context['thread_list'] = Post.objects.filter(parent_post=None).order_by('created')

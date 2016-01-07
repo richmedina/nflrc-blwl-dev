@@ -1,5 +1,6 @@
-from django.views.generic import TemplateView, DetailView, UpdateView, CreateView, FormView
+from django.views.generic import TemplateView, DetailView, UpdateView, CreateView, FormView, DeleteView
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render
 from django import forms
 
@@ -22,6 +23,7 @@ class HomeView(TemplateView):
         context['modules'] = Module.objects.all()
         return context
 
+
 class ModuleView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = Module
     template_name = 'module.html'
@@ -30,6 +32,7 @@ class ModuleView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         context = super(ModuleView, self).get_context_data(**kwargs)
         context['lessons'] = self.get_object().lessons.all()
         return context
+
 
 class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = Lesson
@@ -61,6 +64,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         context['module_lessons'] = self.get_object().module.lessons.all()
         return context
 
+
 class PbllPageView(DetailView):
     model = PbllPage
     template_name = "pbllpage.html"
@@ -76,6 +80,7 @@ class ModuleCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
         context['object_type'] = 'Module'
         return context
 
+
 class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
     model = Module
     template_name = "edit_form.html"
@@ -85,6 +90,19 @@ class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
         context = super(ModuleUpdateView, self).get_context_data(**kwargs)
         context['object_type'] = 'Module'
         return context
+
+
+class ModuleDeleteView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
+    model = Module
+    template_name = 'generic_confirm_delete.html'
+
+    def get_success_url(self):
+        return reverse('home')
+
+    def get_context_data(self, **kwargs):
+        context = super(ModuleDeleteView, self).get_context_data(**kwargs)
+        context['object_type'] = 'Module'
+        return context   
 
 
 class LessonCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
@@ -130,6 +148,20 @@ class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
         context['module'] = self.module
         return context
 
+
+class LessonDeleteView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
+    model = Lesson
+    template_name = 'generic_confirm_delete.html'
+
+    def get_success_url(self):
+        return self.get_object().module.get_absolute_url()
+
+    def get_context_data(self, **kwargs):
+        context = super(LessonDeleteView, self).get_context_data(**kwargs)
+        context['object_type'] = 'Lesson'
+        return context    
+
+
 class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
     model = LessonSection
     template_name = "edit_form.html"
@@ -142,6 +174,7 @@ class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView)
 
         return context
 
+
 class LessonQuizQuestionListView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = Quiz
     template_name = 'question_list.html'
@@ -151,6 +184,7 @@ class LessonQuizQuestionListView(LoginRequiredMixin, HonorCodeRequired, DetailVi
         context['questions'] = self.get_object().get_questions()
         context['lesson'] = get_object_or_404(LessonQuiz, quiz=self.get_object()).lesson
         return context
+
 
 class LessonQuizQuestionDetailView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = MCQuestion
@@ -164,6 +198,7 @@ class LessonQuizQuestionDetailView(LoginRequiredMixin, HonorCodeRequired, Detail
         context['quiz'] = self.get_object().quiz.all().get()
         context['lesson'] = get_object_or_404(LessonQuiz, quiz=context['quiz']).lesson
         return context
+
 
 class LessonQuizQuestionCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
     model = MCQuestion
@@ -294,8 +329,22 @@ class LessonQuizQuestionUpdateView(LoginRequiredMixin, HonorCodeRequired, Update
         return self.render_to_response(
             self.get_context_data(form=form, answers_form=answers_form, quiz=self.quiz, lesson=self.lesson))
 
+
+class LessonQuizQuestionDeleteView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
+    model = MCQuestion
+    template_name = 'generic_confirm_delete.html'
+
+    def get_success_url(self):
+        return self.get_object().quiz.get_absolute_url()
+
+    def get_context_data(self, **kwargs):
+        context = super(LessonQuizQuestionDeleteView, self).get_context_data(**kwargs)
+        context['object_type'] = 'Quiz Question'
+        return context    
+
 class LoginForbiddenView(TemplateView):
     template_name = 'login-forbidden.html'
+
 
 class PbllPageUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
     model = PbllPage

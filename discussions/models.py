@@ -5,6 +5,8 @@ from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
 
+
+
 class Post(TimeStampedModel):
     text = models.TextField()
     creator = models.ForeignKey(User)
@@ -12,6 +14,15 @@ class Post(TimeStampedModel):
     parent_post = models.ForeignKey('self', blank=True, null=True, related_name='replies')
     deleted = models.BooleanField(default=False)
     slug = models.SlugField(null=True, blank=True)
+
+    def get_reply_form(self):
+        from .forms import PostReplyForm
+        initial_post_reply_data = {}
+    
+        # initial_post_reply_data['creator'] = self.request.user
+        initial_post_reply_data['subject'] = 'Re: %s'% self.subject
+        initial_post_reply_data['parent_post'] = self.id  
+        return PostReplyForm(initial=initial_post_reply_data)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.subject))

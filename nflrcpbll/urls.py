@@ -4,7 +4,7 @@ admin.autodiscover()
 
 from filebrowser.sites import site
 
-from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, LessonCreateView, LessonUpdateView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView
+from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView, PostDeleteView, PostUpdateView
 from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView, ParticipantDeleteView
@@ -26,17 +26,20 @@ urlpatterns = patterns('',
     
     url(r'^module/add/$', ModuleCreateView.as_view(), name='module_create' ),
     url(r'^module/(?P<slug>[-\w]+)/$', ModuleView.as_view(), name='module' ),
-    url(r'^module/(?P<slug>[-\w]+)/edit/$', ModuleUpdateView.as_view(), name='module_edit' ),
+    url(r'^module/edit/(?P<slug>[-\w]+)/$', ModuleUpdateView.as_view(), name='module_edit' ),
+    url(r'^module/delete/(?P<pk>[-\w]+)/$', ModuleDeleteView.as_view(), name='module_delete' ),
 
     url(r'^lesson/module/(?P<module_id>[-\w]+)/add/$', LessonCreateView.as_view(), name='lesson_create' ),
     url(r'^lesson/(?P<pk>[-\w]+)/$', LessonView.as_view(), name='lesson' ),
     url(r'^lesson/edit/(?P<pk>[-\w]+)/$', LessonUpdateView.as_view(), name='lesson_edit' ),
     url(r'^lesson/(?P<pk>[-\w]+)/section/(?P<section>[-\w]+)/$', LessonView.as_view(), name='lesson_section' ),
     url(r'^lesson/section/edit/(?P<pk>[-\w]+)/$', LessonSectionUpdateView.as_view(), name='lesson_section_edit' ),
+    url(r'^lesson/delete/(?P<pk>[-\w]+)/$', LessonDeleteView.as_view(), name='lesson_delete' ),
 
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/question/(?P<pk>[-\w]+)/$', LessonQuizQuestionDetailView.as_view(), name='question_preview' ),    
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/add/question/$', LessonQuizQuestionCreateView.as_view(), name='question_create' ),    
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/edit/question/(?P<pk>[-\w]+)/$', LessonQuizQuestionUpdateView.as_view(), name='question_edit' ),
+    url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/delete/question/(?P<pk>[-\w]+)/$', LessonQuizQuestionDeleteView.as_view(), name='question_delete' ),
     url(r'^lesson/quiz/(?P<pk>[-\w]+)/list/questions/$', LessonQuizQuestionListView.as_view(), name='question_list' ),        
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/quiz/take/', QuizTake.as_view(), name='lesson_quiz'),
 
