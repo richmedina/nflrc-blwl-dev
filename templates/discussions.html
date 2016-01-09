@@ -45,9 +45,9 @@
 	    
 	      
 	    {% for j in replies  %}
-		    <div id="post_{{j.0.id}}" class="well" style="margin-left: 30px; {% if j.0 in new_replies %} background-color: #FFCC99 {% endif %}">
+		    <div id="post_{{j.0.id}}" class="" style="margin-left: 30px; {% if j.0 in new_replies %} background-color: #FFCC99 {% endif %}">
 		    	<dt>	
-		    		<h6>  
+		    		<h6 style="border-bottom: 2px solid #ddd">  
 			    		{% if user.is_staff or user == j.0.creator %}
 				    			<form class="post_delete" method="post" data-reply-target="post_{{j.0.id}}" action="{% url 'delete_post' %}">{% csrf_token %}
 				    				<input type="hidden" name="post" value="{{ j.0.id }}"/>
@@ -65,8 +65,7 @@
 		    		
 		    	
 		    	</dt>
-
-		    	<dd>{{ j.0.text | safe }}</dd>
+		    	<dd class="" style="border-bottom: 1px solid #ddd; background: white">{{ j.0.text | safe }}</dd>
 
 	    		<p></p>
 	
@@ -77,7 +76,7 @@
 	    			{% if not j.0.parent.parent %}
 						<form id="{{j.0.id}}-postform" class="postform" style="margin-left: 30px;" action="{% url 'create_post'%}" method="post" data-reply_target="{{j.0.id}}-replies">{% csrf_token %}
 							
-							<h6><input id="post_{{j.0.id}}_reply_btn" type="submit" class="btn btn-success btn-xs" value="reply"/> to {{ j.0.subject }} by {{ j.0.creator }} </h6>
+							<h6><input id="post_{{j.0.id}}_reply_btn" type="submit" class="" value="reply"/> to {{ j.0.creator }} </h6>
 							{{ j.1|crispy }}
 	        			</form>	    				
 	    			{% endif %}
@@ -89,9 +88,9 @@
 	    			<h6>Replies to {{ j.0.subject }} by {{ j.0.creator }} </h6>
 	    			{% for k in j.2  %}
 	    				
-	    				<div id="post_{{k.id}}" class="well">
+	    				<div id="post_{{k.id}}" class="">
 					    	<dt>
-					    		<h6>
+					    		<h6  style="border-bottom: 2px solid #ddd;">
 					    			 
 					    		
 						    		{% if user.is_staff or user == k.creator %}
