@@ -117,6 +117,7 @@ class LessonCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
 
     def get_initial(self):
         initial = self.initial.copy()
+        initial['creator'] = self.request.user
         initial['module'] = self.module
         return initial
 
@@ -139,6 +140,7 @@ class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
 
     def get_initial(self):
         initial = self.initial.copy()
+        initial['creator'] = self.request.user
         initial['module'] = self.module
         return initial
 

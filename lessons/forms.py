@@ -27,7 +27,7 @@ class ModuleUpdateForm(forms.ModelForm):
 class LessonCreateForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['module', 'title', 'description', 'active', 'order']
+        fields = ['creator', 'module', 'title', 'description', 'active', 'order']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),
         }      
@@ -35,7 +35,7 @@ class LessonCreateForm(forms.ModelForm):
 class LessonUpdateForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['title', 'description', 'active', 'order']
+        fields = ['creator', 'module', 'title', 'description', 'active', 'order']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),
         }

@@ -56,6 +56,7 @@ class Lesson(TimeStampedModel):
     module = models.ForeignKey(Module, related_name='lessons')
     active = models.BooleanField(default=True)
     order = models.IntegerField(default=0)
+    creator = models.ForeignKey(User, null=True)
 
     def __unicode__(self):
         return self.title
@@ -79,7 +80,10 @@ class Lesson(TimeStampedModel):
 
         if not self.lesson_discussion.all():
             try:
-                user = User.objects.get(username='llcit')
+                user = self.creator
+            except:
+                user = User.objects.filter(is_superuser=True)[0]
+            try:
                 thread = Post(text="Start a discussion!", creator=user, subject=self.title+' Talk', parent_post=None)
                 thread.save()
                 discussion = LessonDiscussion(thread=thread, lesson=self)

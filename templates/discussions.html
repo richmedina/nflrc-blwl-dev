@@ -70,7 +70,7 @@
 <!-- display subreply form if current reply is not grandchild of thread -->
     			{% if not j.0.parent.parent %}
 					<form id="{{j.0.id}}-postform" class="postform" style="margin-left: 30px;" action="{% url 'create_post'%}" method="post" data-reply_target="{{j.0.id}}-replies">{% csrf_token %}
-						<h6><input id="post_{{j.0.id}}_reply_btn" type="submit" class="" value="reply"/> to {{ j.0.creator }} </h6>
+						<h6><input id="post_{{j.0.id}}_reply_btn" type="submit" class="btn btn-xs" value="reply"/> to {{ j.0.creator.first_name }} {{ j.0.creator.last_name }} </h6>
 						{{ j.1|crispy }}
         			</form>	    				
     			{% endif %}
