@@ -6,7 +6,7 @@
 <div class="col-md-12">
 	<h2>{{ pbllpage.title }}
 		{% if user.is_staff %}
-		<a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class="btn btn-default btn-xs">edit</a>
+		<a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
 		{% endif %}
 	</h2>
 </div>
@@ -17,21 +17,17 @@
 <div class="col-md-12">
 	<h2>Modules
 		{% if user.is_staff %}
-		<a href="{% url 'module_create' %}" class="btn btn-success btn-xs">+ new module</a>
+		<a href="{% url 'module_create' %}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new module</a>
 		{% endif %}
 		<a href="{% url 'discussion' %}" class="btn btn-default btn-xs"> discussions </a>
 	</h2>
 	{% for i in modules %}
 		<div class="thumbnail blocks">  
 			<div class="button">
-				<legend><a href="{{ i.get_absolute_url }}"> {{ i }} {% if user.is_staff %}<i class="fa fa-gear"></i>{% endif %}</a></legend>	
+				<legend><a href="{{ i.get_absolute_url }}"> {{ i }} {% if user.is_staff %}<i class="fa fa-pencil"></i>{% endif %}</a></legend>	
 			</div>
 			{% for j in i.lessons.all %}
 				<div class="thumbnail">
-					{% if user.is_staff %}
-						<a href="{% url 'lesson_edit' j.id %}" class="btn btn-default btn-xs pull-right">edit</a>
-					{% endif %}
-
 					{% if user.is_staff or j.active %}
 						{% if j.active %}<small class="label label-success label-xs">&nbsp;&nbsp;</small>{% endif %}
 						<a class="button" href="{{ j.get_absolute_url }}">{{ j }}</a>
@@ -42,7 +38,7 @@
 			{% endfor %}		
 			<div class="text-center">
 		    {% if user.is_staff %}
-		        <a href="{% url 'lesson_create' module_id=i.id %}" class="btn btn-success btn-xs">+ a new lesson</a>
+		        <a href="{% url 'lesson_create' module_id=i.id %}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new lesson</a>
 		    {% endif %}						
 			</div>
 		</div>

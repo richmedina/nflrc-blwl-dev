@@ -81,8 +81,8 @@ class PbllPageUpdateForm(forms.ModelForm):
         model = PbllPage
         fields = ['title', 'content']
         labels = {
-            'title': 'Editing a PBLL basic page:'
+            'title': 'Page title:'
         }
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 25, 'cols': 80, 'class': 'form-control content-editor'}),
+            'content': forms.Textarea(attrs={'rows': 25, 'cols': 80, 'class': 'form-control content-editor'}),
         }

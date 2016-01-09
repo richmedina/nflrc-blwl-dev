@@ -7,13 +7,13 @@
 <h2> 
 	{{ object.title }}  
 	{% if user.is_staff %}
-        <a href="{% url 'module_edit' slug=object.slug %}"  class="btn btn-default btn-xs">edit</a>
-        <a href="{% url 'module_delete' object.id %}" class="btn btn-danger btn-xs">remove this module</a>
+        <a href="{% url 'module_edit' slug=object.slug %}"  class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
+        <a href="{% url 'module_delete' object.id %}" class="btn btn-default btn-xs">remove</a>
     {% endif %}
 </h2>
 <h3> Lessons 
     {% if user.is_staff %}
-        <a href="{% url 'lesson_create' module_id=object.id %}" class="btn btn-success btn-xs">add a new lesson</a>
+        <a href="{% url 'lesson_create' module_id=object.id %}" class="btn btn-default btn-xs"><i class="fa fa-plus"></i></a>
     {% endif %}
 </h3>
 {% for i in lessons %}
@@ -38,9 +38,9 @@
 		<div>{{ i.description | safe }}</div>
         <hr>
         {% if user.is_staff %}
-            <div class="text-right">
-                <a href="{% url 'lesson_edit' i.id %}" class="btn btn-default btn-xs"> edit </a>
-                <a href="{% url 'lesson_delete' i.id %}" class="btn btn-danger btn-xs"> remove </a>
+            <div class="">
+                <a href="{% url 'lesson_edit' i.id %}" class="btn btn-default btn-xs"> <i class="fa fa-pencil"></i> </a>
+                <a href="{% url 'lesson_delete' i.id %}" class="btn btn-default btn-xs pull-right"> remove </a>
             </div>
         {% endif %}
 	</div>

@@ -9,7 +9,7 @@
     	<h2>
     		<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i></a>
     		<span>{{ lesson }}</span>
-    		{% if user.is_staff %}<a href="{{ lesson.module.get_absolute_url }}" class="btn btn-default btn-xs"><i class="fa fa-gear"></i></a>{% endif %}
+    		{% if user.is_staff %}<a href="{{ lesson.module.get_absolute_url }}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>{% endif %}
     	</h2>
 	</div>
     <div class="col-md-9">
@@ -21,7 +21,7 @@
 				<div class="col-md-12">
 			
 					<h2>{{ item.get_content_type_display }}
-						{% if user.is_staff %}<a href="{% url 'lesson_section_edit' pk=item.id %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+						{% if user.is_staff %}<a href="{% url 'lesson_section_edit' pk=item.id %}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>{% endif %}
 					</h2>
 					
 					<div>{{ item.text | safe }}</div>
@@ -47,12 +47,12 @@
 		
 		{% if lesson_thread %}
 			<div><a href="{% url 'discussion_select' pk=lesson_thread %}" class="menu_btn ">Get Involved</a></div>
-			<div class="well reply_preview_list">
+			<div class=" reply_preview_list bg-success">
 				
 				<div style="text-align: left"><small>Latest posting</small></div>
 				{% for i in lesson_thread_replies %}
 				<a href="{% url 'discussion_select' pk=lesson_thread %}#post_{{i.id}}">
-					<div class="well">
+					<div class="">
 						<i class="fa fa-quote-right fa-1x"></i>					
 						<div class="reply_preview"><small>{{ i.text|truncatewords:10 | safe }}</small></div>
 					</div>
@@ -60,7 +60,7 @@
 				</a>
 				<small class="pull-right" alt="{{ i.creator.email }}">{{ i.creator.first_name }}</small>					
 				{% empty %}
-					<div class="well"><small>No recent posts. Be the first!</small></div>
+					<div class=""><small>No recent posts. Be the first!</small></div>
 				{% endfor %}
 			</div>
 		{% endif %}

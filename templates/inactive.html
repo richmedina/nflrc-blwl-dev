@@ -15,7 +15,7 @@
             <h2>
                 {{ pbllpage.title }}
                 {% if user.is_staff %}
-                    <a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class=""><small>edit</small></a>
+                    <a href="{% url 'pbllpage_edit' slug=pbllpage.slug %}" class=""><small><i class="fa fa-pencil"></i></small></a>
                 {% endif %}
             </h2>
 

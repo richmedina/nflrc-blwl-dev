@@ -169,10 +169,3 @@ class PbllPage(models.Model):
 
     def get_absolute_url(self):
         return reverse('pbllpage', args=[str(self.slug)])
-
-# class StackItem(models.Model):
-#     order = models.IntegerField(default=0)
-#     stack = models.ForeignKey(Stack, related_name='items')
-#     content_type = models.ForeignKey(ContentType)
-#     object_id = models.PositiveIntegerField()
-#     content_object = GenericForeignKey('content_type', 'object_id')

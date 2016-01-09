@@ -21,6 +21,7 @@ class PostReplyForm(forms.ModelForm):
         fields = ['subject', 'text', 'creator', 'parent_post']
         widgets = {
             'text': forms.Textarea(attrs={'rows': 2, 'cols': '100%', 'class': 'form-control discussion-editor'}),
+            'subject': forms.TextInput(attrs={'size': '75%'}),
             'creator': forms.HiddenInput(),
             'parent_post': forms.HiddenInput(), 
         }
@@ -31,7 +32,7 @@ class PostSubthreadReplyForm(forms.ModelForm):
         model = Post
         fields = ['subject', 'text', 'creator', 'parent_post']
         widgets = {
-            'text': forms.Textarea(attrs={'rows': 2, 'cols': '80', 'class': 'form-control '}),
+            'text': forms.Textarea(attrs={'rows': 1, 'class': 'form-control '}),
             'subject': forms.HiddenInput(),
             'creator': forms.HiddenInput(),
             'parent_post': forms.HiddenInput(), 

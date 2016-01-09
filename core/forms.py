@@ -9,7 +9,7 @@ class HonorCodeForm(ModelForm):
     class Meta:
     	model = Whitelist
     	fields = ['honor_agreement']
-    	labels = {
+        labels = {
             'honor_agreement': _('I have read, acknowledge, and agree to the above statements'),
         }
 
