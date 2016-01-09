@@ -77,7 +77,7 @@
 <!-- subthread replies -->
 
     			<dl id="{{j.0.id}}-replies" class="reply-block" style="margin-left: 30px">
-    			<h5 class="text-muted">Replies to {{ j.0.subject }} by {{ j.0.creator }} </h5>
+    			<h5 class="text-muted">Replies to {{ j.0.subject }} by {{ j.0.creator.first_name }} </h5>
     			{% for k in j.2  %}
     				
     				<div id="post_{{k.id}}" style="border-bottom: 1px dotted #ddd;">
