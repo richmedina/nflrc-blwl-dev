@@ -15,14 +15,14 @@ class Post(TimeStampedModel):
     deleted = models.BooleanField(default=False)
     slug = models.SlugField(null=True, blank=True)
 
-    def get_reply_form(self):
-        from .forms import PostReplyForm
+    def get_reply_form(self, creator_init=None):
+        from .forms import PostSubthreadReplyForm
         initial_post_reply_data = {}
     
-        # initial_post_reply_data['creator'] = self.request.user
+        initial_post_reply_data['creator'] = creator_init
         initial_post_reply_data['subject'] = 'Re: %s'% self.subject
         initial_post_reply_data['parent_post'] = self.id  
-        return PostReplyForm(initial=initial_post_reply_data)
+        return PostSubthreadReplyForm(initial=initial_post_reply_data)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.subject))

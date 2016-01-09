@@ -12,7 +12,7 @@ class PostForm(forms.ModelForm):
             'creator': forms.HiddenInput(),
             'parent_post': forms.HiddenInput(), 
         }
-        labels = { 'text': 'Message Text...'}
+        labels = { 'text': 'Message Text...', 'subject': 'Subject line...'}
 
         
 class PostReplyForm(forms.ModelForm):
@@ -21,6 +21,17 @@ class PostReplyForm(forms.ModelForm):
         fields = ['subject', 'text', 'creator', 'parent_post']
         widgets = {
             'text': forms.Textarea(attrs={'rows': 2, 'cols': '100%', 'class': 'form-control discussion-editor'}),
+            'creator': forms.HiddenInput(),
+            'parent_post': forms.HiddenInput(), 
+        }
+        labels = { 'text': '', 'subject': 'Subject line:'}
+
+class PostSubthreadReplyForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['subject', 'text', 'creator', 'parent_post']
+        widgets = {
+            'text': forms.Textarea(attrs={'rows': 2, 'cols': '80', 'class': 'form-control '}),
             'subject': forms.HiddenInput(),
             'creator': forms.HiddenInput(),
             'parent_post': forms.HiddenInput(), 

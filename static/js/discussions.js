@@ -41,8 +41,8 @@ jQuery(function($) {
         /* **** Must call this to populate the form's textarea element */
         tinymce.triggerSave();
         /* **** */
-        
-        if ($("#id_text").val() === "") {
+
+        if ($(this).find("#id_text").val() === "") {
             return;
         }
 

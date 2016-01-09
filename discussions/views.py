@@ -69,18 +69,26 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         replies = thread_post.replies.all().filter(deleted=False).order_by('-created')
         new_replies = replies.filter(modified__gt = logger.modified)
 
+        """ [(post_obj, post_form, [post_replies])]"""
+        reply_list = []
+        for i in replies:
+            thread_reply = (i, i.get_reply_form(creator_init=self.request.user), i.replies.all().filter(deleted=False).order_by('-created'))
+            reply_list.append(thread_reply)
+
 
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject
         initial_post_data['parent_post'] = thread_post.id  
         form = PostReplyForm(initial=initial_post_data)
 
+        context['module_lessons'] = lesson.module.lessons.all()
+        context['lesson'] = lesson
+
         context['thread'] = thread_post
         context['thread_list'] = Post.objects.filter(parent_post=None).order_by('created')
-        context['lesson'] = lesson
-        context['replies'] = replies
+
+        context['replies'] = reply_list
         context['new_replies'] = new_replies
         context['postform'] = form
-        context['module_lessons'] = lesson.module.lessons.all()
 
         logger.save()
         return context
@@ -102,15 +110,21 @@ class PostUpdateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, Upd
         return form_class
 
     def get_success_url(self):
-        if self.get_object().parent_post:
-            return reverse('discussion_select', args=[str(self.get_object().parent_post.id)])
-        return reverse('discussion_select', args=[str(self.get_object().id)])
+        current = self.get_object()
+        parent = current.parent_post
+
+        if parent:
+            if parent.parent_post:  # subthread. make sure to display master thread
+                return reverse('discussion_select', args=[str(parent.parent_post.id)])
+            return reverse('discussion_select', args=[str(parent.id)])
+        return reverse('discussion_select', args=[str(current.id)])
     
 
 class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, CreateView):
     model = Post
     template_name = 'discussions.html'
     form_class= PostReplyForm
+
 
     def post_ajax(self, request, *args, **kwargs):
         postform = PostReplyForm(request.POST)
