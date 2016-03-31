@@ -105,12 +105,12 @@
 
     
     {% if lesson_thread %}
-      <div><a href="{% url 'discussion_select' lesson_thread %}" class="menu_btn ">Get Involved</a></div>
+      <div><a href="{% url 'discussion_select' pk=lesson_thread %}" class="menu_btn ">Get Involved</a></div>
       <div class="well reply_preview_list">
         
         <div style="text-align: left"><small>Latest posting</small></div>
         {% for i in lesson_thread_replies %}
-        <a href="{% url 'discussion_select' lesson_thread %}#post_{{i.id}}">
+        <a href="{% url 'discussion_select' pk=lesson_thread %}#post_{{i.id}}">
           <div class="well">
             <i class="fa fa-quote-left"></i>              
             <div class="reply_preview"><small>{{ i.text|truncatewords:10 | safe }}</small></div>
