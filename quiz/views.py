@@ -265,7 +265,7 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
             results['module_lessons'] = results['lesson'].module.lessons.all()
 
             try:
-                results['lesson_thread'] =  results['lesson'].lesson_discussion.get().thread.slug
+                results['lesson_thread'] =  results['lesson'].lesson_discussion.get().thread
                 preview_replies = results['lesson'].lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
                 results['lesson_thread_replies'] = preview_replies[0:1]
             except:
