@@ -92,15 +92,15 @@ class Lesson(TimeStampedModel):
                 pass  # Fail silently...
 
         if not self.lesson_quiz.all():
+            
             try:
-                title = '%s %s Quiz'% (self.module.title, self.title)
+                title = '%s Quiz'% (self.title)
                 quiz = Quiz(title=title, url=title, random_order=False, answers_at_end=True)
                 quiz.save()
                 lesson_quiz = LessonQuiz(quiz=quiz, lesson=self)
                 lesson_quiz.save()
             except Exception as e:
-                print e
-                # pass  # Fail silently...
+                pass  # Fail silently...
 
     def delete(self, *args, **kwargs):
         print 'deleting a lesson!'

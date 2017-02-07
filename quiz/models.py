@@ -3,6 +3,7 @@ import re
 import json
 
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator
 from django.utils.translation import ugettext as _
@@ -66,14 +67,14 @@ class Quiz(models.Model):
 
     title = models.CharField(
         verbose_name=_("Title"),
-        max_length=60, blank=False)
+        max_length=256, blank=False)
 
     description = models.TextField(
         verbose_name=_("Description"),
         blank=True, help_text=_("a description of the quiz"))
 
     url = models.SlugField(
-        max_length=60, blank=False,
+        max_length=512, blank=False,
         help_text=_("a user friendly url"),
         verbose_name=_("user friendly url"))
 
@@ -169,6 +170,9 @@ class Quiz(models.Model):
 
     def anon_q_data(self):
         return str(self.id) + "_data"
+
+    def get_absolute_url(self):
+        return reverse('question_list', args=[str(self.id)])
 
 
 class ProgressManager(models.Manager):

@@ -337,7 +337,13 @@ class LessonQuizQuestionDeleteView(LoginRequiredMixin, HonorCodeRequired, Delete
     template_name = 'generic_confirm_delete.html'
 
     def get_success_url(self):
-        return self.get_object().quiz.get_absolute_url()
+        # remove the sittings for this quiz and return user back quiz question list.
+        try:
+            quiz = self.get_object().quiz.all()[0]
+            Sitting.objects.filter(quiz=quiz).delete()
+            return quiz.get_absolute_url()
+        except:
+            return reverse('home')
 
     def get_context_data(self, **kwargs):
         context = super(LessonQuizQuestionDeleteView, self).get_context_data(**kwargs)

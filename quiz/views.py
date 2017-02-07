@@ -141,6 +141,7 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
     template_name = 'question.html'
 
     def dispatch(self, request, *args, **kwargs):
+        
         self.quiz = get_object_or_404(Quiz, pk=self.kwargs['quiz_id'])
         if self.quiz.draft and not request.user.has_perm('quiz.change_quiz'):
             raise PermissionDenied
