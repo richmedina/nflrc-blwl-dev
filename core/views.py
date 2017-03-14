@@ -36,10 +36,11 @@ class ParticipantListView(LoginRequiredMixin, StaffuserRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(ParticipantListView, self).get_context_data(**kwargs)
-        context['object_list'] = context['object_list'].order_by('participant_type', 'email_addr')  #self.get_queryset()
-        context['option1_list'] = context['object_list'].filter(participant_type='opt1')
-        context['option2_list'] = context['object_list'].filter(participant_type='opt2')
-        context['staff_list'] = context['object_list'].filter(participant_type='staff')
+        context['object_list'] = context['object_list'].order_by('participant_type', 'email_addr') \
+            .extra(select={'imf': 'LOWER(email_addr)'}, order_by=['imf'])  
+        context['option1_list'] = context['object_list'].filter(participant_type='opt1').order_by('email_addr')
+        context['option2_list'] = context['object_list'].filter(participant_type='opt2').order_by('email_addr')
+        context['staff_list'] = context['object_list'].filter(participant_type='staff').order_by('email_addr')
         context['active_list'] = context['object_list'].filter(site_account__isnull=False).order_by('-site_account__last_login')
 
         return context
