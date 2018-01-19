@@ -66,6 +66,7 @@ class Lesson(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.title))
+        self.slug = self.slug[:49]
         super(Lesson, self).save(*args, **kwargs)
 
         if not self.sections.all():
