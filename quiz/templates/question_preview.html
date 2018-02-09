@@ -10,7 +10,7 @@
         <h2>
             <a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i></a>
             <span> <a href="{{ lesson.get_absolute_url }}">{{ lesson }}</a> </span>
-            {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+            {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.id %}" class="btn btn-default btn-xs">edit</a>{% endif %}
         </h2>
     </div>
 	<div class="col-md-12"><h3>{{ quiz.title }}</h3></div>

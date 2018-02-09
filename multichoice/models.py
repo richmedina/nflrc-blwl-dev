@@ -71,7 +71,7 @@ class Answer(models.Model):
 
     correct = models.BooleanField(blank=False,
                                   default=False,
-                                  help_text=_("Is this a correct answer?"),
+                                  help_text=_("Is this the correct answer? Only one can be selected as correct."),
                                   verbose_name=_("Correct"))
 
     def __str__(self):

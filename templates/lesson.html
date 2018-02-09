@@ -9,7 +9,7 @@
     	<h2>
     		<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i></a>
     		<span>{{ lesson }}</span>
-    		{% if user.is_staff %}<a href="{{ lesson.module.get_absolute_url }}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>{% endif %}
+    		{% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.id %}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>{% endif %}
     	</h2>
 	</div>
     <div class="col-md-9">

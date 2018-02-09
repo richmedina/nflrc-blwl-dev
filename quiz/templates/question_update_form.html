@@ -10,7 +10,7 @@
         <h2>
             <a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i></a>
             <span> <a href="{{ lesson.get_absolute_url }}">{{ lesson }}</a> </span>
-            {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.slug %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+            {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.id %}" class="btn btn-default btn-xs">edit</a>{% endif %}
         </h2>
     </div>
 
@@ -49,6 +49,18 @@
 </div>
     
 {% endblock content_container %}
-{% block js_script %} 
+{% block js_script %}
+<script type="text/javascript">
+
+jQuery(function($) {
     
+    $("input[name$='-correct']").change(function() {
+        var curr_state = $(this).prop("checked");
+        $("input[name$='-correct']").prop( "checked", false );
+        $(this).prop("checked", curr_state);
+    });
+});
+
+</script>
+
 {% endblock js_script %}

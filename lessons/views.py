@@ -228,7 +228,6 @@ class LessonQuizQuestionCreateView(LoginRequiredMixin, HonorCodeRequired, Create
         form_class = self.get_form_class()
         form = self.get_form(form_class)
         answers_form = AnswersCreateFormSet()
-        
         return self.render_to_response(
             self.get_context_data(form=form, answers_form=answers_form, quiz=self.quiz, lesson=self.lesson))
 
