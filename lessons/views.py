@@ -349,6 +349,7 @@ class LessonQuizQuestionDeleteView(LoginRequiredMixin, HonorCodeRequired, Delete
         context['object_type'] = 'Quiz Question'
         return context    
 
+
 class LoginForbiddenView(TemplateView):
     template_name = 'login-forbidden.html'
 
