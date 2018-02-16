@@ -13,7 +13,7 @@ class Post(TimeStampedModel):
     subject = models.CharField(max_length=512)
     parent_post = models.ForeignKey('self', blank=True, null=True, related_name='replies')
     deleted = models.BooleanField(default=False)
-    slug = models.SlugField(null=True, blank=True)
+    slug = models.SlugField(null=True, blank=True, max_length=255)
 
     def get_reply_form(self, creator_init=None):
         from .forms import PostSubthreadReplyForm
