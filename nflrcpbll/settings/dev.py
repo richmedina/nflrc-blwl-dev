@@ -18,7 +18,7 @@ INSTALLED_APPS += (
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'nflrc-pbll-dev-db-2018',
+        'NAME': 'nflrc-blwl-dev-db',
         'USER': 'postgres',
         'PASSWORD': '1',
         'HOST': '127.0.0.1',
