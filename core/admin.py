@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.forms import ModelForm
 
-from lessons.models import Module, Lesson, LessonSection, LessonQuiz, LessonDiscussion, PbllPage
+from lessons.models import Project, Module, Lesson, LessonModule, LessonSection, LessonQuiz, LessonDiscussion, PbllPage
 from discussions.models import Post, DiscussionLog
 from .models import Whitelist
 
@@ -40,8 +40,10 @@ class WhitelistAdmin(admin.ModelAdmin):
     list_filter = ['participant_type', 'honor_agreement']
     list_editable = ['email_addr', 'participant_type', 'honor_agreement']
 
+admin.site.register(Project)
 admin.site.register(Module)
 admin.site.register(Lesson)
+admin.site.register(LessonModule)
 admin.site.register(LessonSection, LessonSectionAdmin)
 admin.site.register(LessonQuiz)
 admin.site.register(LessonDiscussion, LessonDiscussionAdmin)

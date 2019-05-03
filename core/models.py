@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 
 from model_utils.models import TimeStampedModel
 
+# from lessons.models import Project
+
 PARTICIPANT_TYPES = (
 	('opt1', 'Option 1'),
 	('opt2', 'Option 2'),
@@ -19,6 +21,12 @@ class Whitelist(TimeStampedModel):
 
 	def __unicode__(self):
 		return self.email_addr
+
+
+# class ProjectMembership(models.Model):
+# 	project = models.ForeignKey(Project, related_name='members')
+# 	user = models.ForeignKey(User, related_name='member_projects')
+
 
 class SiteFile(TimeStampedModel):
     fileobj = models.FileField(upload_to='pbll-media')

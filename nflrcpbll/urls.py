@@ -4,7 +4,7 @@ admin.autodiscover()
 
 from filebrowser.sites import site
 
-from lessons.views import HomeView, ModuleView, LessonView, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
+from lessons.views import HomeView, ProjectView, ModuleView, LessonView, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, PostCreateView, PostDeleteView, PostUpdateView
 from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView, ParticipantDeleteView
@@ -23,8 +23,10 @@ urlpatterns = patterns('',
     # url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),
     
     url(r'^quiz/', include('quiz.urls')),
+
+    url(r'^(?P<slug>[-\w]+)/$', ProjectView.as_view(), name='project' ),
     
-    url(r'^module/add/$', ModuleCreateView.as_view(), name='module_create' ),
+    url(r'^module/(?P<project_id>[-\w]+)/add/$', ModuleCreateView.as_view(), name='module_create' ),
     url(r'^module/(?P<slug>[-\w]+)/$', ModuleView.as_view(), name='module' ),
     url(r'^module/edit/(?P<slug>[-\w]+)/$', ModuleUpdateView.as_view(), name='module_edit' ),
     url(r'^module/delete/(?P<pk>[-\w]+)/$', ModuleDeleteView.as_view(), name='module_delete' ),

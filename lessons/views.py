@@ -11,7 +11,7 @@ from filebrowser.base import FileListing
 from core.mixins import HonorCodeRequired
 from quiz.models import Quiz, Sitting
 from multichoice.models import MCQuestion, Answer
-from .models import Module, Lesson, LessonSection, LessonQuiz, PbllPage
+from .models import Project, Module, Lesson, LessonModule, LessonSection, LessonQuiz, PbllPage
 from .forms import ModuleUpdateForm, ModuleCreateForm, LessonCreateForm, LessonUpdateForm, LessonSectionUpdateForm, LessonQuizQuestionCreateForm, AnswersCreateFormSet, AnswersUpdateFormSet, PbllPageUpdateForm
  
 class HomeView(TemplateView):
@@ -19,9 +19,18 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        context['pbllpage'] = PbllPage.objects.get(pk=1)
-        context['modules'] = Module.objects.all()
+        context['projects'] = Project.objects.all()
         return context
+
+
+class ProjectView(DetailView):
+    model = Project
+    template_name = 'index_project.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectView, self).get_context_data(**kwargs)
+        context['modules'] = self.get_object().project_modules.all()
+        return context    
 
 
 class ModuleView(LoginRequiredMixin, HonorCodeRequired, DetailView):
@@ -61,7 +70,7 @@ class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         except:
             context['lesson_thread'] = None
 
-        context['module_lessons'] = self.get_object().module.lessons.all()
+        # context['module_lessons'] = self.get_object().module.lessons.all()
         return context
 
 
@@ -74,6 +83,16 @@ class ModuleCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
     model = Module
     template_name = "create_form.html"
     form_class = ModuleCreateForm
+    project = None
+
+    def dispatch(self, request, *args, **kwargs):
+        self.project = get_object_or_404(Project, pk=kwargs['project_id'])
+        return super(ModuleCreateView, self).dispatch(request, *args, **kwargs)
+
+    def get_initial(self):
+        initial = self.initial.copy()
+        initial['project'] = self.project
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super(ModuleCreateView, self).get_context_data(**kwargs)
@@ -120,6 +139,18 @@ class LessonCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
         initial['creator'] = self.request.user
         initial['module'] = self.module
         return initial
+
+    def form_valid(self, form):
+        """
+        Called if all forms are valid. Creates a lesson instance along with
+        a LessonModule instance.
+        """
+        self.object = form.save()
+        module_obj = form.cleaned_data['module']
+        lesson_module = LessonModule(module=module_obj, lesson=self.object)
+        lesson_module.save()
+
+        return super(LessonCreateView, self).form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super(LessonCreateView, self).get_context_data(**kwargs)

@@ -18,18 +18,30 @@ CONTENT_TYPES = (
     ('apply', 'Apply'),    
 )
 
+class Project(models.Model):
+    title = models.CharField(max_length=512)
+    description = models.TextField(blank=True)
+    slug = models.SlugField(blank=True)
+    public = models.BooleanField(default=False)
+
+    def __unicode__(self):
+        return self.title
+
+    def get_absolute_url(self):
+        return reverse('project', args=[str(self.slug)])
+
 class Module(models.Model):
     title = models.CharField(max_length=512)
     description = models.TextField(blank=True)
     slug = models.SlugField(blank=True)
     order = models.IntegerField(default=0)
+    project = models.ForeignKey(Project, related_name='project_modules')
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.title))
         super(Module, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        print 'deleting a lesson!'
         try:
             lessons = self.lessons.all()
             for i in lessons:
@@ -49,13 +61,14 @@ class Module(models.Model):
     class Meta:
         ordering = ['order']
 
+
 class Lesson(TimeStampedModel):
     title = models.CharField(max_length=512)
     description = models.TextField(blank=True)
     slug = models.SlugField(blank=True)
-    module = models.ForeignKey(Module, related_name='lessons')
+    # module = models.ForeignKey(Module, related_name='lessons')
     active = models.BooleanField(default=True)
-    order = models.IntegerField(default=0)
+    # order = models.IntegerField(default=0)
     creator = models.ForeignKey(User, null=True)
 
     def __unicode__(self):
@@ -115,9 +128,12 @@ class Lesson(TimeStampedModel):
             
         super(Lesson, self).delete(*args, **kwargs) # Call the "real" delete() 
 
-    class Meta:
-        ordering = ['order']
 
+class LessonModule(models.Model):
+    module = models.ForeignKey(Module, related_name='lessons')
+    lesson = models.ForeignKey(Lesson, related_name='modules')
+    order = models.IntegerField(default=0)
+    
 
 class LessonSection(models.Model):
     text = models.TextField(default='Coming soon...')
@@ -149,6 +165,7 @@ class LessonQuiz(models.Model):
     
     def __unicode__(self):
         return '%s --> %s' % (self.lesson, self.quiz)
+
 
 class LessonDiscussion(models.Model):
     thread = models.ForeignKey(Post, related_name='lesson_post')

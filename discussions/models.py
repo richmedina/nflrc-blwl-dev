@@ -14,6 +14,7 @@ class Post(TimeStampedModel):
     parent_post = models.ForeignKey('self', blank=True, null=True, related_name='replies')
     deleted = models.BooleanField(default=False)
     slug = models.SlugField(null=True, blank=True, max_length=255)
+    public = models.BooleanField(default=False)
 
     def get_reply_form(self, creator_init=None):
         from .forms import PostSubthreadReplyForm

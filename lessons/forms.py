@@ -5,14 +5,15 @@ from django.forms.models import BaseModelFormSet
 from django.forms.widgets import RadioSelect
 
 from multichoice.models import MCQuestion, Answer
-from .models import Module, Lesson, LessonSection, PbllPage
+from .models import Project, Module, Lesson, LessonSection, PbllPage
 
 class ModuleCreateForm(forms.ModelForm):
 
     class Meta:
         model = Module
-        fields = ['title', 'description', 'order']
+        fields = ['title', 'description', 'order', 'project']
         widgets = {
+            'project': forms.HiddenInput(),
             'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),      
         }
 
@@ -25,9 +26,10 @@ class ModuleUpdateForm(forms.ModelForm):
         }
         
 class LessonCreateForm(forms.ModelForm):
+    module = forms.ModelChoiceField(queryset=Module.objects.all(), widget=forms.TextInput())
     class Meta:
         model = Lesson
-        fields = ['creator', 'module', 'title', 'description', 'active', 'order']
+        fields = ['creator', 'title', 'description', 'active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),
         }      
@@ -35,7 +37,7 @@ class LessonCreateForm(forms.ModelForm):
 class LessonUpdateForm(forms.ModelForm):
     class Meta:
         model = Lesson
-        fields = ['creator', 'module', 'title', 'description', 'active', 'order']
+        fields = ['creator', 'title', 'description', 'active']
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5, 'cols': 80, 'class': 'form-control content-editor'}),
         }
