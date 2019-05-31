@@ -4,9 +4,9 @@ admin.autodiscover()
 
 from filebrowser.sites import site
 
-from lessons.views import HomeView, ProjectView, ModuleView, LessonView, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
+from lessons.views import HomeView, ProjectView, ModuleView, LessonViewAll, LessonView, LessonViewPermLink, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonModuleCreatePairView, LessonModuleDeletePairView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
 from quiz.views import QuizTake
-from discussions.views import DiscussionListView, DiscussionView, PostCreateView, PostDeleteView, PostUpdateView
+from discussions.views import DiscussionListView, DiscussionView, DiscussionViewPermLink, PostCreateView, PostDeleteView, PostUpdateView
 from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView, ParticipantDeleteView
 
 urlpatterns = patterns('',
@@ -24,20 +24,45 @@ urlpatterns = patterns('',
     
     url(r'^quiz/', include('quiz.urls')),
 
+# PROJECT (SERIES)
+    # Display modules and lessons collected as part of a series.
+    # Series (or projects) are collections of modules containing lessons. A series is open or restricted.
     url(r'^(?P<slug>[-\w]+)/$', ProjectView.as_view(), name='project' ),
     
-    url(r'^module/(?P<project_id>[-\w]+)/add/$', ModuleCreateView.as_view(), name='module_create' ),
-    url(r'^module/(?P<slug>[-\w]+)/$', ModuleView.as_view(), name='module' ),
-    url(r'^module/edit/(?P<slug>[-\w]+)/$', ModuleUpdateView.as_view(), name='module_edit' ),
-    url(r'^module/delete/(?P<pk>[-\w]+)/$', ModuleDeleteView.as_view(), name='module_delete' ),
+# MODULE
+    # Root page for a module.
+    # Display information and lessons that are associated with a module.
+    url(r'^(?P<project_slug>[-\w]+)/module/add/$', ModuleCreateView.as_view(), name='module_create' ),
+    url(r'^(?P<project_slug>[-\w]+)/module/(?P<pk>[-\w]+)/$', ModuleView.as_view(), name='module' ),
+    url(r'^(?P<project_slug>[-\w]+)/module/(?P<pk>[-\w]+)/edit/$', ModuleUpdateView.as_view(), name='module_edit' ),
+    url(r'^(?P<project_slug>[-\w]+)/module/(?P<pk>[-\w]+)/delete/$', ModuleDeleteView.as_view(), name='module_delete' ),
 
-    url(r'^lesson/module/(?P<module_id>[-\w]+)/add/$', LessonCreateView.as_view(), name='lesson_create' ),
-    url(r'^lesson/(?P<pk>[-\w]+)/$', LessonView.as_view(), name='lesson' ),
-    url(r'^lesson/edit/(?P<pk>[-\w]+)/$', LessonUpdateView.as_view(), name='lesson_edit' ),
-    url(r'^lesson/(?P<pk>[-\w]+)/section/(?P<section>[-\w]+)/$', LessonView.as_view(), name='lesson_section' ),
-    url(r'^lesson/section/edit/(?P<pk>[-\w]+)/$', LessonSectionUpdateView.as_view(), name='lesson_section_edit' ),
-    url(r'^lesson/delete/(?P<pk>[-\w]+)/$', LessonDeleteView.as_view(), name='lesson_delete' ),
+# LESSON (PROJECT)
+    # url(r'^(?P<project_slug>[-\w]+)/module/(?P<module_id>[-\w]+)/lesson/add/$', LessonCreateView.as_view(), name='lesson_create' ),
+    url(r'^(?P<project_slug>[-\w]+)/module/(?P<module_id>[-\w]+)/lesson/(?P<pk>[-\w]+)/$', LessonView.as_view(), name='lesson' ),
+    url(r'^(?P<project_slug>[-\w]+)/module/(?P<module_id>[-\w]+)/lesson/(?P<pk>[-\w]+)/section/(?P<section>[-\w]+)/$', LessonView.as_view(), name='lesson_section' ),
+    url(r'^(?P<project_slug>[-\w]+)/module/(?P<module_id>[-\w]+)/lesson/(?P<lesson_id>[-\w]+)/discussion/(?P<pk>[-\w]+)/$', DiscussionView.as_view(), name='discussion' ),
+   
 
+    
+    # url(r'^(?P<project_slug>[-\w]+)/module/lesson/edit/(?P<pk>[-\w]+)/$', LessonUpdateView.as_view(), name='lesson_edit' ),
+    # url(r'^(?P<project_slug>[-\w]+)/module/lesson/(?P<pk>[-\w]+)/section/(?P<section>[-\w]+)/$', LessonView.as_view(), name='lesson_section' ),
+    # url(r'^(?P<project_slug>[-\w]+)/module/lesson/section/edit/(?P<pk>[-\w]+)/$', LessonSectionUpdateView.as_view(), name='lesson_section_edit' ),
+    # url(r'^(?P<project_slug>[-\w]+)/module/lesson/delete/(?P<pk>[-\w]+)/$', LessonDeleteView.as_view(), name='lesson_delete' ),
+
+
+# LESSON (permalinked)
+    url(r'^lesson/all/$', LessonViewAll.as_view(), name='lesson_list'),
+    url(r'^lesson/add/$', LessonCreateView.as_view(), name='lesson_create'),
+    url(r'^lesson-module/add/$', LessonModuleCreatePairView.as_view(), name='lesson_module_create'),
+    url(r'^lesson-module/delete/(?P<pk>[-\w]+)$', LessonModuleDeletePairView.as_view(), name='lesson_module_detach'),
+    url(r'^lesson/(?P<pk>[-\w]+)/$', LessonViewPermLink.as_view(), name='lesson_permlink' ),
+    url(r'^lesson/(?P<pk>[-\w]+)/section/(?P<section>[-\w]+)/$', LessonViewPermLink.as_view(), name='lesson_section_permlink' ),
+    url(r'^lesson/(?P<pk>[-\w]+)/edit/$', LessonUpdateView.as_view(), name='lesson_edit' ),
+    url(r'^lesson/section/(?P<pk>[-\w]+)/edit/$', LessonSectionUpdateView.as_view(), name='lesson_section_edit' ),
+    url(r'^lesson/(?P<pk>[-\w]+)/delete/$', LessonDeleteView.as_view(), name='lesson_delete' ),
+
+# QUIZ
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/question/(?P<pk>[-\w]+)/$', LessonQuizQuestionDetailView.as_view(), name='question_preview' ),    
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/add/question/$', LessonQuizQuestionCreateView.as_view(), name='question_create' ),    
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/edit/question/(?P<pk>[-\w]+)/$', LessonQuizQuestionUpdateView.as_view(), name='question_edit' ),
@@ -45,17 +70,18 @@ urlpatterns = patterns('',
     url(r'^lesson/quiz/(?P<pk>[-\w]+)/list/questions/$', LessonQuizQuestionListView.as_view(), name='question_list' ),        
     url(r'^lesson/quiz/(?P<quiz_id>[-\w]+)/quiz/take/', QuizTake.as_view(), name='lesson_quiz'),
 
-    url(r'^discussions/(?P<pk>[-\w]+)/$', DiscussionView.as_view(), name='discussion_select' ),
-    url(r'^discussions/$', DiscussionListView.as_view(), name='discussion' ),
-    url(r'^discussions/post/add/$', PostCreateView.as_view(), name='create_post'),
-    url(r'^discussions/post/delete/$', PostDeleteView.as_view(), name='delete_post'),
-    url(r'^discussions/post/(?P<pk>[-\w]+)/edit/$', PostUpdateView.as_view(), name='edit_post'),
+# DISCUSSION
+    url(r'^(?P<project_slug>[-\w]+)/discussion/all/$', DiscussionListView.as_view(), name='discussion_list' ),
+    url(r'^discussion/(?P<pk>[-\w]+)/$', DiscussionViewPermLink.as_view(), name='discussion_permlink' ),
+    url(r'^discussion/post/add/$', PostCreateView.as_view(), name='create_post'),
+    url(r'^discussion/post/delete/$', PostDeleteView.as_view(), name='delete_post'),
+    url(r'^discussion/post/(?P<pk>[-\w]+)/edit/$', PostUpdateView.as_view(), name='edit_post'),
     
-
+# CONTENT PAGE
     url(r'^pbllpage/(?P<slug>[-\w]+)/$', PbllPageView.as_view(), name='pbllpage' ),
     url(r'^pbllpage/edit/(?P<slug>[-\w]+)/$', PbllPageUpdateView.as_view(), name='pbllpage_edit' ),
 
-    
+# PARTICIPANT MANAGEMENT    
     url(r'^participants/$', ParticipantListView.as_view(), name='participants'),
     url(r'^participants/add/$', ParticipantCreateView.as_view(), name='add_participant'),
     url(r'^participants/edit/(?P<pk>[-\w]+)/$', ParticipantUpdateView.as_view(), name='edit_participant'),

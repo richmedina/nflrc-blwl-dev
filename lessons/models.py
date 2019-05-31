@@ -24,11 +24,20 @@ class Project(models.Model):
     slug = models.SlugField(blank=True)
     public = models.BooleanField(default=False)
 
-    def __unicode__(self):
-        return self.title
+    def get_lessons(self):
+        lessons = []
+        modules = self.project_modules.all().order_by('order')
+        for mod in modules:
+            for lsnmod in mod.lessons.all().order_by('order'):
+                lessons.append((mod, lsnmod.lesson))
+        return lessons 
 
     def get_absolute_url(self):
         return reverse('project', args=[str(self.slug)])
+
+    def __unicode__(self):
+        return self.title
+
 
 class Module(models.Model):
     title = models.CharField(max_length=512)
@@ -56,7 +65,7 @@ class Module(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('module', args=[str(self.slug)])
+        return reverse('module', args=[self.project.slug, self.id])
 
     class Meta:
         ordering = ['order']
@@ -75,7 +84,7 @@ class Lesson(TimeStampedModel):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('lesson', args=[str(self.id)])
+        return reverse('lesson_permlink', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
         self.slug = slugify(unicode(self.title))
@@ -117,7 +126,6 @@ class Lesson(TimeStampedModel):
                 pass  # Fail silently...
 
     def delete(self, *args, **kwargs):
-        print 'deleting a lesson!'
         try:
             q = self.lesson_quiz.all().get()
             q.quiz.delete()
@@ -133,6 +141,9 @@ class LessonModule(models.Model):
     module = models.ForeignKey(Module, related_name='lessons')
     lesson = models.ForeignKey(Lesson, related_name='modules')
     order = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = (('module', 'lesson'),)
     
 
 class LessonSection(models.Model):
@@ -144,7 +155,7 @@ class LessonSection(models.Model):
         return '%s' % (self.content_type)
 
     def get_absolute_url(self):
-        return reverse('lesson_section', args=[str(self.lesson.id), str(self.content_type)])
+        return reverse('lesson_section_permlink', args=[str(self.lesson.id), str(self.content_type)])
 
 
 class LessonQuiz(models.Model):
@@ -173,9 +184,11 @@ class LessonDiscussion(models.Model):
 
     class Meta:
         verbose_name = 'Lesson / Discussion Pair'
+        unique_together = (('thread', 'lesson'),)
 
     def __unicode__(self):
         return '%s --> %s' % (self.lesson, self.thread)
+
 
 class PbllPage(models.Model):
     title = models.CharField(max_length=512)

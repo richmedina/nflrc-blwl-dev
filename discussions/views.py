@@ -5,43 +5,70 @@ from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, 
 
 from .models import Post, DiscussionLog
 from .forms import PostForm, PostReplyForm
-from lessons.models import LessonDiscussion
+from lessons.models import LessonDiscussion, Project, Module, LessonModule
 from core.mixins import HonorCodeRequired
 
 
 class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
     template_name = 'discussions_index.html'
 
+    def get(self, request, *args, **kwargs):
+
+        return super(DiscussionListView, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(DiscussionListView, self).get_context_data(**kwargs)
-        headers = Post.objects.filter(parent_post=None).order_by('created')
         threads = []
+        try:
+            self.project_context = Project.objects.get(slug=kwargs['project_slug'])
+            lessons = self.project_context.get_lessons()
+            # headers = Post.objects.filter(parent_post=None).order_by('created')
+            headers = [{'module': i[0], 'lesson':  i[1], 'thread': i[1].lesson_discussion.all()[0].thread} for i in lessons]
+
+            # self = Project.objects.get(slug=kwargs['project_slug'])
+        except:
+            pass
 
         for hdr in headers:
            
-            try:
-                lesson = LessonDiscussion.objects.get(thread=hdr).lesson
-            except:
-                lesson = None
+            # try:
+            #     lesson = LessonDiscussion.objects.get(thread=hdr).lesson
+            # except:
+            #     lesson = None
+
+            
 
             try:
-                logger = DiscussionLog.objects.filter(user=self.request.user).get(discussion=hdr)
+                logger = DiscussionLog.objects.filter(user=self.request.user).get(discussion=hdr['thread'])
                 last_visit =  logger.modified     
             except:
                 last_visit = self.request.user.last_login
         
-            replies = hdr.replies.all().filter(deleted=False)
+            replies = hdr['thread'].replies.all().filter(deleted=False)
             newmsgs = replies.filter(modified__gt = last_visit)            
-            threads.append({'lesson': lesson, 'header': hdr, 'reply_count': len(replies), 'unread_reply_count': len(newmsgs)})
+            threads.append({'module': hdr['module'], 'lesson': hdr['lesson'], 'header': hdr['thread'], 'reply_count': len(replies), 'unread_reply_count': len(newmsgs)})
 
         context['threads'] = threads
+        context['project'] = self.project_context
         return context
 
 
 class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
     model = Post
     template_name = 'discussions.html'
-    
+    module_context = None
+    project_context = None
+    lesson_context = None
+
+    def get(self, request, *args, **kwargs):
+        try:
+            self.module_context = Module.objects.get(pk=kwargs['module_id'])
+            self.project_context = self.module_context.project
+            self.lesson_context = Lesson.objects.get(pk=kwargs['lesson_id'])
+        except:
+            pass
+        return super(DiscussionView, self).get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super(DiscussionView, self).get_context_data(**kwargs)
 
@@ -80,8 +107,10 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         initial_post_data['parent_post'] = thread_post.id  
         form = PostReplyForm(initial=initial_post_data)
 
-        context['module_lessons'] = lesson.module.lessons.all()
+        # context['module_lessons'] = lesson.module.lessons.all()
         context['lesson'] = lesson
+        context['module'] = self.module_context
+        context['project'] = self.project_context
 
         context['thread'] = thread_post
         context['thread_list'] = Post.objects.filter(parent_post=None).order_by('created')
@@ -93,9 +122,41 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         logger.save()
         return context
 
+
+class DiscussionViewPermLink(LoginRequiredMixin, HonorCodeRequired, DetailView):
+    model = Post
+    template_name = 'discussions_permlink.html'
+
+    def get(self, request, *args, **kwargs):
+        return super(DiscussionViewPermLink, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(DiscussionViewPermLink, self).get_context_data(**kwargs)
+
+        initial_post_data = {}
+        initial_post_data['creator'] = self.request.user
+        thread_post = self.get_object()
+        context['thread'] = thread_post
+
+        try:
+            lesson = thread_post.lesson_post.all().get().lesson
+            context['lesson'] = lesson
+        except:
+            context['lesson'] = None
+
+        try:
+            quiz = lesson.lesson_quiz.get().quiz
+            context['quiz'] =  quiz
+        except:
+            pass
+
+        return context
+
+
 class PostView(LoginRequiredMixin, HonorCodeRequired, ListView):
     model = Post
     template_name = 'post.html'
+
 
 class PostUpdateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, UpdateView):
     model = Post
@@ -115,9 +176,9 @@ class PostUpdateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, Upd
 
         if parent:
             if parent.parent_post:  # subthread. make sure to display master thread
-                return reverse('discussion_select', args=[str(parent.parent_post.id)])
-            return reverse('discussion_select', args=[str(parent.id)])
-        return reverse('discussion_select', args=[str(current.id)])
+                return reverse('discussion_permlink', args=[str(parent.parent_post.id)])
+            return reverse('discussion_permlink', args=[str(parent.id)])
+        return reverse('discussion_permlink', args=[str(current.id)])
     
 
 class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, CreateView):

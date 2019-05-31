@@ -3,9 +3,7 @@
 {% load staticfiles %}
 
 {% block content_container %}
-<div class="col-md-12">
-	<h2>Project {{ object.title }}</h2>
-</div>
+<div class="col-md-12">Series: {{ object.title }}</div>
 
 <div class="col-md-12">{{ pbllpage.content|safe }}</div>
 
@@ -13,9 +11,9 @@
 <div class="col-md-12">
 	<h2>Modules
 		{% if user.is_staff %}
-		<a href="{% url 'module_create' object.id %}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new module</a>
+		<a href="{% url 'module_create' object.slug %}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new module</a>
 		{% endif %}
-		<a href="{% url 'discussion' %}" class="btn btn-default btn-xs"> discussions </a>
+		<a href="{% url 'discussion_list' object.slug %}" class="btn btn-default btn-xs"> discussions </a>
 	</h2>
 	{% for i in modules %}
 		<div class="thumbnail blocks">  
@@ -25,8 +23,8 @@
 			{% for j in i.lessons.all %}
 				<div class="thumbnail">
 					{% if user.is_staff or j.active %}
-						{% if j.active %}<small class="label label-success label-xs">&nbsp;&nbsp;</small>{% endif %}
-						<a class="button" href="{{ j.get_absolute_url }}">{{ j }}</a>
+						{% if j.lesson.active %}<small class="label label-success label-xs">&nbsp;&nbsp;</small>{% endif %}
+						<a class="button" href="{% url 'lesson' object.slug i.id j.lesson.id %}">{{ j.lesson }}</a>
 					{% else %}
 						<p class="inactive_lesson">{{ j }}</p>
 					{% endif %}
@@ -34,7 +32,7 @@
 			{% endfor %}		
 			<div class="text-center">
 		    {% if user.is_staff %}
-		        <a href="{% url 'lesson_create' module_id=i.id %}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new lesson</a>
+		        <a href="{% url 'lesson_create' %}?project={{object.slug}}&module={{i.id}}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new lesson</a>
 		    {% endif %}						
 			</div>
 		</div>

@@ -15,23 +15,19 @@
 		
 			
 			<!-- thread header -->
-			<a href="{{ i.lesson.module.get_absolute_url }}"> {{ i.lesson.module }} </a> <i class="fa fa-caret-right"></i> 
-	    	<a href="{{ i.lesson.get_absolute_url }}"> {{ i.lesson }} </a>
-	    	<small class="" style="font-size: 0.3; float: right"><i>{{ i.reply_count }} replies {% if i.unread_reply_count %} <span class="badge">{{ i.unread_reply_count }}</span> new{% endif %}</i></small>
+			<a href="{% url 'module' project.slug i.module.id %}">{{ i.module }}</a> / 
+			<a href="{% url 'lesson' project.slug i.module.id i.lesson.id %}">{{ i.lesson }}</a>
+	    	<small class="" style="float: right"><i>{{ i.reply_count }} replies {% if i.unread_reply_count %} <span class="badge">{{ i.unread_reply_count }}</span> new{% endif %}</i></small>
 	    	
 	    	
-	    	<a href="{% url 'discussion_select' i.header.id %}">
-		    	<h2>{{ i.header.subject }}</h2>
-		    </a>
-	       
-	       	<small> by {{ i.header.creator.first_name }}</small>
-	    	<small class="pull-right"> {{ i.header.modified|date:"M j Y" }} </small>
-	    	{% if user.is_staff or user == thread.creator %}<small class="pull-right"> <a href="{% url 'edit_post' i.header.id %}">edit</a>&nbsp; </small>{% endif %}
-	    	
+	    	<h4><a href="{% url 'discussion' project.slug i.module.id i.lesson.id i.header.id %}">{{ i.header }}</a><small> by {{ i.header.creator.first_name }}</small></h4>
+	           	
 		    
 		    <!-- thread header text -->
 		    <p>{{ i.header.text | truncatewords_html:140 | safe }}</p>
 		    
+		    <small class="">last activity {{ i.header.modified|date:"M j Y" }} </small>
+		    {% if user.is_staff or user == i.header.creator %}<small class="pull-right"> <a href="{% url 'edit_post' i.header.id %}">edit</a>&nbsp; </small>{% endif %}
 		
 		</div>
 

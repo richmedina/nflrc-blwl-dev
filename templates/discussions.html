@@ -109,18 +109,20 @@
 
     <div class="col-md-3">
     	{% if lesson %}       
-		    <div><a href="{% url 'lesson_section' pk=lesson.id section='topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a></div>
-		    <div><a href="{% url 'lesson_section' pk=lesson.id section='media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
+		    <div><a href="{% url 'lesson_section' project.slug module.id lesson.id 'topic' %}" class="menu_btn {% if curr_section == 'topic' %}active{% endif %}">Topics</a></div>
+		    
+		    <div><a href="{% url 'lesson_section' project.slug module.id lesson.id 'media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
 		    
 			{% if quiz %} 
-				<div><a href="{% url 'lesson_quiz' quiz.id %}" class="menu_btn ">Test Yourself</a></div>
+				<div><a href="{% url 'lesson_quiz' quiz.id %}" class="menu_btn ">Test Yourself</a></div>				
 			{% endif %} 
 			
-			<div><a href="{% url 'lesson_section' pk=lesson.id section='reading' %}" class="menu_btn {% if curr_section == 'reading' %}active{% endif %}">More to Consider</a></div>
+			<div><a href="{% url 'lesson_section' project.slug module.id lesson.id 'reading' %}" class="menu_btn {% if curr_section == 'reading' %}active{% endif %}">More to Consider</a></div>
+			
 			<div><a href="" class="menu_btn active">Get Involved</a></div>
 			
-			<div><a href="{% url 'lesson_section' pk=lesson.id section='apply' %}" class="menu_btn {% if curr_section == 'apply' %}active{% endif %}">Apply</a>	</div>
-			<div><a href="{% url 'discussion' %}" class="menu_btn"> All Threads </a></div>
+			<div><a href="{% url 'lesson_section' project.slug module.id lesson.id 'apply' %}" class="menu_btn {% if curr_section == 'apply' %}active{% endif %}">Apply</a>	</div>
+			<div><a href="{% url 'discussion_list' project.slug %}" class="menu_btn"> All Threads </a></div>
 
 			<hr>
 			
