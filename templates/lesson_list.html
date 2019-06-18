@@ -1,0 +1,28 @@
+<!-- lesson.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content_container %}
+
+<div class="row">
+    <div class="col-md-12">
+    	<h2>Lessons</h2>
+    	<h3><a href="{% url 'lesson_module_create' %}">Add lessons</a> </h3>
+	</div>
+    <div class="col-md-12">
+    	<ul>
+    	{% for k, v in lesson_list.items %}
+			<li><a href="{% url 'lesson_permlink' v.object.id %}">{{ v.object }}</a></li>
+			<ul>
+				{% for p, q in v.related_projects.items %}
+					<li><a href="{% url 'project' p.slug %}">{{p.title}}</a>
+						Modules: {% for m in q %} <a href="{% url 'module' p.slug m.id %}"> {{m.title}} </a> {% endfor %}
+					</li>
+				{% endfor %}
+			</ul>
+		{% endfor %}
+		</ul>
+    </div>
+</div>
+    
+{% endblock content_container %}

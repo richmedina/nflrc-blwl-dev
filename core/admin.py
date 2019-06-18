@@ -3,7 +3,7 @@ from django.forms import ModelForm
 
 from lessons.models import Project, Module, Lesson, LessonModule, LessonSection, LessonQuiz, LessonDiscussion, PbllPage
 from discussions.models import Post, DiscussionLog
-from .models import Whitelist
+from .models import Whitelist, ProjectMembership
 
 class ExtraMedia:
     js = [
@@ -50,4 +50,5 @@ admin.site.register(LessonDiscussion, LessonDiscussionAdmin)
 admin.site.register(Post, PostAdmin)
 admin.site.register(DiscussionLog, DiscussionLogAdmin)
 admin.site.register(Whitelist, WhitelistAdmin)
+admin.site.register(ProjectMembership)
 admin.site.register(PbllPage)

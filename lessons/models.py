@@ -6,7 +6,6 @@ from django.utils.text import slugify
 
 from model_utils.models import TimeStampedModel
 
-from core.models import SiteFile
 from quiz.models import Quiz
 from discussions.models import Post
 

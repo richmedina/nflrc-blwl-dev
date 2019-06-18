@@ -4,10 +4,10 @@ admin.autodiscover()
 
 from filebrowser.sites import site
 
-from lessons.views import HomeView, ProjectView, ModuleView, LessonViewAll, LessonView, LessonViewPermLink, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonModuleCreatePairView, LessonModuleDeletePairView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
+from lessons.views import HomeView, ProjectView, ProjectListView, ModuleView, LessonViewAll, LessonView, LessonViewPermLink, LoginForbiddenView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonModuleCreatePairView, LessonModuleDeletePairView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, DiscussionViewPermLink, PostCreateView, PostDeleteView, PostUpdateView
-from core.views import HonorCodeFormView, ParticipantListView, ParticipantUpdateView, ParticipantCreateView, ParticipantDeleteView
+from core.views import HonorCodeFormView, ProjectParticipantListView, ProjectParticipantCreateView, ProjectParticipantDeleteView, WhitelistView, WhitelistObjectCreateView, WhitelistObjectUpdateView, WhitelistObjectDeleteView
 
 urlpatterns = patterns('',
 
@@ -24,10 +24,13 @@ urlpatterns = patterns('',
     
     url(r'^quiz/', include('quiz.urls')),
 
+    url(r'^project_listing/$', ProjectListView.as_view(), name='project_listing' ),
+
 # PROJECT (SERIES)
     # Display modules and lessons collected as part of a series.
     # Series (or projects) are collections of modules containing lessons. A series is open or restricted.
     url(r'^(?P<slug>[-\w]+)/$', ProjectView.as_view(), name='project' ),
+    
     
 # MODULE
     # Root page for a module.
@@ -81,11 +84,16 @@ urlpatterns = patterns('',
     url(r'^pbllpage/(?P<slug>[-\w]+)/$', PbllPageView.as_view(), name='pbllpage' ),
     url(r'^pbllpage/edit/(?P<slug>[-\w]+)/$', PbllPageUpdateView.as_view(), name='pbllpage_edit' ),
 
-# PARTICIPANT MANAGEMENT    
-    url(r'^participants/$', ParticipantListView.as_view(), name='participants'),
-    url(r'^participants/add/$', ParticipantCreateView.as_view(), name='add_participant'),
-    url(r'^participants/edit/(?P<pk>[-\w]+)/$', ParticipantUpdateView.as_view(), name='edit_participant'),
-    url(r'^participants/delete/(?P<pk>[-\w]+)/$', ParticipantDeleteView.as_view(), name='delete_participant'),
+# WHITELIST MANAGMENT 
+    url(r'^whitelist/all/$', WhitelistView.as_view(), name='whitelist'),
+    url(r'^whitelist/add/$', WhitelistObjectCreateView.as_view(), name='whitelist_add'),
+    url(r'^whitelist/edit/(?P<pk>[-\w]+)/$', WhitelistObjectUpdateView.as_view(), name='whitelist_edit'),
+    url(r'^whitelist/delete/(?P<pk>[-\w]+)/$', WhitelistObjectDeleteView.as_view(), name='whitelist_delete'),
+
+# PARTICIPANT/PROJECT MEMBERSHIP MANAGEMENT
+    url(r'^(?P<project_slug>[-\w]+)/participants/$', ProjectParticipantListView.as_view(), name='participants'),
+    url(r'^(?P<project_slug>[-\w]+)/participants/add/$', ProjectParticipantCreateView.as_view(), name='add_participant'),
+    url(r'^(?P<project_slug>[-\w]+)/participants/delete/(?P<pk>[-\w]+)/$', ProjectParticipantDeleteView.as_view(), name='remove_participant'),
 
     url(r'^inactive-user/$', HonorCodeFormView.as_view(), name='honor_agreement'),
     url(r'^login-forbidden/$', LoginForbiddenView.as_view(), name='login_forbidden'),

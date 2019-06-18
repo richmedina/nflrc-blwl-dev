@@ -1,0 +1,19 @@
+<!-- create_form.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block content_container %}
+
+<div class="row">
+    <div class="col-md-06">
+    	<h3>Add an existing lesson {% if module %}to <a href="{% url 'module' module.project.slug module.id %}">{{ module }}</a> {% endif %}</h3>
+		
+		<form id="basicform" class="" action="" method="post">{% csrf_token %}
+			{{ form|crispy }}
+			<p><br><input id="update_btn" type="submit" class="btn btn-default" value="Add"/></p>
+		</form>
+    </div>
+</div>
+    
+{% endblock content_container %}

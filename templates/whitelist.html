@@ -1,0 +1,59 @@
+<!-- whitelist.html -->
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content_container %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h3>Master Whitelist <a href="{% url 'whitelist_add' %}" class="btn btn-sm btn-success">+ New Whitelist Entry</a></h3>
+			<a href="{% url 'project_listing' %}">projects</a>		
+		</div>
+		<div class="col-md-12">
+			<div id="alpha_filters" class="pull-left">
+				<div class="btn btn-xs btn-default" data-floor="a" data-ceiling="h" >a-h</div>
+				<div class="btn btn-xs btn-default" data-floor="i" data-ceiling="p">i-p</div>
+				<div class="btn btn-xs btn-default" data-floor="q" data-ceiling="z">q-z</div>
+			</div>
+		
+			<div id="type_filters" class="pull-left">				
+				<div class="btn btn-xs btn-default" data-filter=".staff">Staff
+					<span class="badge">{{ staff_list|length }}</span>
+				</div>
+				<div class="btn btn-xs btn-default" data-filter=".active">Active
+					<span class="badge">{{ active_list|length }}</span>
+				</div>
+				<div class="btn btn-xs btn-default" data-filter=".participant">All</div>
+			</div>
+			<p class="clearfix">
+			<div class="col-md-4">Registered email address</div>
+			<div class="col-md-4">Membership</div>
+			<div class="col-md-2">Last login</div>
+			<div class="col-md-2">Edit record</div>
+			</p>
+		</div>
+	</div>
+	<div class="row" id="participant_container">
+	{% for i in object_list %} 
+		<div class="col-md-12 participant {{ i.participant_type }} {% if i.site_account.last_login %} active {% endif %}" style="padding: 5px">
+			<div class="col-md-4 email_addr">{{ i.email_addr }}</div>
+			<div class="col-md-4">
+                {% for p in i.member_projects.all %} 
+                    <a href="{% url 'participants' p.project.slug %}">{{ p }}</a>    
+                {% endfor %}
+            </div>
+			<div class="col-md-2 last_login">{{ i.site_account.last_login }}</div>
+			<div class="col-md-2">
+				{% if user.is_staff %}
+				<a href="{% url 'whitelist_edit' i.pk %}" class="btn btn-xs btn-default"><small>edit</small></a>
+				<a href="{% url 'whitelist_delete' i.pk %}" class="btn btn-xs btn-danger"><small>remove</small></a>
+				{% endif %}
+			</div>			  
+		</div>
+	{% endfor %}
+	</div>
+
+{% endblock content_container %}
+
+{% block js_include %} <script src="{% static 'js/filtering.js' %}"></script>{% endblock js_include %}
+

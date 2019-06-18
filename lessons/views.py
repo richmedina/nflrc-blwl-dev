@@ -8,7 +8,7 @@ from braces.views import LoginRequiredMixin
 from filebrowser.sites import site
 from filebrowser.base import FileListing
 
-from core.mixins import HonorCodeRequired
+from core.mixins import HonorCodeRequired, WhitelistRequiredMixin
 from quiz.models import Quiz, Sitting
 from multichoice.models import MCQuestion, Answer
 from .models import Project, Module, Lesson, LessonModule, LessonSection, LessonQuiz, PbllPage
@@ -33,7 +33,12 @@ class ProjectView(DetailView):
         return context    
 
 
-class ModuleView(LoginRequiredMixin, HonorCodeRequired, DetailView):
+class ProjectListView(ListView):
+    model = Project
+    template_name = 'project_list.html'
+    
+
+class ModuleView(WhitelistRequiredMixin, DetailView):
     model = Module
     template_name = 'module.html'
 
@@ -48,7 +53,7 @@ class ModuleView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         return context
 
 
-class LessonView(LoginRequiredMixin, HonorCodeRequired, DetailView):
+class LessonView(WhitelistRequiredMixin, DetailView):
     model = Lesson
     template_name = 'lesson.html'
     context_object_name = 'lesson'
@@ -134,7 +139,7 @@ class PbllPageView(DetailView):
     template_name = "pbllpage.html"
 
 
-class ModuleCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
+class ModuleCreateView(LoginRequiredMixin, CreateView):
     model = Module
     template_name = "create_form.html"
     form_class = ModuleCreateForm
@@ -155,7 +160,7 @@ class ModuleCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
         return context
 
 
-class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+class ModuleUpdateView(LoginRequiredMixin, UpdateView):
     model = Module
     template_name = "edit_form.html"
     form_class = ModuleUpdateForm
@@ -166,7 +171,7 @@ class ModuleUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
         return context
 
 
-class ModuleDeleteView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
+class ModuleDeleteView(LoginRequiredMixin, DeleteView):
     model = Module
     template_name = 'generic_confirm_delete.html'
 
@@ -201,7 +206,7 @@ class LessonViewAll(ListView):
         return context
 
 
-class LessonCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
+class LessonCreateView(LoginRequiredMixin, CreateView):
     model = Lesson
     template_name = "create_lesson_form.html"
     form_class = LessonCreateForm
@@ -293,7 +298,7 @@ class LessonModuleCreatePairView(LoginRequiredMixin, CreateView):
         return context
 
 
-class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+class LessonUpdateView(LoginRequiredMixin, UpdateView):
     model = Lesson
     template_name = "edit_form.html"
     form_class = LessonUpdateForm
@@ -356,7 +361,7 @@ class LessonUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
         return context
 
 
-class LessonDeleteView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
+class LessonDeleteView(LoginRequiredMixin, DeleteView):
     model = Lesson
     template_name = 'generic_confirm_delete.html'
 
@@ -369,7 +374,7 @@ class LessonDeleteView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
         return context
 
 
-class LessonModuleDeletePairView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
+class LessonModuleDeletePairView(LoginRequiredMixin, DeleteView):
     model = LessonModule
     template_name = 'lesson_module_confirm_delete.html'
 
@@ -382,7 +387,7 @@ class LessonModuleDeletePairView(LoginRequiredMixin, HonorCodeRequired, DeleteVi
         return context    
 
 
-class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+class LessonSectionUpdateView(LoginRequiredMixin, UpdateView):
     model = LessonSection
     template_name = "edit_form.html"
     form_class = LessonSectionUpdateForm
@@ -410,7 +415,7 @@ class LessonSectionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView)
         return context
 
 
-class LessonQuizQuestionListView(LoginRequiredMixin, HonorCodeRequired, DetailView):
+class LessonQuizQuestionListView(LoginRequiredMixin, DetailView):
     model = Quiz
     template_name = 'question_list.html'
     
@@ -421,7 +426,7 @@ class LessonQuizQuestionListView(LoginRequiredMixin, HonorCodeRequired, DetailVi
         return context
 
 
-class LessonQuizQuestionDetailView(LoginRequiredMixin, HonorCodeRequired, DetailView):
+class LessonQuizQuestionDetailView(LoginRequiredMixin, DetailView):
     model = MCQuestion
     template_name = 'question_preview.html'
     lesson = None
@@ -435,7 +440,7 @@ class LessonQuizQuestionDetailView(LoginRequiredMixin, HonorCodeRequired, Detail
         return context
 
 
-class LessonQuizQuestionCreateView(LoginRequiredMixin, HonorCodeRequired, CreateView):
+class LessonQuizQuestionCreateView(LoginRequiredMixin, CreateView):
     model = MCQuestion
     template_name = 'question_create_form.html'
     form_class = LessonQuizQuestionCreateForm
@@ -504,7 +509,7 @@ class LessonQuizQuestionCreateView(LoginRequiredMixin, HonorCodeRequired, Create
             self.get_context_data(form=form, answers_form=answers_form, quiz=self.quiz, lesson=self.lesson))
 
 
-class LessonQuizQuestionUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+class LessonQuizQuestionUpdateView(LoginRequiredMixin, UpdateView):
     model = MCQuestion
     template_name = 'question_update_form.html'
     form_class = LessonQuizQuestionCreateForm
@@ -564,7 +569,7 @@ class LessonQuizQuestionUpdateView(LoginRequiredMixin, HonorCodeRequired, Update
             self.get_context_data(form=form, answers_form=answers_form, quiz=self.quiz, lesson=self.lesson))
 
 
-class LessonQuizQuestionDeleteView(LoginRequiredMixin, HonorCodeRequired, DeleteView):
+class LessonQuizQuestionDeleteView(LoginRequiredMixin, DeleteView):
     model = MCQuestion
     template_name = 'generic_confirm_delete.html'
 
@@ -587,7 +592,7 @@ class LoginForbiddenView(TemplateView):
     template_name = 'login-forbidden.html'
 
 
-class PbllPageUpdateView(LoginRequiredMixin, HonorCodeRequired, UpdateView):
+class PbllPageUpdateView(LoginRequiredMixin, UpdateView):
     model = PbllPage
     template_name = "edit_form.html"
     form_class = PbllPageUpdateForm
