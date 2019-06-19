@@ -1,19 +1,22 @@
 <!-- lesson.html -->
 {% extends "base.html" %}
 {% load staticfiles %}
-{% block series_title %} <a href="{% url 'project' project.slug %}">{{project}} {% endblock series_title %}
-{% block page_header_container %} {% endblock page_header_container %}
+{% block series_title %} {% endblock series_title %}
+
+{% block page_header_container %}
+	<a href="{% url 'project' project.slug %}" class="static_a_display">{{ project }}</a> • <a href="{{ module.get_absolute_url }}" class="static_a_display">{{ module.title }}</a>	
+{% endblock page_header_container %}
 
 {% block content_container %}
 
 <div class="row">
     <div class="col-md-12">
-    	<h2>
-    		<a href="{{ module.get_absolute_url }}">{{ module }}</a> <i class="fa fa-caret-right"></i></a>
-    		<span>{{ lesson }}</span>
-    		{% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.id %}?module={{ module.id }}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>{% endif %}
-    		<a href="{% url 'lesson_delete' lesson.id %}?project={{project.slug}}&module={{module.id}}" class="btn btn-danger btn-xs pull-right"> remove </a>
-    	</h2>
+		<span class="lead">{{ lesson }}</span>
+		{% if user.is_staff %}
+			<a href="{% url 'lesson_edit' lesson.id %}?module={{ module.id }}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> edit</a>
+			<a href="{% url 'lesson_delete' lesson.id %}?project={{ project.slug }}&module={{ module.id }}" class="btn btn-default btn-xs"><i class="fa fa-minus"></i> remove </a>
+		{% endif %}
+		
 	</div>
     <div class="col-md-9">
 		<div class="row">
@@ -24,7 +27,7 @@
 				<div class="col-md-12">
 			
 					<h2>{{ item.get_content_type_display }}
-						{% if user.is_staff %}<a href="{% url 'lesson_section_edit' pk=item.id %}?module={{ module.id }}&lesson={{ lesson.id }}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>{% endif %}
+						{% if user.is_staff %}<a href="{% url 'lesson_section_edit' pk=item.id %}?module={{ module.id }}&lesson={{ lesson.id }}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> edit</a>{% endif %}
 					</h2>
 					
 					<div>{{ item.text | safe }}</div>

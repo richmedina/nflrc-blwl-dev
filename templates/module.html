@@ -1,52 +1,37 @@
 <!-- module.html -->
 {% extends "base.html" %}
 {% load staticfiles %}
-{% block series_title %} <a href="{% url 'project' project.slug %}">{{project}}</a> {% endblock series_title %}
+{% block series_title %}  {% endblock series_title %}
 
-{% block page_header_container %}{% endblock page_header_container %}
+{% block page_header_container %}
+    <a href="{% url 'project' project.slug %}" class="static_a_display">{{ project }}</a> • {{ object.title }} 
+    {% if user.is_staff %}
+        <a href="{% url 'module_edit' project.slug object.id %}"  class="btn btn-default btn-xs" title="edit module"><i class="fa fa-pencil"></i> edit</a>
+        <a href="{% url 'module_delete' project.slug object.id %}" class="btn btn-default btn-xs" title="remove module"><i class="fa fa-minus"></i> remove</a>
+        <a href="{% url 'lesson_create' %}?project={{project.slug}}&module={{object.id}}" class="btn btn-default btn-xs" title="add new lesson"><i class="fa fa-plus"></i> lesson</a>
+    {% endif %}
+{% endblock page_header_container %}
 
 {% block content_container %}
-
-<h2>     
-    {{ object.title }}  
-	{% if user.is_staff %}
-        <a href="{% url 'module_edit' project.slug object.id %}"  class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
-        <a href="{% url 'module_delete' project.slug object.id %}" class="btn btn-default btn-xs">remove</a>
-    {% endif %}
-</h2>
-<h3> Lessons 
-    {% if user.is_staff %}
-        <a href="{% url 'lesson_create' %}?project={{project.slug}}&module={{object.id}}" class="btn btn-default btn-xs"><i class="fa fa-plus"></i></a>
-    {% endif %}
-</h3>
-{% for i in lessons %}
-	<div class="thumbnail blocks">
-        {% if user.is_staff or i.lesson.active %}
-            <div>
-            {% if not i.lesson.active %}
-            	<small class="label label-default label-xs">&nbsp;&nbsp;</small>
-            {% else %}
-            	<small class="label label-success label-xs">&nbsp;&nbsp;</small>
-            {% endif %}
-            <a href="{% url 'lesson' project.slug object.id i.lesson.id %}"> {{ i.lesson }} ({{ i.order }})</a>
-            </div> 
-            <hr>         
-        {% else %}
-            <span class="inactive_lesson">{{ i.lesson }}</span>
-        {% endif %}
-        
-		{% if user.is_staff %}
-        {% endif %}
-        
-		<div>{{ i.lesson.description | safe }}</div>
-        <hr>
-        {% if user.is_staff %}
-            <div class="">
+<div class="row"><div class="col-md-12">
+    {% for i in lessons %}        
+            {% if user.is_staff %}                
+            <div class="thumbnail blocks">
+                {% if not i.lesson.active %}<small class="label label-default label-xs">&nbsp;&nbsp;</small>
+                {% else %}<small class="label label-success label-xs">&nbsp;&nbsp;</small>
+                {% endif %}
+                <a href="{% url 'lesson' project.slug object.id i.lesson.id %}" class="static_a_display lead"> {{ i.lesson }} </a>
+                <div>{{ i.lesson.description | safe }}</div>
+                <hr>
                 <a href="{% url 'lesson_edit' i.lesson.id %}?module={{object.id}}" class="btn btn-default btn-xs"> <i class="fa fa-pencil"></i> </a>
                 <a href="{% url 'lesson_module_detach' i.id %}" class="btn btn-default btn-xs pull-right"> remove from module </a>
             </div>
-        {% endif %}
-	</div>
-{% endfor %}
-    
+            {% elif i.lesson.active %}
+            <div class="thumbnail blocks"> 
+                <a href="{% url 'lesson' project.slug object.id i.lesson.id %}" class="static_a_display lead"> {{ i.lesson }} </a>
+                <div>{{ i.lesson.description | safe }}</div>
+            </div>
+            {% endif %}
+    {% endfor %}
+</div></div>
 {% endblock content_container %}

@@ -1,42 +1,53 @@
-<!-- index.html -->
+<!-- index_project.html -->
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block content_container %}
-<div class="col-md-12">Series: {{ object.title }}</div>
-
-<div class="col-md-12">{{ pbllpage.content|safe }}</div>
-
-
-<div class="col-md-12">
-	<h2>Modules
-		{% if user.is_staff %}
-		<a href="{% url 'module_create' object.slug %}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new module</a>
+{% block page_header_container %}
+	{{ object.title }} 
+		{% if user.is_staff %} 
+		<a href="{% url 'module_create' object.slug %}" class="btn btn-default btn-xs" title="add new module"><i class="fa fa-plus"></i> new module</a>
 		{% endif %}
-		<a href="{% url 'discussion_list' object.slug %}" class="btn btn-default btn-xs"> discussions </a>
-	</h2>
+{% endblock page_header_container %}
+
+{% block content_container %}
+<div class="row"><div class="col-md-12">
 	{% for i in modules %}
 		<div class="thumbnail blocks">  
-			<div class="button">
-				<legend><a href="{{ i.get_absolute_url }}"> {{ i }} {% if user.is_staff %}<i class="fa fa-pencil"></i>{% endif %}</a></legend>	
+			<div>
+				<legend><a href="{{ i.get_absolute_url }}" class="static_a_display"> {{ i }} </a></legend>	
 			</div>
-			{% for j in i.lessons.all %}
-				<div class="thumbnail">
-					{% if user.is_staff or j.active %}
-						{% if j.lesson.active %}<small class="label label-success label-xs">&nbsp;&nbsp;</small>{% endif %}
-						<a class="button" href="{% url 'lesson' object.slug i.id j.lesson.id %}">{{ j.lesson }}</a>
-					{% else %}
-						<p class="inactive_lesson">{{ j }}</p>
+			{% for j in i.lessons.all %}									
+					{% if user.is_staff %}
+					<div class="thumbnail">
+					<p>                
+						{% if not j.lesson.active %}<small class="label label-default label-xs">&nbsp;&nbsp;</small>
+						{% else %}<small class="label label-success label-xs">&nbsp;&nbsp;</small>
+						{% endif %}
+						<a href="{% url 'lesson' object.slug i.id j.lesson.id %}" class="static_a_display "> {{ j.lesson }} </a>
+					</p>
+					
+					<p>
+						<a href="{% url 'lesson_edit' j.lesson.id %}?module={{i.id}}" class="btn btn-default btn-xs"> <i class="fa fa-pencil"></i> </a>
+						<a href="{% url 'lesson_module_detach' i.id %}" class="btn btn-default btn-xs pull-right"> remove from module </a>
+					</p>
+					</div>
+					{% elif j.lesson.active %}
+					<div class="thumbnail">
+					<p>
+						<a href="{% url 'lesson' object.slug i.id j.lesson.id %}" class="static_a_display "> {{ j.lesson }} </a>
+					</p>
+						</div>
 					{% endif %}
+				
+			{% endfor %}
+			
+			{% if user.is_staff %}
+				<div class="text-center">				
+					<a href="{% url 'lesson_create' %}?project={{object.slug}}&module={{i.id}}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new lesson</a>								
 				</div>
-			{% endfor %}		
-			<div class="text-center">
-		    {% if user.is_staff %}
-		        <a href="{% url 'lesson_create' %}?project={{object.slug}}&module={{i.id}}" class="btn btn-success btn-xs"><i class="fa fa-plus"></i> new lesson</a>
-		    {% endif %}						
-			</div>
+			{% endif %}
 		</div>
 	{% endfor %}
-</div>
+</div></div>
 
 {% endblock content_container %}

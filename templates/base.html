@@ -51,14 +51,15 @@
           </button>
 
           <a class="pull-left" href="{% url 'home' %}">
-            <img src="https://nflrc.hawaii.edu/media/img/1-PBLicon.png"> <span class="lead" style="font-size: 2.0em;">NFLRCLessons</span>
-          </a> {% block series_title %} {% endblock series_title %}
+            <img src="https://nflrc.hawaii.edu/media/img/1-PBLicon.png">
+            <span class="lead" style="font-size: 2.0em;">{% block series_title %}  {% endblock series_title %}</span>
+            <span class="lead" style="font-size: 2.0em;">NFLRCLessons</span>
+            </a> 
 
         </div>
         
         <div class="collapse navbar-collapse pull-right" style="background-color: white">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="{% url 'lesson_list' %}">Lesson Repository</a></li>
             {% if user.is_staff %}<li><a href="{% url 'whitelist' %}"><i class="fa fa-users fa-1x"></i></a>{% endif %}</li>
             {% if user and not user.is_anonymous %}
               <li><a href="{% url 'auth:logout' %}"> sign out <smaller>{{ user.email }}</smaller></a> </li>
@@ -73,7 +74,7 @@
 
   <!-- Page content -->
     <div class="container-fluid">
-      <h1>{% block page_header_container %}{% endblock page_header_container %}</h1>
+      <h3>{% block page_header_container %}{% endblock page_header_container %}</h3>
     </div>
     
     <div class="container-fluid">{% block content_container %} {% endblock content_container %}</div>
@@ -104,7 +105,7 @@
   <script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
 
   <!-- TinyMCE -->
-  <script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+  <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
   <script>
     tinymce.init({
       selector:'.content-editor',

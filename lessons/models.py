@@ -143,6 +143,7 @@ class LessonModule(models.Model):
 
     class Meta:
         unique_together = (('module', 'lesson'),)
+        ordering = ['order']
     
 
 class LessonSection(models.Model):
