@@ -17,7 +17,7 @@ class Whitelist(TimeStampedModel):
     email_addr = models.EmailField(max_length=254, unique=True)
     honor_agreement = models.BooleanField(default=False)
     participant_type = models.CharField(max_length=8, choices=PARTICIPANT_TYPES, default='opt2')
-    site_account = models.ForeignKey(User, null=True, blank=True)
+    site_account = models.ForeignKey(User, null=True, blank=True, related_name='whitelisting')
 
     def __unicode__(self):
         return self.email_addr

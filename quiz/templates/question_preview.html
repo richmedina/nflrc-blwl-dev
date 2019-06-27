@@ -17,7 +17,7 @@
     <div class="col-md-12">
         <a href="{% url 'question_create' quiz.id %}" class="btn btn-default btn-xs">add another question</a>
         <a href="{% url 'question_list' quiz.id %}" class="btn btn-default btn-xs">view questions</a>
-        <a href="{% url 'lesson_quiz' quiz.id %}" class="btn btn-default btn-xs">go to quiz</a>
+        <a href="{% url 'lesson_quiz_permlink' quiz.id %}" class="btn btn-default btn-xs">go to quiz</a>
     </div>  
     <div class="col-md-12">
         <h3>Question Preview</h3>

@@ -1,6 +1,7 @@
 # mixins.py
 from django.shortcuts import redirect
-from django.core.exceptions import PermissionDenied
+from django.core.urlresolvers import reverse
+from django.core.exceptions import PermissionDenied, ObjectDoesNotExist
 from django.contrib.auth.views import redirect_to_login
 
 from braces.views import LoginRequiredMixin
@@ -21,21 +22,24 @@ class WhitelistRequiredMixin(LoginRequiredMixin):
         """Mixin that overrides braces LoginRequiredMixin to provide an
         optional login depending on visibility setting in project.
         """
-        project = Project.objects.get(slug=kwargs.get('project_slug'))
-        
+        try:
+            project = Project.objects.get(slug=kwargs.get('project_slug'))
+        except ObjectDoesNotExist:
+            project = Project.objects.get(slug=kwargs.get('slug'))
+
+        #  Closed access - authentication required.
         if not project.public:
             if not request.user.is_authenticated():
-                if self.raise_exception:
-                    raise PermissionDenied  # return a forbidden response
-                else:
-                    return redirect_to_login(request.get_full_path(),
+                return redirect_to_login(request.get_full_path(),
                                             self.get_login_url(),
                                             self.get_redirect_field_name())
             else:  # Check project membership for user.
                 if request.user.is_staff:
                     pass
-                elif not request.user.member_projects.filter(project=project):
-                    raise PermissionDenied  # return a forbidden response
+                else:
+                    whitelisting = request.user.whitelisting.get()
+                    if not whitelisting.member_projects.filter(project=project):
+                        return redirect(reverse('member_access_error'), permanent=True)  # return a membership access response
 
             return super(WhitelistRequiredMixin, self).dispatch(
                 request, *args, **kwargs)

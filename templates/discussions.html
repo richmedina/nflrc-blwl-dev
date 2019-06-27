@@ -3,30 +3,36 @@
 {% load staticfiles %}
 {% load crispy_forms_tags %}
 
+{% block page_header_container %}
+	<a href="{% url 'project' project.slug %}" class="static_a_display">{{ project }}</a> • <a href="{{ module.get_absolute_url }}" class="static_a_display">{{ module.title }}</a>
+{% endblock page_header_container %}
 
 {% block content_container %}
 
 <div class="row">
 	<div class="col-md-12">
 		{% if lesson %}
-			<h2>
-    			<a href="{{ lesson.module.get_absolute_url }}">{{ lesson.module }}</a> <i class="fa fa-caret-right"></i>
-    			{{ lesson }} {% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.id %}" class="btn btn-default btn-xs">edit</a>{% endif %}
-			</h2>
+			<span class="lead">{{ lesson }} </span>{% if user.is_staff %}<a href="{% url 'lesson_edit' lesson.id %}" class="btn btn-default btn-xs">edit</a>{% endif %}
+			
 		{% endif %}
 	</div>
 
     <div class="col-md-9">
-		<h1>Discussions</h1>    					
+
 	<!-- thread header -->			    
 		<h3>{{ thread.subject }}
 			<small>by {{ thread.creator.first_name }} {{ thread.creator.last_name }}</small>
 			<small style="float: right">{{ thread.modified|date:"M j Y" }}</small>
 			{% if user.is_staff or user == thread.creator %}<a href="{% url 'edit_post' thread.id %}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>{% endif %}
 		</h3>
-
+		<p style="margin: 15px 15px 15px 15px">{{ thread.text  | safe }}</p>
+		{% if not user.is_authenticated %}
+		
+		Please sign in to participate in the discussion.	
+	
+		{% else %}
 		    
-	    <p style="margin: 15px 15px 15px 15px">{{ thread.text  | safe }}</p>
+	    
 
 	<!-- thread post form -->
 	    <div class="">
@@ -104,7 +110,7 @@
 	    </div> <!-- End posts to thread -->
 	    {% endfor %}
 		</dl>
-
+		{% endif %}
 	</div>	
 
     <div class="col-md-3">
@@ -114,7 +120,7 @@
 		    <div><a href="{% url 'lesson_section' project.slug module.id lesson.id 'media' %}" class="menu_btn {% if curr_section == 'media' %}active{% endif %}">Consider This</a></div>
 		    
 			{% if quiz %} 
-				<div><a href="{% url 'lesson_quiz' quiz.id %}" class="menu_btn ">Test Yourself</a></div>				
+				<div><a href="{% url 'lesson_quiz' project.slug module.id lesson.id quiz.id %}" class="menu_btn ">Test Yourself</a></div>				
 			{% endif %} 
 			
 			<div><a href="{% url 'lesson_section' project.slug module.id lesson.id 'reading' %}" class="menu_btn {% if curr_section == 'reading' %}active{% endif %}">More to Consider</a></div>
@@ -127,20 +133,8 @@
 			<hr>
 			
 			<div>
-				<a class="menu_btn" data-toggle="collapse" href="#lesson-menu"  aria-expanded="false" aria-controls="lesson-menu">More Lessons <i class="fa fa-caret-right"></i></a>
-
-				<div id="lesson-menu" class="collapse">
-					{% for i in module_lessons %}
-						<div class="">
-						{% if i.id = lesson.id %}
-							<span class="btn btn-md btn-default">{{ i.title }}</span>
-						{% else %}
-							<a href="{{ i.get_absolute_url }}" class="btn btn-md"> {{ i.title }}</a>
-						{% endif %}
-						</div>					
-					{% endfor %}
-				</div>
-	    	</div>
+				<a class="menu_btn" href="{% url 'module' project.slug module.id %}">More Lessons <i class="fa fa-caret-right"></i></a>
+			</div> 
 		{% endif %}
     </div>
 </div>

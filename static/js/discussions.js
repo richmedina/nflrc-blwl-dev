@@ -58,7 +58,8 @@ jQuery(function($) {
 
 
             success : function(json) {
-            	var hdr = '<div class="well" style="margin-left: 30px"><dt>' + json.subject + ' <small> ' + json.creator + '</small><small style="float: right"> ' + json.modified + '</small><small style="float: right">&nbsp;<a href="/discussions/post/' + json.id + '/edit/">edit</a>&nbsp;</small></dt>';
+                console.log(json)
+            	var hdr = '<div class="well" style="margin-left: 30px"><dt>' + json.subject + ' <small> ' + json.creator + '</small><small style="float: right"> ' + json.modified + '</small></dt>';
 				var body = '<dd>' + json.text + '</dd></div>';
 				var msg = hdr + ' ' + body;
 

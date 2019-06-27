@@ -11,7 +11,7 @@ from .models import Quiz, Category, Progress, Sitting, Question
 from essay.models import Essay_Question
 
 from braces.views import LoginRequiredMixin
-from lessons.models import LessonQuiz
+from lessons.models import LessonQuiz, Module, Project
 from core.mixins import HonorCodeRequired
 
 
@@ -136,7 +136,7 @@ class QuizMarkingDetail(QuizMarkerMixin, DetailView):
         return context
 
 
-class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
+class QuizTake( FormView):
     form_class = QuestionForm
     template_name = 'question.html'
 
@@ -158,7 +158,9 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
             return render(request, 'single_complete.html')
 
         if self.sitting is None:
-            c = {'lesson': LessonQuiz.objects.get(quiz=self.quiz).lesson, 'quiz': self.quiz }
+            project = Project.objects.get(slug=self.kwargs.get('project_slug'))
+            module = Module.objects.get(pk=self.kwargs.get('module_id'))
+            c = {'project': project, 'module': module, 'lesson': LessonQuiz.objects.get(quiz=self.quiz).lesson, 'quiz': self.quiz }
             return render(request, 'no_questions_in_quiz.html', c)
         
         return super(QuizTake, self).dispatch(request, *args, **kwargs)
@@ -199,7 +201,8 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
         context = super(QuizTake, self).get_context_data(**kwargs)
         context['question'] = self.question
         context['quiz'] = self.quiz
-
+        # context['project'] = self.kwargs.get('project_slug')
+        # context['module'] = self.kwargs.get('module_id')
 
         if hasattr(self, 'previous'):
             context['previous'] = self.previous
@@ -207,11 +210,13 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
             context['progress'] = self.progress
 # Custom CLT--
         context['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
-        context['module_lessons'] = context['lesson'].module.lessons.all()
+        # context['module_lessons'] = context['lesson'].module.lessons.all()
         try:
             context['lesson_thread'] =  context['lesson'].lesson_discussion.get().thread
             preview_replies = context['lesson'].lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
             context['lesson_thread_replies'] = preview_replies[0:1]
+            context['project'] = Project.objects.get(slug=self.kwargs.get('project_slug'))
+            context['module'] = Module.objects.get(pk=self.kwargs.get('module_id'))
 
         except:
             context['lesson_thread'] = None
@@ -260,15 +265,18 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
                 self.sitting.get_questions(with_answers=True)
             results['incorrect_questions'] =\
                 self.sitting.get_incorrect_questions
-
+            results['quiz'] = self.quiz
             # Custom CLT--
             results['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
-            results['module_lessons'] = results['lesson'].module.lessons.all()
+            # results['module_lessons'] = results['lesson'].module.lessons.all()
 
             try:
                 results['lesson_thread'] =  results['lesson'].lesson_discussion.get().thread
                 preview_replies = results['lesson'].lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
                 results['lesson_thread_replies'] = preview_replies[0:1]
+                results['project'] = Project.objects.get(slug=self.kwargs.get('project_slug'))
+                results['module'] = Module.objects.get(pk=self.kwargs.get('module_id'))
+
             except:
                 results['lesson_thread'] = None
             # --Custom CLT
@@ -379,9 +387,20 @@ class QuizTake(LoginRequiredMixin, HonorCodeRequired, FormView):
             results['incorrect_questions'] = (
                 self.request
                     .session[self.quiz.anon_q_data()]['incorrect_questions'])
-
+            results['quiz'] = self.quiz
             # Custom CLT--
             results['lesson'] = LessonQuiz.objects.get(quiz=self.quiz).lesson
+            # results['module_lessons'] = results['lesson'].module.lessons.all()
+
+            try:
+                results['lesson_thread'] =  results['lesson'].lesson_discussion.get().thread
+                preview_replies = results['lesson'].lesson_discussion.get().thread.replies.all().filter(deleted=False).order_by('-modified')
+                results['lesson_thread_replies'] = preview_replies[0:1]
+                results['project'] = Project.objects.get(slug=self.kwargs.get('project_slug'))
+                results['module'] = Module.objects.get(pk=self.kwargs.get('module_id'))
+
+            except:
+                results['lesson_thread'] = None
             # --Custom CLT
 
         else:

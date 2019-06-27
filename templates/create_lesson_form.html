@@ -7,13 +7,17 @@
 
 <div class="row">
     <div class="col-md-12"><h3>Create a new {{ object_type|lower }} {% if module %}in <a href="{% url 'module' module.project.slug module.id %}">{{ module }}</a> {% endif %}</h3></div>
-    <div class="col-md-12">Add an existing <a href="{% url 'lesson_module_create' %}?module={{ module.id }}">lesson</a>?</div>
-    <div class="col-md-12">
+	
+	<div class="col-md-10 col-md-offset-1">Add an existing <a href="{% url 'lesson_module_create' %}?module={{ module.id }}">lesson</a>?</div>
+	
+	<div class="col-md-10 col-md-offset-1">
+		<p>
     	{{ form.fields.content_type_selected }}
 		<form id="basicform" class="" action="" method="post">{% csrf_token %}
 			{{ form|crispy }}
 			<p><br><input id="update_btn" type="submit" class="btn btn-default" value="Add"/></p>
 		</form>
+	</p>
     </div>
 </div>
     

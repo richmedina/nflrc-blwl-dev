@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import get_object_or_404, render
 from django import forms
 
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, StaffuserRequiredMixin
 from filebrowser.sites import site
 from filebrowser.base import FileListing
 
@@ -19,11 +19,23 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        context['projects'] = Project.objects.all()
+        projects = Project.objects.all()
+        context['public_projects'] = projects.filter(public=True)
+        if self.request.user.is_authenticated():
+            if self.request.user.is_staff:
+                context['member_projects'] = projects.filter(public=False)
+            else:
+                try:
+                    w = self.request.user.whitelisting.get()
+                    context['member_projects'] = [mp.project for mp in w.member_projects.all()]
+                except:
+                    pass
+        else:
+            context['anonymous'] = True
         return context
 
 
-class ProjectView(DetailView):
+class ProjectView(WhitelistRequiredMixin, DetailView):
     model = Project
     template_name = 'index_project.html'
 
@@ -33,10 +45,15 @@ class ProjectView(DetailView):
         return context    
 
 
-class ProjectListView(ListView):
+class ProjectListView(LoginRequiredMixin, StaffuserRequiredMixin, ListView):
     model = Project
     template_name = 'project_list.html'
     
+
+class ProjectUpdateView(LoginRequiredMixin, StaffuserRequiredMixin, UpdateView):
+    model = Project
+    template_name = 'edit_form.html'
+    fields = ['title', 'description', 'public']
 
 class ModuleView(WhitelistRequiredMixin, DetailView):
     model = Module
@@ -590,6 +607,10 @@ class LessonQuizQuestionDeleteView(LoginRequiredMixin, DeleteView):
 
 class LoginForbiddenView(TemplateView):
     template_name = 'login-forbidden.html'
+
+
+class MembershipAccessErrorView(TemplateView):
+    template_name = 'membership-error.html'
 
 
 class PbllPageUpdateView(LoginRequiredMixin, UpdateView):

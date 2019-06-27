@@ -1,5 +1,6 @@
 # utils.py
 from django.conf import settings
+from django.contrib.auth.models import User
 
 from social.exceptions import SocialAuthBaseException, AuthException, AuthForbidden
 
@@ -44,7 +45,11 @@ def nflrc_auth_allowed(backend, details, response, *args, **kwargs):
         raise NFLRCAuthForbidden(backend, response, details['email'])
 
 
-
-
+def associate_django_user_account(backend, details, response, *args, **kwargs):
+    whitelisting = Whitelist.objects.get(email_addr=details.get('email'))
+    if not whitelisting.site_account:
+        django_account = User.objects.get(username=details.get('email'))
+        whitelisting.site_account = django_account
+        whitelisting.save()
 
 

@@ -178,5 +178,7 @@ SOCIAL_AUTH_PIPELINE = (
     # Update the user record with any changed info from the auth service.
     'social.pipeline.user.user_details',
 
+    # Associate user account with whitelist object.
+    'core.utils.associate_django_user_account',
 )
 

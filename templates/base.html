@@ -34,8 +34,6 @@
 
 <body>
 
-
-
 	<!-- Fixed navbar content -->
     <div class="navbar navbar-default navbar-fixed-top header" role="navigation">
       <div class="container-fluid ">
@@ -60,7 +58,10 @@
         
         <div class="collapse navbar-collapse pull-right" style="background-color: white">
           <ul class="nav navbar-nav navbar-right">
-            {% if user.is_staff %}<li><a href="{% url 'whitelist' %}"><i class="fa fa-users fa-1x"></i></a>{% endif %}</li>
+            {% if user.is_staff %}
+              <li><a href="{% url 'project_listing' %}" title="manage projects"><i class="fa fa-cogs fa-1x"></i></a></li>
+              <li><a href="{% url 'whitelist' %}" title="manage participant whitelist"><i class="fa fa-users fa-1x"></i></a>
+            {% endif %}</li>
             {% if user and not user.is_anonymous %}
               <li><a href="{% url 'auth:logout' %}"> sign out <smaller>{{ user.email }}</smaller></a> </li>
             {% else %}
@@ -72,11 +73,13 @@
     </div>
 	<!-- End navbar content -->
 
-  <!-- Page content -->
+  <!-- Page header -->
     <div class="container-fluid">
-      <h3>{% block page_header_container %}{% endblock page_header_container %}</h3>
+      <div class="row"><div class="col-md-12"><h3>{% block page_header_container %}{% endblock page_header_container %}</h3></div></div>
     </div>
-    
+  <!-- End page header -->
+  
+  <!-- Page content -->  
     <div class="container-fluid">{% block content_container %} {% endblock content_container %}</div>
   <!-- End page content -->
 

@@ -159,6 +159,7 @@ class ProjectParticipantCreateView(LoginRequiredMixin, StaffuserRequiredMixin, C
         context['members'] = [i.user for i in self.project.member_list.all()]
         return context
 
+
 class ProjectParticipantDeleteView(LoginRequiredMixin, StaffuserRequiredMixin, DeleteView):
     model = ProjectMembership
     template_name = 'generic_confirm_delete.html'

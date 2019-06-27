@@ -2,18 +2,24 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block content_container %}
-<div class="col-md-12">
-	
-</div>
+{% block page_header_container %}
+	Project Dashboard
+{% endblock page_header_container %}
 
+{% block content_container %}
 <div class="col-md-12">
 	{% for i in object_list %}
 		<div class="thumbnail blocks">  
-			<div class="button">
-                <legend><a href="{{ i.get_absolute_url }}"> {{ i }} {% if user.is_staff %}<i class="fa fa-pencil"></i>{% endif %}</a> 
-                <a href="{% url 'participants' i.slug %}"><i class="fa fa-users fa-1x"></i></a>
-                </legend>	
+			<div>
+				<p class="text-right">{% if not i.public %} <i class="fa fa-lock fa-1x"></i> {% else %} <i class="fa fa-unlock fa-1x text-success"></i> {% endif %}</p>
+				<a href="{{ i.get_absolute_url }}" class="">
+					<img src="{% static 'img/nflrc-logo-square.png'%}">
+				</a>
+				
+				<legend><a href="{{ i.get_absolute_url }}" class="static_a_display"> {{ i }} </a></legend>
+				<p>{{ i.description }}</p>
+				{% if user.is_staff %}<a href="{% url 'project_edit' i.slug %}" class="btn" title="Edit project properties"><i class="fa fa-pencil"></i></a> {% endif %} 
+                <a href="{% url 'participants' i.slug %}" class="btn" title="View participant list"><i class="fa fa-users fa-1x"></i></a>
 			</div>
 		</div>
 	{% endfor %}

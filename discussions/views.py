@@ -5,11 +5,11 @@ from braces.views import CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, 
 
 from .models import Post, DiscussionLog
 from .forms import PostForm, PostReplyForm
-from lessons.models import LessonDiscussion, Project, Module, LessonModule
-from core.mixins import HonorCodeRequired
+from lessons.models import LessonDiscussion, Project, Module, LessonModule, Lesson
+from core.mixins import HonorCodeRequired, WhitelistRequiredMixin
 
 
-class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
+class DiscussionListView(LoginRequiredMixin, TemplateView):
     template_name = 'discussions_index.html'
 
     def get(self, request, *args, **kwargs):
@@ -53,7 +53,7 @@ class DiscussionListView(LoginRequiredMixin, HonorCodeRequired, TemplateView):
         return context
 
 
-class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
+class DiscussionView(DetailView):
     model = Post
     template_name = 'discussions.html'
     module_context = None
@@ -62,37 +62,41 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 
     def get(self, request, *args, **kwargs):
         try:
-            self.module_context = Module.objects.get(pk=kwargs['module_id'])
+            self.module_context = Module.objects.get(pk=kwargs.get('module_id'))
             self.project_context = self.module_context.project
-            self.lesson_context = Lesson.objects.get(pk=kwargs['lesson_id'])
+            self.lesson_context = Lesson.objects.get(pk=kwargs.get('lesson_id'))
         except:
+            print kwargs
             pass
         return super(DiscussionView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(DiscussionView, self).get_context_data(**kwargs)
 
+        context['lesson'] = self.lesson_context
+        context['module'] = self.module_context
+        context['project'] = self.project_context
+
+        thread_post = self.get_object()
+        context['thread'] = thread_post
+
+        try:
+            quiz = self.lesson_context.lesson_quiz.get().quiz
+            context['quiz'] =  quiz
+        except:
+            pass
+       
+        if not self.request.user.is_authenticated():
+            return context
+
         initial_post_data = {}
         initial_post_data['creator'] = self.request.user
-        thread_post = self.get_object()
-
         try:
             logger = DiscussionLog.objects.filter(user=self.request.user).get(discussion=thread_post) 
         except:
             logger = DiscussionLog(user=self.request.user, discussion=thread_post)
             logger.save()
-        try:
-            lesson = thread_post.lesson_post.all().get().lesson
-            # lesson = LessonDiscussion.objects.get(thread=thread_post).lesson
-        except:
-            lesson = None
-
-        try:
-            quiz = lesson.lesson_quiz.get().quiz
-            context['quiz'] =  quiz
-        except:
-            pass
-
+        
         replies = thread_post.replies.all().filter(deleted=False).order_by('-created')
         new_replies = replies.filter(modified__gt = logger.modified)
 
@@ -105,14 +109,9 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
 
         initial_post_data['subject'] = 'Re: %s'% thread_post.subject
         initial_post_data['parent_post'] = thread_post.id  
-        form = PostReplyForm(initial=initial_post_data)
+        form = PostReplyForm(initial=initial_post_data)       
 
-        # context['module_lessons'] = lesson.module.lessons.all()
-        context['lesson'] = lesson
-        context['module'] = self.module_context
-        context['project'] = self.project_context
-
-        context['thread'] = thread_post
+        
         context['thread_list'] = Post.objects.filter(parent_post=None).order_by('created')
 
         context['replies'] = reply_list
@@ -123,7 +122,7 @@ class DiscussionView(LoginRequiredMixin, HonorCodeRequired, DetailView):
         return context
 
 
-class DiscussionViewPermLink(LoginRequiredMixin, HonorCodeRequired, DetailView):
+class DiscussionViewPermLink(DetailView):
     model = Post
     template_name = 'discussions_permlink.html'
 
@@ -153,12 +152,12 @@ class DiscussionViewPermLink(LoginRequiredMixin, HonorCodeRequired, DetailView):
         return context
 
 
-class PostView(LoginRequiredMixin, HonorCodeRequired, ListView):
+class PostView(LoginRequiredMixin, ListView):
     model = Post
     template_name = 'post.html'
 
 
-class PostUpdateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, UpdateView):
+class PostUpdateView(LoginRequiredMixin, CsrfExemptMixin, UpdateView):
     model = Post
     form_class= PostReplyForm
     template_name = 'edit_form.html'
@@ -181,7 +180,7 @@ class PostUpdateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, Upd
         return reverse('discussion_permlink', args=[str(current.id)])
     
 
-class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, CreateView):
     model = Post
     template_name = 'discussions.html'
     form_class= PostReplyForm
@@ -210,7 +209,7 @@ class PostCreateView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSO
             data = postform.errors
             return self.render_json_response(data)
 
-class PostDeleteView(LoginRequiredMixin, HonorCodeRequired, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, View):
+class PostDeleteView(LoginRequiredMixin, CsrfExemptMixin, JSONResponseMixin, AjaxResponseMixin, View):
    
     def post_ajax(self, request, *args, **kwargs):
         if request:

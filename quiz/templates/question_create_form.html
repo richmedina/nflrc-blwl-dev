@@ -15,7 +15,7 @@
     </div>
     <div class="col-md-12"><h3>Creating a new Question for {{ quiz.0 }}<small>
         <a href="{% url 'question_list' quiz.0.id %}" class="btn btn-default btn-xs">view questions</a>
-        <a href="{% url 'lesson_quiz' quiz.0.id %}" class="btn btn-default btn-xs">go to quiz</a>
+        <a href="{% url 'lesson_quiz_permlink' quiz.0.id %}" class="btn btn-default btn-xs">go to quiz</a>
     </small></h3></div>
 
     <div class="col-md-12">
