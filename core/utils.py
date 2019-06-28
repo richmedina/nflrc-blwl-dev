@@ -48,7 +48,6 @@ def nflrc_auth_allowed(backend, details, response, *args, **kwargs):
 def associate_django_user_account(backend, details, response, *args, **kwargs):
     try:
         whitelisting = Whitelist.objects.get(email_addr=details.get('email'))
-        whitelisting.site_account:
         django_account = User.objects.get(username=details.get('email'))
         whitelisting.site_account = django_account
         whitelisting.save()
