@@ -46,7 +46,7 @@ def nflrc_auth_allowed(backend, details, response, *args, **kwargs):
 
 
 def associate_django_user_account(backend, details, response, *args, **kwargs):
-    print response
+    # print response
     try:
         whitelisting = Whitelist.objects.get(email_addr=details.get('email'))
         if not whitelisting.site_account:
@@ -56,7 +56,7 @@ def associate_django_user_account(backend, details, response, *args, **kwargs):
             whitelisting.save()
     except Exception as e:
         # problem setting up account. pass for now.
-        print e
+        # print e
         pass
         # raise NFLRCAuthForbidden(backend, response, details['email'])
 
