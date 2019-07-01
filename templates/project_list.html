@@ -4,6 +4,9 @@
 
 {% block page_header_container %}
 	Project Dashboard
+	{% if user.is_staff %}
+	<a href="{% url 'project_create' %}" class="btn btn-default btn-xs" title="add new project"><i class="fa fa-plus"></i> project</a>
+	{% endif %}
 {% endblock page_header_container %}
 
 {% block content_container %}

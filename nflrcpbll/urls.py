@@ -4,7 +4,7 @@ admin.autodiscover()
 
 from filebrowser.sites import site
 
-from lessons.views import HomeView, ProjectView, ProjectListView, ProjectUpdateView, ModuleView, LessonViewAll, LessonView, LessonViewPermLink, LoginForbiddenView, MembershipAccessErrorView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonModuleCreatePairView, LessonModuleDeletePairView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
+from lessons.views import HomeView, ProjectView, ProjectListView, ProjectCreateView, ProjectUpdateView, ModuleView, LessonViewAll, LessonView, LessonViewPermLink, LoginForbiddenView, MembershipAccessErrorView, ModuleCreateView, ModuleUpdateView, ModuleDeleteView, LessonCreateView, LessonModuleCreatePairView, LessonModuleDeletePairView, LessonUpdateView, LessonDeleteView, LessonSectionUpdateView, PbllPageUpdateView, PbllPageView, LessonQuizQuestionCreateView, LessonQuizQuestionUpdateView, LessonQuizQuestionDetailView, LessonQuizQuestionListView, LessonQuizQuestionDeleteView
 from quiz.views import QuizTake
 from discussions.views import DiscussionListView, DiscussionView, DiscussionViewPermLink, PostCreateView, PostDeleteView, PostUpdateView
 from core.views import HonorCodeFormView, ProjectParticipantListView, ProjectParticipantCreateView, ProjectParticipantDeleteView, WhitelistView, WhitelistObjectCreateView, WhitelistObjectUpdateView, WhitelistObjectDeleteView
@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     # url(r'^logout/$', 'django.contrib.auth.views.logout', name='logout'),  
     url(r'^quiz/', include('quiz.urls')),
     url(r'^project_listing/$', ProjectListView.as_view(), name='project_listing' ),
+    url(r'^project_add/$', ProjectCreateView.as_view(), name='project_create' ),
 
 # PROJECT (SERIES)
     # Display modules and lessons collected as part of a series.

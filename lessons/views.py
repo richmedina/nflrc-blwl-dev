@@ -42,7 +42,7 @@ class ProjectView(WhitelistRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProjectView, self).get_context_data(**kwargs)
         context['modules'] = self.get_object().project_modules.all()
-        return context    
+        return context  
 
 
 class ProjectListView(LoginRequiredMixin, StaffuserRequiredMixin, ListView):
@@ -50,6 +50,11 @@ class ProjectListView(LoginRequiredMixin, StaffuserRequiredMixin, ListView):
     template_name = 'project_list.html'
     
 
+class ProjectCreateView(LoginRequiredMixin, StaffuserRequiredMixin, CreateView):
+    model = Project
+    template_name = 'create_form.html'
+
+    
 class ProjectUpdateView(LoginRequiredMixin, StaffuserRequiredMixin, UpdateView):
     model = Project
     template_name = 'edit_form.html'

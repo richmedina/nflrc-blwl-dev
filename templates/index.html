@@ -6,6 +6,7 @@
 <div class="row">
 	<div class="col-md-12"></div>
 	<div class="col-md-12">
+		
 		{% for i in public_projects %}
 			<div class="thumbnail blocks">
 				<p class="text-right"><i class="fa fa-unlock fa-1x text-success"></i></p>
@@ -17,8 +18,7 @@
 				</div>				
 			</div>
 		{% endfor %}
-
-		{% if anonymous %} Please sign in to view your memberships.{% endif %}
+	
 		{% for i in member_projects %}
 			<div class="thumbnail blocks">
 				<p class="text-right">{% if not i.public %} <i class="fa fa-lock fa-1x"></i> {% endif %}</p>
